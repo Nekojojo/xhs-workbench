@@ -6,6 +6,7 @@
 <title>小红书工作台 V2.3 - 方正证券</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="history/index.js"></script>
 <style>
 :root {
   --pri: #E01E23;
@@ -3092,8 +3093,13 @@ var _historyDates = [];
 var _historyLoading = false;
 
 function loadHistoryIndex() {
+  if (typeof HISTORY_DATES !== "undefined" && HISTORY_DATES.length > 0) {
+    _historyDates = HISTORY_DATES;
+    buildDateSelector(_historyDates);
+    return;
+  }
   var s = document.createElement("script");
-  s.src = "history/index.js";
+  s.src = "history/index.js?t=" + Date.now();
   s.onload = function() {
     if (typeof HISTORY_DATES !== "undefined") {
       _historyDates = HISTORY_DATES;
@@ -3101,10 +3107,15 @@ function loadHistoryIndex() {
     buildDateSelector(_historyDates);
   };
   s.onerror = function() {
-    /* Local file mode: show offline notice */
     buildDateSelector([]);
   };
   document.head.appendChild(s);
+  setTimeout(function() {
+    if (_historyDates.length === 0 && typeof HISTORY_DATES !== "undefined") {
+      _historyDates = HISTORY_DATES;
+      buildDateSelector(_historyDates);
+    }
+  }, 3000);
 }
 
 function buildDateSelector(dates) {
