@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小红书工作台 简易版1.2 - 方正证券</title>
+<style>
+:root {
+  --pri: #E01E23; --pri-light: #FFF0F0; --pri-dark: #B8161B;
+  --bg: #F5F6FA; --card: #FFFFFF; --text: #1A1A2E; --text2: #6B7280;
+  --border: #E5E7EB; --green: #10B981; --orange: #F59E0B;
+  --blue: #3B82F6; --purple: #8B5CF6;
+  --sidebar-w: 240px; --radius: 10px; --shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar { width: var(--sidebar-w); background: #fff; border-right: 1px solid var(--border); position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; display: flex; flex-direction: column; }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 22px 18px; border-bottom: 1px solid var(--border); }
+.sidebar-logo svg { width: 38px; height: 38px; flex-shrink: 0; }
+.sidebar-logo .logo-text { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.sidebar-logo .logo-sub { font-size: 11px; color: var(--text2); }
+.nav-group { padding: 16px 0; }
+.nav-group-title { font-size: 11px; color: var(--text2); padding: 4px 22px 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 13px 22px; cursor: pointer; font-size: 15px; color: var(--text); transition: all 0.15s; border-left: 3px solid transparent; }
+.nav-item:hover { background: var(--pri-light); color: var(--pri); }
+.nav-item.active { background: var(--pri-light); color: var(--pri); border-left-color: var(--pri); font-weight: 600; }
+.nav-item .icon { width: 22px; text-align: center; font-size: 18px; }
+.sidebar-footer { margin-top: auto; padding: 16px 18px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text2); text-align: center; line-height: 1.6; }
+
+/* Main */
+.main { margin-left: var(--sidebar-w); flex: 1; padding: 28px 32px; min-height: 100vh; }
+.topbar { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; box-shadow: var(--shadow); }
+.topbar-clock { font-size: 14px; color: var(--text2); font-weight: 500; }
+.page-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+.page-title .badge { font-size: 12px; background: var(--pri); color: #fff; padding: 3px 12px; border-radius: 20px; font-weight: 400; }
+
+/* Components */
+.card { background: var(--card); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 22px; }
+.card-title { font-size: 16px; font-weight: 600; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #F9FAFB; padding: 11px 14px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); white-space: nowrap; }
+td { padding: 11px 14px; border-bottom: 1px solid var(--border); }
+tr:hover td { background: #FAFBFC; }
+.tag { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.tag-red { background: #FEE2E2; color: #DC2626; }
+.tag-orange { background: #FEF3C7; color: #D97706; }
+.tag-blue { background: #DBEAFE; color: #2563EB; }
+.tag-purple { background: #EDE9FE; color: #7C3AED; }
+.tag-green { background: #D1FAE5; color: #059669; }
+.btn { padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 13px; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: var(--text); }
+.btn:hover { border-color: var(--pri); color: var(--pri); }
+.btn-pri { background: var(--pri); color: #fff; border-color: var(--pri); }
+.btn-pri:hover { background: var(--pri-dark); color: #fff; }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+.tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 22px; }
+.tab { padding: 11px 22px; cursor: pointer; font-size: 14px; color: var(--text2); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+.tab:hover { color: var(--pri); }
+.tab.active { color: var(--pri); border-bottom-color: var(--pri); font-weight: 600; }
+.search-box { display: flex; gap: 10px; margin-bottom: 22px; }
+.search-box input { flex: 1; padding: 11px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; }
+.search-box input:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,0.1); }
+textarea { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical; outline: none; line-height: 1.7; }
+textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,0.1); }
+
+/* Hot list */
+.hot-list { list-style: none; }
+.hot-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+.hot-item:last-child { border-bottom: none; }
+.hot-item .rank { width: 26px; height: 26px; border-radius: 50%; background: var(--pri-light); color: var(--pri); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.hot-item .rank.top3 { background: var(--pri); color: #fff; }
+.hot-item .title { flex: 1; font-size: 14px; }
+.hot-item .heat { font-size: 12px; color: var(--orange); font-weight: 600; }
+
+/* Expand rows */
+.topic-row { cursor: pointer; }
+.expand-row { display: none; }
+.expand-row.show { display: table-row; }
+.topic-detail { padding: 18px; background: #F9FAFB; border-radius: 8px; }
+.topic-detail .xhs-titles { list-style: none; padding: 0; }
+.topic-detail .xhs-titles li { padding: 7px 0; font-size: 14px; border-bottom: 1px dashed var(--border); }
+.topic-detail .xhs-titles li:last-child { border-bottom: none; }
+
+/* Compliance */
+.result-box { margin-top: 18px; padding: 18px; border-radius: 8px; }
+.result-danger { background: #FEE2E2; border: 1px solid #FECACA; }
+.result-warning { background: #FEF3C7; border: 1px solid #FDE68A; }
+.result-ok { background: #D1FAE5; border: 1px solid #A7F3D0; }
+.text-danger { background: #FEE2E2; color: #DC2626; padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+.text-warning { background: #FEF3C7; color: #D97706; padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+
+/* Create module */
+.wizard-steps { display: flex; gap: 0; margin-bottom: 28px; background: #fff; border-radius: var(--radius); padding: 16px 20px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.wizard-step { flex: 1; display: flex; align-items: center; gap: 10px; padding: 8px 12px; position: relative; }
+.wizard-step .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--border); color: var(--text2); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.wizard-step .step-label { font-size: 14px; color: var(--text2); }
+.wizard-step.active .step-num { background: var(--pri); color: #fff; }
+.wizard-step.active .step-label { color: var(--text); font-weight: 600; }
+.wizard-step.done .step-num { background: var(--green); color: #fff; }
+.wizard-step.done .step-label { color: var(--green); }
+.wizard-step + .wizard-step::before { content: ''; position: absolute; left: -8px; top: 50%; width: 16px; height: 2px; background: var(--border); }
+
+.hotspot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.hotspot-card { padding: 16px; border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.15s; background: #fff; }
+.hotspot-card:hover { border-color: var(--pri); box-shadow: 0 2px 8px rgba(224,30,35,0.1); }
+.hotspot-card.selected { border-color: var(--pri); background: var(--pri-light); }
+.hotspot-card .hc-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.hotspot-card .hc-meta { font-size: 12px; color: var(--text2); display: flex; gap: 12px; }
+.hotspot-card .hc-heat { color: var(--orange); font-weight: 600; }
+
+.style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.style-card { padding: 12px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; text-align: center; font-size: 13px; transition: all 0.15s; }
+.style-card:hover { border-color: var(--blue); }
+.style-card.selected { border-color: var(--blue); background: #EFF6FF; }
+.style-card .sc-icon { font-size: 24px; margin-bottom: 4px; }
+.style-card .sc-name { font-weight: 600; }
+
+.preview-box { padding: 20px; background: #fff; border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); }
+.preview-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; line-height: 1.5; }
+.preview-body { font-size: 14px; line-height: 2; color: #333; white-space: pre-wrap; }
+.preview-tags { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+
+.form-group { margin-bottom: 18px; }
+.form-label { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
+.form-input { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; }
+.form-input:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,0.1); }
+
+/* Toast */
+#toast-container { position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast { padding: 13px 22px; border-radius: 8px; font-size: 13px; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.15); animation: toast-in 0.3s ease; max-width: 380px; }
+.toast-success { background: #10B981; }
+.toast-info { background: #3B82F6; }
+.toast-warning { background: #F59E0B; }
+@keyframes toast-in { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+/* Modal */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.modal-box { background: #fff; border-radius: 12px; padding: 24px; max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.modal-close { cursor: pointer; font-size: 20px; color: var(--text2); background: none; border: none; }
+.modal-close:hover { color: var(--pri); }
+.script-box { background: #1A1A2E; color: #E5E7EB; padding: 20px; border-radius: 8px; font-family: "Courier New", monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; margin: 10px 0; }
+
+
+/* Viral content */
+.viral-platform { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.vp-xhs { background: #FFE4E6; color: #E11D48; }
+.vp-bili { background: #DBEAFE; color: #2563EB; }
+.vp-ths { background: #D1FAE5; color: #059669; }
+.vp-em { background: #FEF3C7; color: #D97706; }
+.vp-ttjj { background: #EDE9FE; color: #7C3AED; }
+
+/* Weekly schedule */
+.weekly-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.weekly-card { padding: 20px; border-radius: 10px; border: 2px solid var(--border); background: #fff; transition: all 0.15s; }
+.weekly-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.weekly-card.weekday { border-left: 4px solid var(--blue); }
+.weekly-card.weekend { border-left: 4px solid var(--green); }
+.weekly-card .wc-day { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.weekly-card .wc-theme { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.weekly-card .wc-meta { font-size: 13px; color: var(--text2); line-height: 1.8; }
+.weekly-card .wc-time { display: inline-block; background: #EFF6FF; color: var(--blue); padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+.weekly-card .wc-type { display: inline-block; background: #F0FDF4; color: var(--green); padding: 2px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-left: 6px; }
+.rhythm-box { padding: 18px; background: #F9FAFB; border-radius: 8px; border: 1px solid var(--border); margin-top: 18px; }
+.rhythm-box h4 { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+.rhythm-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; color: var(--text2); }
+.rhythm-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+@media (max-width: 1000px) { .sidebar { width: 60px; } .sidebar .logo-text, .sidebar .logo-sub, .sidebar .nav-group-title, .sidebar .nav-item span:not(.icon), .sidebar-footer { display: none; } .main { margin-left: 60px; } .hotspot-grid { grid-template-columns: 1fr; } .style-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* History date selector */
+.history-selector { display: inline-flex; align-items: center; gap: 6px; margin-left: 12px; }
+.history-selector select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; color: var(--text); background: #fff; cursor: pointer; outline: none; }
+.history-selector select:focus { border-color: var(--pri); }
+.history-badge { display: inline-block; background: var(--pri-light); color: var(--pri); font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <svg viewBox="0 0 36 36"><rect width="36" height="36" rx="8" fill="#E01E23"/><polygon points="10,26 18,8 26,26 22,26 18,16 14,26" fill="#fff"/></svg>
+    <div>
+      <div class="logo-text">方正证券</div>
+      <div class="logo-sub">小红书工作台 简易版</div>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">功能模块</div>
+    <div class="nav-item active" onclick="nav('hotspots')"><span class="icon">&#x1F525;</span><span>每日财经热点</span></div>
+    <div class="nav-item" onclick="nav('viral')"><span class="icon">&#x1F4A5;</span><span>平台爆款</span></div>
+    <div class="nav-item" onclick="nav('topics')"><span class="icon">&#x1F4CB;</span><span>今日选题计划</span></div>
+    <div class="nav-item" onclick="nav('weekly')"><span class="icon">&#x1F4C5;</span><span>周历排期</span></div>
+    <div class="nav-item" onclick="nav('create')"><span class="icon">&#x270F;&#xFE0F;</span><span>内容创作</span></div>
+    <div class="nav-item" onclick="nav('compliance')"><span class="icon">&#x26A0;&#xFE0F;</span><span>敏感词筛查</span></div>
+  </div>
+  <div class="sidebar-footer">小红书工作台 简易版1.2<br>方正证券新媒体团队</div>
+</div>
+<div class="main" id="main"></div>
+<div id="toast-container"></div>
+<div id="modal-root"></div>
+
+<script>
+/* ========== UTILITIES ========== */
+function toast(msg, type) {
+  type = type || 'info';
+  var el = document.createElement('div');
+  el.className = 'toast toast-' + type;
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(function() { el.style.opacity = '0'; setTimeout(function() { el.remove(); }, 300); }, 3000);
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea'); ta.value = text;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+function copyText(text) {
+  var done = false;
+  function finish() { if (!done) { done = true; toast('已复制到剪贴板', 'success'); } }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(finish, function() { fallbackCopy(text); finish(); });
+    setTimeout(function() { if (!done) { fallbackCopy(text); finish(); } }, 800);
+  } else {
+    fallbackCopy(text); finish();
+  }
+}
+
+function openModal(title, bodyHtml) {
+  var root = document.getElementById('modal-root');
+  root.innerHTML = '<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box"><div class="modal-title"><span>' + title + '</span><button class="modal-close" onclick="closeModal()">&times;</button></div><div id="modal-body">' + bodyHtml + '</div></div></div>';
+}
+
+function closeModal() { document.getElementById('modal-root').innerHTML = ''; }
+
+/* ========== DATA ========== */
+/* 2026-08-13 实时财经热点 */
+var currentHistoryDate = "";
+var currentPage = "hotspots";
+var hotspots = [
+  {
+    "id": 1,
+    "title": "宇树科技科创板上市首日暴涨629% 中一签赚超47万元 刷新注册制新股纪录",
+    "source": "证券时报",
+    "heat": 98,
+    "tier": "一级",
+    "biz": "新股打新",
+    "link": "https://www.stcn.com/article/detail/4085788.html",
+    "titles": [
+      "中一签赚47万！宇树科技上市暴涨629%，打新到底有多香？",
+      "新手必看｜打新股全流程拆解，一签赚47万的秘密",
+      "别人打新赚了47万，你还不知道怎么参与？手把手教你",
+      "注册制打新天花板来了！宇树科技一签盈利纪录全解析",
+      "打新攻略｜如何提高中签率？老股民都在用的3个技巧"
+    ],
+    "tags": [
+      "#打新股",
+      "#宇树科技",
+      "#科创板",
+      "#新股申购",
+      "#理财知识"
+    ],
+    "framework": "热点事件引入→打新收益数据展示→打新流程图解→中签率提升技巧→风险提示"
+  },
+  {
+    "id": 2,
+    "title": "基金投顾业务申报冲刺 20多家券商争抢业务\"关键拼图\"",
+    "source": "财联社",
+    "heat": 95,
+    "tier": "一级",
+    "biz": "券商业务",
+    "link": "https://www.cls.cn/detail/2457820",
+    "titles": [
+      "20家券商抢着拿的牌照，基金投顾到底是什么？",
+      "你的基金有人帮你管了！基金投顾和普通买基金有啥区别",
+      "券商都在卷的新业务，对散户到底有没有用？",
+      "基金投顾来了！要不要把基金交给专业的人打理？",
+      "一文看懂基金投顾｜费率、收益、适合谁？"
+    ],
+    "tags": [
+      "#基金投顾",
+      "#券商",
+      "#基金理财",
+      "#投资入门",
+      "#资产配置"
+    ],
+    "framework": "新闻热点→基金投顾概念科普→和传统买基金的区别→费用对比→适合人群分析"
+  },
+  {
+    "id": 3,
+    "title": "中金公司\"三合一\"重组获证监会受理 万亿级券商整合提速",
+    "source": "澎湃新闻",
+    "heat": 93,
+    "tier": "一级",
+    "biz": "券商并购",
+    "link": "https://www.thepaper.cn/newsDetail_forward_33588128",
+    "titles": [
+      "中金+中银+建投要合并了！对股民意味着什么？",
+      "万亿级券商来了！券商合并潮下散户该怎么办",
+      "券商合并对你有啥影响？佣金、服务、开户全解读",
+      "中金三合一获受理！券业大变局，你的账户会变吗？",
+      "2026券商合并大年，这些概念股值得关注"
+    ],
+    "tags": [
+      "#中金公司",
+      "#券商合并",
+      "#券商概念股",
+      "#A股",
+      "#投资"
+    ],
+    "framework": "合并事件→历史回顾（申万宏源等案例）→对投资者影响→对行业格局影响→受益标的分析"
+  },
+  {
+    "id": 4,
+    "title": "两市融资余额单日增加52亿元 杠杆资金加速入场信号明确",
+    "source": "证券时报",
+    "heat": 91,
+    "tier": "一级",
+    "biz": "融资融券",
+    "link": "https://www.stcn.com/article/detail/4085661.html",
+    "titles": [
+      "融资余额一天增加52亿！杠杆资金在买什么？",
+      "新手千万别碰！融资融券的风险你必须知道",
+      "杠杆资金疯狂入场，现在是牛市信号吗？",
+      "两融余额飙升｜一文看懂融资买入的正确姿势",
+      "融资做多有多危险？3个真实案例告诉你"
+    ],
+    "tags": [
+      "#融资融券",
+      "#两融",
+      "#杠杆",
+      "#A股",
+      "#风险教育"
+    ],
+    "framework": "数据展示→两融概念科普→当前资金流向分析→风险提示→理性投资建议"
+  },
+  {
+    "id": 5,
+    "title": "上交所对13天12板大牛股异常交易者暂停账户交易 监管持续加码",
+    "source": "财联社",
+    "heat": 90,
+    "tier": "一级",
+    "biz": "投资避雷",
+    "link": "https://www.cls.cn/detail/2457746",
+    "titles": [
+      "13天12板的妖股终于被监管了！这类股票千万别追",
+      "账户被冻结！追涨妖股的后果有多严重？",
+      "投资避雷针｜如何识别妖股炒作陷阱？5个特征要牢记",
+      "为什么你总是高位接盘？追涨杀跌的心理陷阱全解析",
+      "监管出手了！散户如何避免成为游资的\"接盘侠\""
+    ],
+    "tags": [
+      "#投资避雷",
+      "#妖股",
+      "#监管",
+      "#散户",
+      "#风险提示"
+    ],
+    "framework": "监管事件→妖股特征总结→追涨风险案例→理性投资方法→合规交易提醒"
+  },
+  {
+    "id": 6,
+    "title": "宇树科技带动16只机器人ETF总规模逼近600亿 科技ETF配置窗口",
+    "source": "财联社",
+    "heat": 88,
+    "tier": "二级",
+    "biz": "ETF基金",
+    "link": "https://www.cls.cn/detail/2457807",
+    "titles": [
+      "机器人ETF要起飞了！16只产品怎么选？一张图看懂",
+      "宇树科技带动的机器人概念，普通人怎么上车？",
+      "600亿规模的机器人ETF，哪只最值得投？对比测评",
+      "科技ETF大全｜从AI到机器人，小白也能看懂的配置指南",
+      "ETF选品攻略｜同样是机器人ETF，差别居然这么大"
+    ],
+    "tags": [
+      "#ETF",
+      "#机器人",
+      "#科技投资",
+      "#基金对比",
+      "#定投"
+    ],
+    "framework": "事件引入→机器人ETF一览表→费率/规模/跟踪误差对比→定投建议→风险提示"
+  },
+  {
+    "id": 7,
+    "title": "AI算力需求暴涨 两大存储龙头利润增超10倍 产业链投资机会",
+    "source": "证券时报",
+    "heat": 86,
+    "tier": "二级",
+    "biz": "科技板块",
+    "link": "https://www.stcn.com/article/detail/4085006.html",
+    "titles": [
+      "AI让存储芯片利润翻了10倍！这条产业链还有哪些机会？",
+      "一图看懂AI算力产业链｜从芯片到散热，投资机会全梳理",
+      "存储芯片暴涨背后的逻辑，普通人怎么参与？",
+      "AI基建狂潮下，铜、铝、稀土都在涨，还能上车吗？",
+      "科技股投资指南｜从算力到应用，哪些细分赛道值得关注"
+    ],
+    "tags": [
+      "#AI",
+      "#算力",
+      "#存储芯片",
+      "#科技股",
+      "#产业链"
+    ],
+    "framework": "业绩数据→AI算力产业链图解→各环节投资标的→估值分析→风险与机遇"
+  },
+  {
+    "id": 8,
+    "title": "券商晨会精华：反弹仍将持续 聚力新格局布局秋季行情",
+    "source": "财联社",
+    "heat": 85,
+    "tier": "二级",
+    "biz": "市场策略",
+    "link": "https://www.cls.cn/detail/2457750",
+    "titles": [
+      "十大券商都说反弹要继续！秋季行情买什么？",
+      "券商晨会干货｜8月最看好的5个方向，科技排第一",
+      "秋季行情来了！券商推荐的配置策略，小白也能看懂",
+      "反弹还能持续多久？多家券商最新研判来了",
+      "看不懂研报？这份券商晨会精华帮你3分钟get重点"
+    ],
+    "tags": [
+      "#券商研报",
+      "#A股策略",
+      "#秋季行情",
+      "#投资",
+      "#板块轮动"
+    ],
+    "framework": "多家券商观点汇总→核心结论提炼→重点方向解读→操作建议→风险提示"
+  },
+  {
+    "id": 9,
+    "title": "A股板块轮动加速 机构建议关注科技+农业+并购三条主线",
+    "source": "证券时报",
+    "heat": 84,
+    "tier": "二级",
+    "biz": "板块轮动",
+    "link": "https://www.stcn.com/article/detail/4085517.html",
+    "titles": [
+      "板块轮动太快抓不住？机构给了3条明线",
+      "科技、农业、并购｜8月最值得关注的3条投资主线",
+      "为什么你买的板块总是不涨？轮动规律一文讲透",
+      "板块轮动实操指南｜如何提前埋伏下一个热点？",
+      "农业+科技双主线，散户应该怎么配置仓位？"
+    ],
+    "tags": [
+      "#板块轮动",
+      "#A股",
+      "#科技股",
+      "#农业股",
+      "#投资策略"
+    ],
+    "framework": "当前轮动格局→三条主线详细解读→历史轮动规律→仓位配置建议→注意事项"
+  },
+  {
+    "id": 10,
+    "title": "沪指上演V形反弹 农业板块涨停潮 全球粮食安全议题升温",
+    "source": "东方财富",
+    "heat": 83,
+    "tier": "二级",
+    "biz": "热点板块",
+    "link": "https://finance.eastmoney.com/a/202608183844502394.html",
+    "titles": [
+      "全球6亿人挨饿！农业股为什么是今年的黑马？",
+      "农业板块涨停潮！粮食安全概念还能追吗？",
+      "V形反转后该买什么？农业+消费龙头全梳理",
+      "从种子到餐桌，农业股的投资逻辑你看懂了吗？",
+      "农业ETF有哪些？一文看懂如何布局粮食安全赛道"
+    ],
+    "tags": [
+      "#农业股",
+      "#粮食安全",
+      "#A股",
+      "#板块分析",
+      "#ETF"
+    ],
+    "framework": "行情回顾→上涨原因分析→全球粮食安全数据→核心标的梳理→投资建议"
+  },
+  {
+    "id": 11,
+    "title": "主动权益基金净值8月明显回暖 科技行情带动业绩修复",
+    "source": "证券时报",
+    "heat": 82,
+    "tier": "二级",
+    "biz": "基金市场",
+    "link": "https://www.stcn.com/article/detail/4085466.html",
+    "titles": [
+      "你的基金回本了吗？8月主动权益基金净值回暖",
+      "科技行情修复，哪些基金经理抓住了这波机会？",
+      "基金亏了半年终于涨了！现在该加仓还是观望？",
+      "主动基金vs指数基金｜8月业绩对比，谁更强？",
+      "基金经理8月成绩单出炉，这几位表现最亮眼"
+    ],
+    "tags": [
+      "#基金",
+      "#基金净值",
+      "#科技股",
+      "#基金经理",
+      "#理财"
+    ],
+    "framework": "净值数据→回暖原因→优秀基金筛选→加仓时机判断→长期投资建议"
+  },
+  {
+    "id": 12,
+    "title": "A股并购重组聚焦\"补链强链\" 产业整合成市场新主线",
+    "source": "证券时报",
+    "heat": 80,
+    "tier": "二级",
+    "biz": "并购重组",
+    "link": "https://www.stcn.com/article/detail/4085480.html",
+    "titles": [
+      "并购重组概念火了！哪些公司最有可能被收购？",
+      "A股并购潮来了｜一文看懂并购重组的投资机会",
+      "重组股怎么买？老股民总结的4个筛选标准",
+      "政策鼓励并购重组，这些行业最容易出现大动作",
+      "社保基金长情股曝光！跟着国家队选股靠谱吗？"
+    ],
+    "tags": [
+      "#并购重组",
+      "#A股",
+      "#概念股",
+      "#社保基金",
+      "#投资策略"
+    ],
+    "framework": "政策背景→并购重组类型→筛选标准→重点行业→风险提示"
+  },
+  {
+    "id": 13,
+    "title": "韩股大跌触发熔断 存储双雄重挫 全球市场联动风险",
+    "source": "证券时报",
+    "heat": 79,
+    "tier": "二级",
+    "biz": "全球市场",
+    "link": "https://www.stcn.com/article/detail/4085796.html",
+    "titles": [
+      "韩国股市熔断了！全球市场怎么了？一文看懂",
+      "韩股暴跌熔断｜对A股有什么影响？散户该注意什么",
+      "外围市场大跌时，A股投资者应该怎么做？",
+      "从韩国熔断看全球风险｜你的持仓安全吗？",
+      "全球联动时代，如何用ETF做分散化配置？"
+    ],
+    "tags": [
+      "#韩国股市",
+      "#全球市场",
+      "#熔断",
+      "#风险管理",
+      "#ETF配置"
+    ],
+    "framework": "事件报道→原因分析→对A股影响→风险对冲方法→全球配置建议"
+  },
+  {
+    "id": 14,
+    "title": "ETF基金经理人才争夺战白热化 公募行业洗牌加速",
+    "source": "财联社",
+    "heat": 77,
+    "tier": "二级",
+    "biz": "行业动态",
+    "link": "https://www.cls.cn/detail/2457753",
+    "titles": [
+      "ETF基金经理都在跳槽！你的基金还稳吗？",
+      "明星基金经理离职，持有的基金要不要赎回？",
+      "公募人才大洗牌｜选基金到底该看人还是看公司？",
+      "基金经理换了怎么办？3个指标判断要不要继续持有",
+      "ETF越来越火，背后的人才竞争有多激烈？"
+    ],
+    "tags": [
+      "#基金经理",
+      "#ETF",
+      "#公募基金",
+      "#理财",
+      "#投资"
+    ],
+    "framework": "人事变动事件→基金经理对业绩影响→持有人应对策略→选基金方法论→长期建议"
+  },
+  {
+    "id": 15,
+    "title": "9部门联合发文活跃县域消费 消费板块迎政策催化",
+    "source": "东方财富",
+    "heat": 76,
+    "tier": "常青",
+    "biz": "政策解读",
+    "link": "https://topic.eastmoney.com/detail/jbmhyxyxf.html",
+    "titles": [
+      "9部门发文促消费！县城消费崛起，哪些股票受益？",
+      "县域消费新政全解读｜从奶茶到家电，投资机会在哪",
+      "下沉市场消费股梳理｜这几个细分赛道值得关注",
+      "政策利好来了！消费板块还能不能追？",
+      "县城经济崛起，普通人有哪些创业和投资机会？"
+    ],
+    "tags": [
+      "#消费股",
+      "#县域经济",
+      "#政策",
+      "#投资",
+      "#消费升级"
+    ],
+    "framework": "政策要点→县域消费数据→受益行业分析→核心标的→投资逻辑"
+  },
+  {
+    "id": 16,
+    "title": "我国首次实现火箭陆地回收 航天产业商业化提速",
+    "source": "东方财富",
+    "heat": 78,
+    "tier": "二级",
+    "biz": "科技产业",
+    "link": "https://finance.eastmoney.com/a/202608193845171794.html",
+    "titles": [
+      "中国版SpaceX来了！火箭回收成功，航天股要起飞？",
+      "火箭陆地回收突破！商业航天产业链全梳理",
+      "从火箭回收到卫星互联网，航天概念股一图看懂",
+      "航天产业商业化，普通人能投什么？ETF还是个股？",
+      "SpaceX的对手来了！中国商业航天的投资地图"
+    ],
+    "tags": [
+      "#航天",
+      "#火箭回收",
+      "#商业航天",
+      "#科技",
+      "#概念股"
+    ],
+    "framework": "突破事件→技术意义→产业链图谱→投资标的梳理→风险与机遇"
+  },
+  {
+    "id": 17,
+    "title": "住房公积金管理条例重大修改 楼市政策工具箱持续扩容",
+    "source": "东方财富",
+    "heat": 75,
+    "tier": "常青",
+    "biz": "房地产",
+    "link": "https://finance.eastmoney.com/a/202608183844594441.html",
+    "titles": [
+      "公积金大改！对你的房贷和买房有什么影响？",
+      "公积金新规全解读｜提取更容易？额度更高？",
+      "公积金+首付新政｜2026年买房最全指南来了",
+      "房地产政策工具箱又扩容！现在适合买房吗？",
+      "公积金改革的5大变化，一条视频讲清楚"
+    ],
+    "tags": [
+      "#公积金",
+      "#房贷",
+      "#买房",
+      "#房地产",
+      "#政策解读"
+    ],
+    "framework": "政策变化→对购房者影响→各地政策对比→买房决策建议→地产股投资分析"
+  },
+  {
+    "id": 18,
+    "title": "基金定投从零入门：每月500元，10年后能赚多少？",
+    "source": "投教专题",
+    "heat": 72,
+    "tier": "常青",
+    "biz": "投教科普",
+    "link": "https://www.chnfund.com/video-detail/4959624",
+    "titles": [
+      "每月定投500元，10年后能有多少？算完我震惊了",
+      "基金定投入门指南｜小白第一篇理财就该看这个",
+      "月光族自救计划：每月500定投，告别死工资",
+      "定投vs存银行｜同样是攒钱，收益差了10倍",
+      "新手理财第一步：为什么大家都推荐从定投开始？"
+    ],
+    "tags": [
+      "#基金定投",
+      "#理财入门",
+      "#小白理财",
+      "#攒钱",
+      "#被动收入"
+    ],
+    "framework": "收益计算展示→定投原理→选基金方法→定投节奏→止盈策略"
+  },
+  {
+    "id": 19,
+    "title": "券商开户全指南：2026年最新流程、佣金对比、注意事项",
+    "source": "投教专题",
+    "heat": 70,
+    "tier": "常青",
+    "biz": "开户指南",
+    "link": "https://zhuanlan.zhihu.com/p/2047627194621600427",
+    "titles": [
+      "2026开户攻略｜佣金最低能到多少？手把手教你谈",
+      "券商怎么选？5个维度帮你挑最适合自己的",
+      "开户避坑指南｜这些手续费你不问就没人告诉你",
+      "新手开户全流程｜线上5分钟搞定，不用跑营业部",
+      "佣金万1.5和万2.5差多少？算完这笔账你就懂了"
+    ],
+    "tags": [
+      "#开户",
+      "#券商",
+      "#佣金",
+      "#股票入门",
+      "#新手必看"
+    ],
+    "framework": "开户流程→券商对比维度→佣金谈判技巧→隐藏费用→开户后第一步"
+  },
+  {
+    "id": 20,
+    "title": "可转债打新：零成本中签，一年能赚3000-5000元的理财小技巧",
+    "source": "投教专题",
+    "heat": 68,
+    "tier": "常青",
+    "biz": "投教科普",
+    "link": "https://edu.gf.com.cn/article/detail?articleId=01KN1AWHGP57HBB0YKGNQC7KNS",
+    "titles": [
+      "零成本薅羊毛！可转债打新一年能赚5000块",
+      "最适合上班族的理财：可转债打新，中签就赚钱",
+      "可转债打新保姆级教程｜新手看这一篇就够了",
+      "打新债vs打新股｜哪个更适合资金少的散户？",
+      "每个月多赚几百块的副业：可转债打新全攻略"
+    ],
+    "tags": [
+      "#可转债",
+      "#打新",
+      "#理财技巧",
+      "#零成本",
+      "#薅羊毛"
+    ],
+    "framework": "收益展示→可转债概念→打新流程→中签率技巧→风险提示"
+  }
+];
+
+
+var topicPlans = [
+  {
+    "name": "打新新手攻略：从宇树科技一签赚47万说起",
+    "stars": 5,
+    "viral": 96,
+    "direction": "借助宇树科技上市热点，科普打新全流程，重点讲解申购规则、中签率提升技巧和风险提示",
+    "persona": "理财小课堂",
+    "type": "图文",
+    "titles": [
+      "中一签赚47万！打新到底怎么玩？",
+      "新手打新攻略｜如何提高中签率？",
+      "打新vs存银行，同样10万块一年差多少？"
+    ],
+    "imgStyle": "数据卡片+流程图+收益对比表",
+    "copyStyle": "口语化科普，多用数字对比，降低理解门槛",
+    "framework": "热点事件→打新基础知识→操作步骤→中签技巧→风险提示",
+    "time": "08:30",
+    "relatedHotId": 1
+  },
+  {
+    "name": "基金投顾业务全解读：你的基金有人帮你管了",
+    "stars": 5,
+    "viral": 94,
+    "direction": "结合基金投顾申报冲刺热点，科普基金投顾的概念、费率、和普通买基金的区别",
+    "persona": "基金小助手",
+    "type": "图文",
+    "titles": [
+      "基金投顾来了！和自己买基金有什么区别？",
+      "20家券商抢着做的业务，到底有多香？",
+      "基金亏钱的人看过来！投顾可能是你需要的"
+    ],
+    "imgStyle": "对比表格+流程图+问答式卡片",
+    "copyStyle": "问答式结构，用最简单的话解释专业概念",
+    "framework": "什么是基金投顾→和自己买基金的区别→费用对比→适合谁→如何开通",
+    "time": "10:00",
+    "relatedHotId": 2
+  },
+  {
+    "name": "券商合并潮解读：中金三合一对散户意味着什么",
+    "stars": 4,
+    "viral": 90,
+    "direction": "分析券商合并对普通投资者的实际影响，包括佣金、服务、账户变化等",
+    "persona": "证券行业观察者",
+    "type": "图文",
+    "titles": [
+      "券商合并了，我的账户会变吗？",
+      "中金+中银+建投合并，你持有的股票怎么办？",
+      "券商合并大年，普通人能投什么？"
+    ],
+    "imgStyle": "时间线+影响对比图+概念股梳理",
+    "copyStyle": "专业但接地气，重点回答“和我有什么关系”",
+    "framework": "合并事件→历史案例→对投资者影响→受益标的→风险提示",
+    "time": "12:00",
+    "relatedHotId": 3
+  },
+  {
+    "name": "融资融券入门：杠杆资金加速入场背后的机会与风险",
+    "stars": 4,
+    "viral": 88,
+    "direction": "结合融资余额增长数据，科普两融业务基础知识和风险警示",
+    "persona": "风控小课堂",
+    "type": "图文",
+    "titles": [
+      "融资余额一天增52亿，杠杆资金在买什么？",
+      "新手千万别碰！融资融券的风险你必须知道",
+      "杠杆做多有多危险？真实案例告诉你"
+    ],
+    "imgStyle": "数据走势图+风险警示卡+流程图",
+    "copyStyle": "警示性强，数据真实，用案例说话",
+    "framework": "数据展示→两融概念→门槛条件→风险案例→理性建议",
+    "time": "14:00",
+    "relatedHotId": 4
+  },
+  {
+    "name": "机器人ETF选品指南：16只产品怎么选？",
+    "stars": 5,
+    "viral": 92,
+    "direction": "借助宇树科技上市热度，对比16只机器人ETF的费率、规模、跟踪误差",
+    "persona": "ETF研究员",
+    "type": "图文",
+    "titles": [
+      "16只机器人ETF对比，哪只最值得投？",
+      "宇树科技带动的机器人概念，普通人怎么上车？",
+      "同样是机器人ETF，差别居然这么大！"
+    ],
+    "imgStyle": "对比表格+雷达图+排名榜单",
+    "copyStyle": "客观数据对比，不做推荐，只做分析",
+    "framework": "概念背景→ETF一览表→费率对比→规模对比→定投建议",
+    "time": "16:00",
+    "relatedHotId": 6
+  },
+  {
+    "name": "投资避雷针：如何识别妖股炒作陷阱",
+    "stars": 4,
+    "viral": 89,
+    "direction": "结合监管处罚案例，总结妖股特征和识别方法，强化风险意识",
+    "persona": "合规小卫士",
+    "type": "图文",
+    "titles": [
+      "13天涨12板的妖股被监管了！这类股票千万别追",
+      "追涨妖股的后果有多严重？账户被冻结！",
+      "如何识别妖股？5个特征让你远离陷阱"
+    ],
+    "imgStyle": "警示卡片+特征清单+案例时间线",
+    "copyStyle": "警示性强，用真实案例和监管数据说话",
+    "framework": "监管事件→妖股特征→追涨风险→识别方法→理性建议",
+    "time": "18:00",
+    "relatedHotId": 5
+  },
+  {
+    "name": "农业板块投资指南：全球粮食安全议题升温下的机会",
+    "stars": 4,
+    "viral": 86,
+    "direction": "结合农业板块涨停潮和全球粮食安全数据，梳理农业股投资逻辑和标的",
+    "persona": "行业研究员",
+    "type": "图文",
+    "titles": [
+      "全球超6亿人挨饿！农业股为什么是今年黑马？",
+      "农业ETF有哪些？一文看懂粮食安全赛道",
+      "从种子到餐桌，农业股的投资逻辑你看懂了吗"
+    ],
+    "imgStyle": "产业链图+数据卡片+标的梳理",
+    "copyStyle": "数据驱动，用全球视角讲解农业投资逻辑",
+    "framework": "行情回顾→上涨原因→全球数据→标的梳理→投资建议",
+    "time": "20:00",
+    "relatedHotId": 10
+  },
+  {
+    "name": "可转债打新全攻略：零成本薛羊毛的理财小技巧",
+    "stars": 5,
+    "viral": 91,
+    "direction": "科普可转债打新的全流程，强调零成本、低风险的特点，适合新手和资金少的散户",
+    "persona": "薛羊毛达人",
+    "type": "图文",
+    "titles": [
+      "零成本薛羊毛！可转债打新一年能赚5000块",
+      "最适合上班族的理财：可转债打新全攻略",
+      "打新债vs打新股，哪个更适合资金少的人？"
+    ],
+    "imgStyle": "流程图+收益计算+对比表",
+    "copyStyle": "操作导向，每步都有截图示例，新手友好",
+    "framework": "收益展示→可转债概念→打新流程→中签技巧→风险提示",
+    "time": "22:00",
+    "relatedHotId": 20
+  },
+  {
+    "name": "开户避坑指南：2026年券商佣金对比与选择",
+    "stars": 5,
+    "viral": 93,
+    "direction": "对比主流券商的佣金、服务、APP体验，帮助新手选择最适合的券商",
+    "persona": "股票工具评测师",
+    "type": "图文",
+    "titles": [
+      "2026开户攻略｜佣金最低能到多少？",
+      "券商怎么选？5个维度帮你挑最适合的",
+      "佣金万1.5和万2.5差多少？算完这笔账你就懂了"
+    ],
+    "imgStyle": "对比表格+评分雷达图+截图展示",
+    "copyStyle": "客观测评，数据对比为主，不做硬广",
+    "framework": "开户流程→佣金对比→APP体验→服务对比→选择建议",
+    "time": "09:00",
+    "relatedHotId": 19
+  },
+  {
+    "name": "科技股投资地图：从AI算力到机器人，哪些赛道值得关注",
+    "stars": 4,
+    "viral": 87,
+    "direction": "梳理当前科技股各细分赛道的投资逻辑，包括AI算力、存储、机器人、航天等",
+    "persona": "科技行业分析师",
+    "type": "图文",
+    "titles": [
+      "一图看懂AI产业链，从芯片到散热全梳理",
+      "科技股太多看不懂？这份赛道地图帮你理清思路",
+      "存储芯片利润翻10倍！科技股还能上车吗？"
+    ],
+    "imgStyle": "产业链地图+赛道对比+标的梳理",
+    "copyStyle": "专业但通俗，用类比解释技术概念",
+    "framework": "行情回顾→赛道地图→各赛道标的→估值分析→配置建议",
+    "time": "11:00",
+    "relatedHotId": 7
+  }
+];
+
+var viralContent = [
+  {
+    "id": 1,
+    "title": "中一签赚47万！打新到底怎么玩？手把手教你提高中签率",
+    "platform": "小红书",
+    "author": "理财小课堂",
+    "viralScore": 98,
+    "likes": 3250,
+    "collects": 4890,
+    "category": "打新攻略",
+    "tags": [
+      "#打新",
+      "#新股",
+      "#理财入门",
+      "#中签"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68a4f1e20000000002035678",
+    "analysis": "借助宇树科技上市热点，用具体数据吸引新手关注。封面用“47万”大字+收益截图，制造强烈反差感。",
+    "template": "热点事件+数据展示+操作教程+风险提示"
+  },
+  {
+    "id": 2,
+    "title": "月光族自救指南：每月定抅500元，3年后我有了10万",
+    "platform": "小红书",
+    "author": "攒钱小能手",
+    "viralScore": 96,
+    "likes": 5430,
+    "collects": 7820,
+    "category": "基金定投",
+    "tags": [
+      "#定投",
+      "#攒钱",
+      "#月光族",
+      "#理财"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68a3e2d10000000001034567",
+    "analysis": "用个人真实经历叙事，触发“我也可以”的情绪共鸣。标题用具体数字制造可信度。",
+    "template": "个人经历+收益数据+操作方法+心路历程"
+  },
+  {
+    "id": 3,
+    "title": "别再傻傻存银行了！2026年新手理财必看清单",
+    "platform": "小红书",
+    "author": "财富小课代表",
+    "viralScore": 95,
+    "likes": 4120,
+    "collects": 6230,
+    "category": "理财入门",
+    "tags": [
+      "#理财入门",
+      "#新手",
+      "#存款",
+      "#基金"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68a2c3b00000000002033456",
+    "analysis": "利用“不要做XX”的警告式标题，触发损失双避心理。内容提供可操作的替代方案。",
+    "template": "警告式开头+对比分析+替代方案+行动指南"
+  },
+  {
+    "id": 4,
+    "title": "券商佣金内幕：万1和万2.5到底差多少钱？算完我惊了",
+    "platform": "小红书",
+    "author": "股民小白鼠",
+    "viralScore": 93,
+    "likes": 2890,
+    "collects": 3540,
+    "category": "开户指南",
+    "tags": [
+      "#开户",
+      "#佣金",
+      "#券商",
+      "#省钱"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68a1b2c00000000001032345",
+    "analysis": "用具体计算揭示“隐藏费用”，触发“不知道就亏了”的心理。数据对比形式增强可信度。",
+    "template": "数据计算+对比表格+省钱技巧+开户推荐"
+  },
+  {
+    "id": 5,
+    "title": "ETF入门全指南：为什么越来越多人不买股票改买ETF了？",
+    "platform": "B站",
+    "author": "半佛财经",
+    "viralScore": 92,
+    "likes": 1870,
+    "collects": 2340,
+    "category": "投教科普",
+    "tags": [
+      "#ETF",
+      "#投资入门",
+      "#基金",
+      "#股票"
+    ],
+    "link": "https://www.bilibili.com/video/BV1xK4y1z7mN",
+    "analysis": "视频用动画形式解释ETF原理，降低理解门槛。“不买股票”的反常识标题引发好奇。",
+    "template": "反常识观点+动画解释+数据对比+实操建议"
+  },
+  {
+    "id": 6,
+    "title": "追涨杀跌的心理陷阱：为什么你总是高位接盘？",
+    "platform": "小红书",
+    "author": "行为金融实验室",
+    "viralScore": 91,
+    "likes": 3670,
+    "collects": 4560,
+    "category": "投资心理",
+    "tags": [
+      "#投资心理",
+      "#追涨杀跌",
+      "#散户",
+      "#行为金融"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68a0a1b00000000002031234",
+    "analysis": "用行为金融学解释散户常见错误，强情绪共鸣。内容结构清晰，每个均陷配实例。",
+    "template": "痛点共鸣+原理解释+实例分析+应对方法"
+  },
+  {
+    "id": 7,
+    "title": "同花顺股票开户2026全流程｜5分钟线上开户+佣金谈判技巧",
+    "platform": "同花顺",
+    "author": "同花顺官方",
+    "viralScore": 90,
+    "likes": 1560,
+    "collects": 2890,
+    "category": "开户教程",
+    "tags": [
+      "#开户",
+      "#同花顺",
+      "#教程",
+      "#佣金"
+    ],
+    "link": "https://www.10jqka.com.cn/20260819/c664235412.shtml",
+    "analysis": "官方教程内容权威，流程图清晰。用户可直接参考操作，实用性极强。",
+    "template": "步骤图解+截图标注+佣金谈判+开户后指南"
+  },
+  {
+    "id": 8,
+    "title": "一张图看懂A股交易规则：T+1、涨跌幅、手续费全科普",
+    "platform": "小红书",
+    "author": "图解财经",
+    "viralScore": 89,
+    "likes": 4230,
+    "collects": 6780,
+    "category": "投教科普",
+    "tags": [
+      "#一图看懂",
+      "#A股",
+      "#交易规则",
+      "#新手"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689f90a00000000001030123",
+    "analysis": "信息图形式降低阅读门槛，收藏率极高。“一图看懂”系列是券商号的核心爆款模板。",
+    "template": "信息图+规则对比+常见误区+新手FAQ"
+  },
+  {
+    "id": 9,
+    "title": "工资族每月定投实录：第18个月，终于转正了！",
+    "platform": "小红书",
+    "author": "定投日记本",
+    "viralScore": 88,
+    "likes": 2450,
+    "collects": 3120,
+    "category": "定投实录",
+    "tags": [
+      "#定投",
+      "#工资族",
+      "#理财日记",
+      "#基金"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689e80b00000000002029012",
+    "analysis": "真实记录形式增强可信度，“转正”的剧情转折点引发关注。每月更新保持用户粘性。",
+    "template": "每月实录+收益曲线+心路历程+下月计划"
+  },
+  {
+    "id": 10,
+    "title": "新手第一只股票怎么买？从选股到下单全流程",
+    "platform": "B站",
+    "author": "小白投资课",
+    "viralScore": 87,
+    "likes": 1230,
+    "collects": 1870,
+    "category": "入门教程",
+    "tags": [
+      "#新手入门",
+      "#买股票",
+      "#教程",
+      "#开户"
+    ],
+    "link": "https://www.bilibili.com/video/BV1mN4y1z7aB",
+    "analysis": "屏幕录制实操，新手可直接跟做。内容结构线性清晰，完播率高。",
+    "template": "屏幕录制+步骤讲解+常见问题+风险提示"
+  },
+  {
+    "id": 11,
+    "title": "为什么我建议新手先买基金而不是股票？3个理由很现实",
+    "platform": "小红书",
+    "author": "理财老司机",
+    "viralScore": 86,
+    "likes": 3890,
+    "collects": 5240,
+    "category": "投教科普",
+    "tags": [
+      "#基金",
+      "#股票",
+      "#新手",
+      "#理财"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689d70c00000000001028901",
+    "analysis": "反常识观点+列举式结构，每个理由配实例数据。评论区引发大量讨论。",
+    "template": "反常识观点+3个理由+数据支撑+建议总结"
+  },
+  {
+    "id": 12,
+    "title": "可转债打新攻略：零成本薛羊毛，今年已赚1800元",
+    "platform": "小红书",
+    "author": "薛羊毛小能手",
+    "viralScore": 85,
+    "likes": 2180,
+    "collects": 3450,
+    "category": "理财技巧",
+    "tags": [
+      "#可转债",
+      "#打新",
+      "#薛羊毛",
+      "#零成本"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689c60d00000000002027890",
+    "analysis": "“零成本”概念极具吸引力，配合具体收益数据增强可信度。操作简单适合所有人。",
+    "template": "收益展示+操作流程+中签技巧+风险提示"
+  },
+  {
+    "id": 13,
+    "title": "东方财富股吧热门讨论：宇树科技上市能追吗？机器人板块还能上车吗",
+    "platform": "东方财富",
+    "author": "股吧热议",
+    "viralScore": 84,
+    "likes": 980,
+    "collects": 1230,
+    "category": "股吧讨论",
+    "tags": [
+      "#宇树科技",
+      "#机器人",
+      "#股吧",
+      "#A股"
+    ],
+    "link": "https://guba.eastmoney.com/news,300750,1523456789.html",
+    "analysis": "股吧情绪指标，反映散户关注焦点。可作为选题素材参考。",
+    "template": "热门讨论汇总+理性分析+风险提示"
+  },
+  {
+    "id": 14,
+    "title": "上班族的理财日常：每天花10分钟管理你的钱",
+    "platform": "小红书",
+    "author": "职场理财师",
+    "viralScore": 83,
+    "likes": 2670,
+    "collects": 3890,
+    "category": "理财习惯",
+    "tags": [
+      "#理财习惯",
+      "#上班族",
+      "#时间管理",
+      "#财富"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689b50e00000000001026789",
+    "analysis": "用时间线形式展示每日理财习惯，实操性强。生活化场景让内容更亲切。",
+    "template": "早中晚时间线+具体操作+工具推荐+习惯养成"
+  },
+  {
+    "id": 15,
+    "title": "天天基金热榜：近一周购买最多的基金有哪些？资金流向解读",
+    "platform": "天天基金",
+    "author": "天天基金研究中心",
+    "viralScore": 82,
+    "likes": 870,
+    "collects": 1560,
+    "category": "基金数据",
+    "tags": [
+      "#基金榜单",
+      "#资金流向",
+      "#热门基金",
+      "#ETF"
+    ],
+    "link": "https://fund.eastmoney.com/data/fundranking.html",
+    "analysis": "数据驱动型内容，定期更新保持用户粘性。资金流向是重要投资参考指标。",
+    "template": "榜单展示+流向分析+原因解读+投资建议"
+  },
+  {
+    "id": 16,
+    "title": "别再被割韭菜了！散户常犯的5个致命错误",
+    "platform": "小红书",
+    "author": "老股民说心里话",
+    "viralScore": 81,
+    "likes": 4560,
+    "collects": 5670,
+    "category": "投资警示",
+    "tags": [
+      "#散户",
+      "#韭菜",
+      "#投资错误",
+      "#警示"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689a40f00000000002025678",
+    "analysis": "警示性内容触发损失双避心理，“别再被XX”的标题模板转化率极高。",
+    "template": "警告标题+5个错误列举+真实案例+正确做法"
+  },
+  {
+    "id": 17,
+    "title": "养老金账户全解读：节税+理财，年轻人也该知道的省钱神器",
+    "platform": "小红书",
+    "author": "社保小课堂",
+    "viralScore": 80,
+    "likes": 1890,
+    "collects": 2780,
+    "category": "养老规划",
+    "tags": [
+      "#养老金",
+      "#节税",
+      "#理财",
+      "#省钱"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689930000000000001024567",
+    "analysis": "养老规划是券商号的核心内容方向。“节税”角度降低阅读门槛，吸引年轻用户。",
+    "template": "概念科普+节税计算+开户流程+产品推荐"
+  },
+  {
+    "id": 18,
+    "title": "为什么有人用招商证券、有人用华泰证券？各券商APP对比测评",
+    "platform": "小红书",
+    "author": "股票工具评测",
+    "viralScore": 78,
+    "likes": 1450,
+    "collects": 2340,
+    "category": "券商对比",
+    "tags": [
+      "#券商对比",
+      "#APP",
+      "#开户",
+      "#测评"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689820100000000001023456",
+    "analysis": "对比测评是小红书高收藏类型内容。用户可直接参考做决策，实用价值高。",
+    "template": "多维度对比+截图展示+优劣势分析+推荐结论"
+  },
+  {
+    "id": 19,
+    "title": "一张图看懂股票分红：什么是股息红利？如何靠分红赚钱？",
+    "platform": "小红书",
+    "author": "图解理财",
+    "viralScore": 76,
+    "likes": 2340,
+    "collects": 3560,
+    "category": "投教科普",
+    "tags": [
+      "#股票分红",
+      "#股息",
+      "#红利",
+      "#投资入门"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689710200000000002022345",
+    "analysis": "“一图看懂”系列是券商号的稳定爆款模板。信息图形式收藏率高。",
+    "template": "信息图+概念解释+计算方法+高股息股筛选"
+  },
+  {
+    "id": 20,
+    "title": "新手必看：股票、基金、可转债、ETF到底怎么选？一篇全搞懂",
+    "platform": "小红书",
+    "author": "理财小白兔",
+    "viralScore": 75,
+    "likes": 3780,
+    "collects": 5890,
+    "category": "理财入门",
+    "tags": [
+      "#理财入门",
+      "#新手",
+      "#股票",
+      "#基金",
+      "#ETF"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/689600300000000001021234",
+    "analysis": "全面性指南收藏率极高。“一篇搞懂”的标题模板转化率强。",
+    "template": "品类对比表+风险收益图+选择流程图+新手建议"
+  }
+];
+
+var weeklySchedule = [
+  {
+    "day": "周一",
+    "theme": "本周市场展望",
+    "time": "08:30",
+    "type": "数据卡片",
+    "desc": "梳理本周关键经济数据、重要会议和市场事件，帮助投资者提前布局",
+    "tips": "覆盖本周IPO、解禁、财报、经济数据"
+  },
+  {
+    "day": "周二",
+    "theme": "投教干货日",
+    "time": "20:00",
+    "type": "图文",
+    "desc": "ETF/基金/股票入门科普，一图看懂系列，适合新手收藏",
+    "tips": "选择当下热门概念做科普切入"
+  },
+  {
+    "day": "周三",
+    "theme": "产品精选日",
+    "time": "12:30",
+    "type": "轮播图",
+    "desc": "基金/理财产品推荐与对比，ETF选择指南",
+    "tips": "结合本周热点板块推荐对应ETF"
+  },
+  {
+    "day": "周四",
+    "theme": "热点深度解读",
+    "time": "19:00",
+    "type": "图文+视频",
+    "desc": "跟随当日财经热点做深度分析，政策解读+投资影响",
+    "tips": "选择本周最重要的1-2个热点深挖"
+  },
+  {
+    "day": "周五",
+    "theme": "周度复盘",
+    "time": "16:00",
+    "type": "数据卡片",
+    "desc": "本周行情回顾、涨跌板块总结、下周展望",
+    "tips": "用数据可视化展示本周市场表现"
+  },
+  {
+    "day": "周六",
+    "theme": "理财生活",
+    "time": "10:30",
+    "type": "图文",
+    "desc": "攒钱/存钱/工资理财等生活向内容，轻松有趣",
+    "tips": "贴近年轻人生活场景，降低理财门槛感"
+  },
+  {
+    "day": "周日",
+    "theme": "投资者问答",
+    "time": "21:00",
+    "type": "图文",
+    "desc": "常见投资误区Q&A、避坑指南、新手答疑",
+    "tips": "收集粉丝提问做互动式内容"
+  }
+];
+
+var bannedWords = [
+  /* 投顾业务 */ '保本', '保收益', '600', '601', '000', '00', '688', '920', '零佣金', '返佣', '送礼', '调整风险等级', '我帮你操作', '保证赚钱', '抄底', '期货', '002', '300',
+  /* 开户引流 */ '大礼相送', '免开户费', '速来开户', '马上开户', '免五',
+  /* 信用与衍生品 */ '绕标', '非标', '马甲户', '出借账户', '借用账户', '配资', '期货投顾',
+  /* 违规炒股 */ '帮我买', '帮我卖', '替我买', '替我卖', '帮我操作', '帮你操作', '你来操作', '我来操作', '我来操盘', '你来操盘', '收益归你', '收益归我', '亏损归你', '亏损归我', '亏了归你', '亏了归我', '亏了算你的', '亏了算我的', '承诺给我收益', '承诺给你收益', '本金还给我', '本金还给你', '保证收益', '我来赔', '你来赔', '密码发你', '密码发我',
+  /* 配资 */ '你出保证金', '保证金打到', '五五分', '四六分', '三七分', '二八分', '比例分成', '每月付你', '每月付我',
+  /* 提供答案 */ '发我答案', '发你答案', '各类测试题的答案', 'R5/R4风险测评答案',
+  /* 规避行为 */ '微信说', '微信发你', '不要在这里说', '回访电话不要接', '回访电话不用管', '回访电话不用接', '95571不要接', '95571不用接',
+  /* 投诉举报 */ '投诉', '举报', '信访', '上访', '检举', '揭发', '曝光', '媒体', '抖音', '协会', '证监局', '证监会', '监管部门', '监管机构', '找总部投诉', '你去投诉我', '投诉到证监会', '投诉到监管', '投诉公司', '投诉没有用',
+  /* 金融产品销售 */ '安全', '保证', '承诺', '保险', '避险', '有保障', '高收益', '零风险', '无风险', '收益有保障', '本金无忧', '预期收益率', '预计收益率', '目标收益率', '基准收益率', '欲购从速', '申购良机', '业绩稳健', '业绩优良', '名列前茅', '业绩最佳', '规模最大', '绝对安全', '保证赚', '100%收益', '包赚', '承诺回报', '预期收益', '只涨不跌', '稳赚', '翻倍', '涨停', '内幕', '暴涨', '必涨', '日赚', '躺着赚钱', '唯一',
+  /* 不当言论 (NEW) */ '快跑', '赶紧抛', '全部卖掉', '销户吧', '提现离场', '崩盘了', '股灾来了', '金融危机', '经济崩溃', '大萧条', '熊市来了', '跌跌不休', '一片哀嚎', '惨不忍睹', '底在哪里', '跌麻了', '深不见底', '还要大跌', '马上崩盘', '没希望了', '救不了了', '全完了', '韭菜', '听我的赶紧撤', '崩了', '凉了', '完蛋了', '暴跌', '崩盘在即', '危险', '赶紧撤', '血亏', '亏麻了', '套死了', '跳楼价', '庄家跑了', '主力出货', '跑慢了就没了', '恐慌盘', '全杀', '夺路而逃', '流动性危机', '技术性熊市', '熊途漫漫', '阴跌不止', '跌入深渊', '做减法的也要减一些', '果断离场', '提桶跑路', '爆雷', '被套', '爆仓',
+  /* 敏感话题 (NEW) */ 'P2P', '失业率', '就业率', '出生率', '疫情',
+  /* 买卖建议 (NEW) */ '买入', '卖出', '加仓', '减仓', '清仓', '建仓', '平仓', '重仓', '满仓', '空仓', '轻仓', '补仓', '止损', '止盈', '做多', '做空', '逃顶', '挂单', '现价买', '现价卖', '赶紧买', '赶紧卖', '可以进了', '能上了', '马上买', '不要卖', '继续持有', '拿住了', '别下车', '回调就买', '反弹就卖', '冲高卖出', '急跌买入', '波段操作', '明天必涨', '明天必跌', '快上车', '跌停价挂', '尾盘卖', '融资干', '闭眼买', '开盘买', '抛掉', '抛了', 'all in', '拿住', '满仓干', '必赚', '小白稳赢', '适合各类', '轻松投资', '轻松理财', '简单操作', '低门槛', '小投入', '零投入高回报', '实现暴富', '赚大钱', '现金返现', '高额返佣', '马上入场', '清盘', '割肉',
+  /* 收益承诺 (NEW) */ '不赔', '保本保息', '本金安全', '收益保障', '承诺收益', '保证盈利', '稳赢', '躺赚', '有米', '只赚不亏', '永不亏损', '%收益', '百分百赚钱', '翻倍收益', '收益翻倍', '财富自由', '财务自由', '一夜暴富', '快速致富', '投资神话', '资金安全', '风险稳健', '最高收益', '最低风险', '风险极小', '没有风险', '绝无风险', '风险忽略不计', '跑赢通胀', '战胜市场', '绝对靠谱', '安心之选', '睡觉赚钱', '印钞机', '捡钱', '送钱', '白给', '捡钱行情', '牛市启动', '牛市来了', '吃肉', '暴增', '狂飙', '爆棚', '丰沛', '丰厚', '飙升', '领跑', '领先', '稳拿', '稳获', '无上限', '不封顶', '高企', '碾压', '秒杀', '独占鳌头', '一骑绝尘', '超预期', '保本高息', '稳如泰山', '尽享牛市', '安享收益', '收益稳健', '年化收益超', '收益率翻倍', '行业绝无仅有', '收益第一', '最牛', '同类产品没有之一', '全球顶尖机构', '独一无二', '无可匹敌', '最强', '绝对领先', '顶级服务', '理财终极方案', '地位至高无上', '专业度登峰造极', '收益无与伦比', '所向披靡', '战无不胜', '天下第一', '行业霸主', '市场垄断', '独家', '唯一权威', '绝对权威', '顶级', '最权威', '最专业', '最可靠', '利率',
+  /* 不当竞争 (NEW) */ '同行垃圾', '那是骗局', '策略太糙', '分析师不行', '就是小作坊', '服务特差', '质量劣质', '收费虚高', '没真东西', '净忽悠人', '全是套路', '风险超高', '收益造假', '投诉一大堆', '口碑烂透', '资质不全', '没人监管', '资金没保障', '操作不规范', '流程太繁琐', '效率极低', '响应超慢', '售后没保障', '技术落后', '团队不专业', '没经验', '眼光不行', '垃圾友商', '决策常错', '风控薄弱', '同行抗风险差', '同行不行', '别信他们', '有隐藏费用', '套路多', '不靠谱', '实力不行', '产品垃圾',
+];
+var dangerWords = ['保本', '保收益', '零佣金', '保证赚钱', '配资', '保证收益', '承诺给我收益', '承诺给你收益', '高收益', '零风险', '无风险', '收益有保障', '本金无忧', '预期收益率', '预计收益率', '目标收益率', '基准收益率', '欲购从速', '申购良机', '绝对安全', '只涨不跌', '保证赚', '100%收益', '包赚', '承诺回报', '稳赚', '预期收益', '有保障', '不赔', '保本保息', '本金安全', '收益保障', '承诺收益', '保证盈利', '稳赢', '必赚', '躺赚', '只赚不亏', '永不亏损', '百分百赚钱', '翻倍收益', '收益翻倍', '一夜暴富', '快速致富', '资金安全', '最高收益', '最低风险', '风险极小', '没有风险', '绝无风险', '风险忽略不计', '绝对靠谱', '睡觉赚钱', '印钞机', '捡钱', '送钱', '白给', '捡钱行情', '保本高息', '稳如泰山', '安享收益', '年化收益超', '收益率翻倍', '翻倍', '最牛', '同类产品没有之一', '独一无二', '无可匹敌', '最强', '绝对领先', '唯一', '顶级服务', '理财终极方案', '收益无与伦比', '所向披靡', '战无不胜', '天下第一', '行业霸主', '唯一权威', '绝对权威', '顶级', '最权威', '最专业', '最可靠', '收益稳健', '无上限', '不封顶', '稳拿', '稳获', '买入', '卖出', '加仓', '减仓', '清仓', '建仓', '重仓', '满仓', '补仓', '止损', '止盈', '做多', '做空', '抄底', '逃顶', '现价买', '现价卖', '赶紧买', '赶紧卖', '可以进了', '能上了', '马上买', '不要卖', '继续持有', '拿住了', '别下车', '回调就买', '反弹就卖', '冲高卖出', '急跌买入', '波段操作', '明天必涨', '明天必跌', '快上车', '跌停价挂', '尾盘卖', '融资干', '闭眼买', '开盘买', '满仓干', '小白稳赢', '零投入高回报', '实现暴富', '赚大钱', '马上入场', '割肉', 'all in'];
+var wordCategory = {
+  /* 投顾业务 */ '保本':'投顾业务', '保收益':'投顾业务', '600':'投顾业务', '601':'投顾业务', '000':'投顾业务', '00':'投顾业务', '688':'投顾业务', '920':'投顾业务', '零佣金':'投顾业务', '返佣':'投顾业务', '送礼':'投顾业务', '调整风险等级':'投顾业务', '我帮你操作':'投顾业务', '保证赚钱':'投顾业务', '抄底':'投顾业务', '期货':'投顾业务', '002':'投顾业务', '300':'投顾业务',
+  /* 开户引流 */ '大礼相送':'开户引流', '免开户费':'开户引流', '速来开户':'开户引流', '马上开户':'开户引流', '免五':'开户引流',
+  /* 信用与衍生品 */ '绕标':'信用与衍生品', '非标':'信用与衍生品', '马甲户':'信用与衍生品', '出借账户':'信用与衍生品', '借用账户':'信用与衍生品', '配资':'信用与衍生品', '期货投顾':'信用与衍生品',
+  /* 违规炒股 */ '帮我买':'违规炒股', '帮我卖':'违规炒股', '替我买':'违规炒股', '替我卖':'违规炒股', '帮我操作':'违规炒股', '帮你操作':'违规炒股', '你来操作':'违规炒股', '我来操作':'违规炒股', '我来操盘':'违规炒股', '你来操盘':'违规炒股', '收益归你':'违规炒股', '收益归我':'违规炒股', '亏损归你':'违规炒股', '亏损归我':'违规炒股', '亏了归你':'违规炒股', '亏了归我':'违规炒股', '亏了算你的':'违规炒股', '亏了算我的':'违规炒股', '承诺给我收益':'违规炒股', '承诺给你收益':'违规炒股', '本金还给我':'违规炒股', '本金还给你':'违规炒股', '保证收益':'违规炒股', '我来赔':'违规炒股', '你来赔':'违规炒股', '密码发你':'违规炒股', '密码发我':'违规炒股',
+  /* 配资 */ '你出保证金':'配资', '保证金打到':'配资', '五五分':'配资', '四六分':'配资', '三七分':'配资', '二八分':'配资', '比例分成':'配资', '每月付你':'配资', '每月付我':'配资',
+  /* 提供答案 */ '发我答案':'提供答案', '发你答案':'提供答案', '各类测试题的答案':'提供答案', 'R5/R4风险测评答案':'提供答案',
+  /* 规避行为 */ '微信说':'规避行为', '微信发你':'规避行为', '不要在这里说':'规避行为', '回访电话不要接':'规避行为', '回访电话不用管':'规避行为', '回访电话不用接':'规避行为', '95571不要接':'规避行为', '95571不用接':'规避行为',
+  /* 投诉举报 */ '投诉':'投诉举报', '举报':'投诉举报', '信访':'投诉举报', '上访':'投诉举报', '检举':'投诉举报', '揭发':'投诉举报', '曝光':'投诉举报', '媒体':'投诉举报', '抖音':'投诉举报', '协会':'投诉举报', '证监局':'投诉举报', '证监会':'投诉举报', '监管部门':'投诉举报', '监管机构':'投诉举报', '找总部投诉':'投诉举报', '你去投诉我':'投诉举报', '投诉到证监会':'投诉举报', '投诉到监管':'投诉举报', '投诉公司':'投诉举报', '投诉没有用':'投诉举报',
+  /* 金融产品销售 */ '安全':'金融产品销售', '保证':'金融产品销售', '承诺':'金融产品销售', '保险':'金融产品销售', '避险':'金融产品销售', '有保障':'金融产品销售', '高收益':'金融产品销售', '零风险':'金融产品销售', '无风险':'金融产品销售', '收益有保障':'金融产品销售', '本金无忧':'金融产品销售', '预期收益率':'金融产品销售', '预计收益率':'金融产品销售', '目标收益率':'金融产品销售', '基准收益率':'金融产品销售', '欲购从速':'金融产品销售', '申购良机':'金融产品销售', '业绩稳健':'金融产品销售', '业绩优良':'金融产品销售', '名列前茅':'金融产品销售', '业绩最佳':'金融产品销售', '规模最大':'金融产品销售', '绝对安全':'金融产品销售', '保证赚':'金融产品销售', '100%收益':'金融产品销售', '包赚':'金融产品销售', '承诺回报':'金融产品销售', '预期收益':'金融产品销售', '只涨不跌':'金融产品销售', '稳赚':'金融产品销售', '翻倍':'金融产品销售', '涨停':'金融产品销售', '内幕':'金融产品销售', '暴涨':'金融产品销售', '必涨':'金融产品销售', '日赚':'金融产品销售', '躺着赚钱':'金融产品销售', '唯一':'金融产品销售',
+  /* 不当言论 */ '快跑':'不当言论', '赶紧抛':'不当言论', '全部卖掉':'不当言论', '销户吧':'不当言论', '提现离场':'不当言论', '崩盘了':'不当言论', '股灾来了':'不当言论', '金融危机':'不当言论', '经济崩溃':'不当言论', '大萧条':'不当言论', '熊市来了':'不当言论', '跌跌不休':'不当言论', '一片哀嚎':'不当言论', '惨不忍睹':'不当言论', '底在哪里':'不当言论', '跌麻了':'不当言论', '深不见底':'不当言论', '还要大跌':'不当言论', '马上崩盘':'不当言论', '没希望了':'不当言论', '救不了了':'不当言论', '全完了':'不当言论', '韭菜':'不当言论', '听我的赶紧撤':'不当言论', '崩了':'不当言论', '凉了':'不当言论', '完蛋了':'不当言论', '暴跌':'不当言论', '崩盘在即':'不当言论', '危险':'不当言论', '赶紧撤':'不当言论', '血亏':'不当言论', '亏麻了':'不当言论', '套死了':'不当言论', '跳楼价':'不当言论', '庄家跑了':'不当言论', '主力出货':'不当言论', '跑慢了就没了':'不当言论', '恐慌盘':'不当言论', '全杀':'不当言论', '夺路而逃':'不当言论', '流动性危机':'不当言论', '技术性熊市':'不当言论', '熊途漫漫':'不当言论', '阴跌不止':'不当言论', '跌入深渊':'不当言论', '做减法的也要减一些':'不当言论', '果断离场':'不当言论', '提桶跑路':'不当言论', '爆雷':'不当言论', '被套':'不当言论', '爆仓':'不当言论',
+  /* 敏感话题 */ 'P2P':'敏感话题', '失业率':'敏感话题', '就业率':'敏感话题', '出生率':'敏感话题', '疫情':'敏感话题',
+  /* 买卖建议 */ '买入':'买卖建议', '卖出':'买卖建议', '加仓':'买卖建议', '减仓':'买卖建议', '清仓':'买卖建议', '建仓':'买卖建议', '平仓':'买卖建议', '重仓':'买卖建议', '满仓':'买卖建议', '空仓':'买卖建议', '轻仓':'买卖建议', '补仓':'买卖建议', '止损':'买卖建议', '止盈':'买卖建议', '做多':'买卖建议', '做空':'买卖建议', '逃顶':'买卖建议', '挂单':'买卖建议', '现价买':'买卖建议', '现价卖':'买卖建议', '赶紧买':'买卖建议', '赶紧卖':'买卖建议', '可以进了':'买卖建议', '能上了':'买卖建议', '马上买':'买卖建议', '不要卖':'买卖建议', '继续持有':'买卖建议', '拿住了':'买卖建议', '别下车':'买卖建议', '回调就买':'买卖建议', '反弹就卖':'买卖建议', '冲高卖出':'买卖建议', '急跌买入':'买卖建议', '波段操作':'买卖建议', '明天必涨':'买卖建议', '明天必跌':'买卖建议', '快上车':'买卖建议', '跌停价挂':'买卖建议', '尾盘卖':'买卖建议', '融资干':'买卖建议', '闭眼买':'买卖建议', '开盘买':'买卖建议', '抛掉':'买卖建议', '抛了':'买卖建议', 'all in':'买卖建议', '拿住':'买卖建议', '满仓干':'买卖建议', '必赚':'买卖建议', '小白稳赢':'买卖建议', '适合各类':'买卖建议', '轻松投资':'买卖建议', '轻松理财':'买卖建议', '简单操作':'买卖建议', '低门槛':'买卖建议', '小投入':'买卖建议', '零投入高回报':'买卖建议', '实现暴富':'买卖建议', '赚大钱':'买卖建议', '现金返现':'买卖建议', '高额返佣':'买卖建议', '马上入场':'买卖建议', '清盘':'买卖建议', '割肉':'买卖建议',
+  /* 收益承诺 */ '不赔':'收益承诺', '保本保息':'收益承诺', '本金安全':'收益承诺', '收益保障':'收益承诺', '承诺收益':'收益承诺', '保证盈利':'收益承诺', '稳赢':'收益承诺', '躺赚':'收益承诺', '有米':'收益承诺', '只赚不亏':'收益承诺', '永不亏损':'收益承诺', '%收益':'收益承诺', '百分百赚钱':'收益承诺', '翻倍收益':'收益承诺', '收益翻倍':'收益承诺', '财富自由':'收益承诺', '财务自由':'收益承诺', '一夜暴富':'收益承诺', '快速致富':'收益承诺', '投资神话':'收益承诺', '资金安全':'收益承诺', '风险稳健':'收益承诺', '最高收益':'收益承诺', '最低风险':'收益承诺', '风险极小':'收益承诺', '没有风险':'收益承诺', '绝无风险':'收益承诺', '风险忽略不计':'收益承诺', '跑赢通胀':'收益承诺', '战胜市场':'收益承诺', '绝对靠谱':'收益承诺', '安心之选':'收益承诺', '睡觉赚钱':'收益承诺', '印钞机':'收益承诺', '捡钱':'收益承诺', '送钱':'收益承诺', '白给':'收益承诺', '捡钱行情':'收益承诺', '牛市启动':'收益承诺', '牛市来了':'收益承诺', '吃肉':'收益承诺', '暴增':'收益承诺', '狂飙':'收益承诺', '爆棚':'收益承诺', '丰沛':'收益承诺', '丰厚':'收益承诺', '飙升':'收益承诺', '领跑':'收益承诺', '领先':'收益承诺', '稳拿':'收益承诺', '稳获':'收益承诺', '无上限':'收益承诺', '不封顶':'收益承诺', '高企':'收益承诺', '碾压':'收益承诺', '秒杀':'收益承诺', '独占鳌头':'收益承诺', '一骑绝尘':'收益承诺', '超预期':'收益承诺', '保本高息':'收益承诺', '稳如泰山':'收益承诺', '尽享牛市':'收益承诺', '安享收益':'收益承诺', '收益稳健':'收益承诺', '年化收益超':'收益承诺', '收益率翻倍':'收益承诺', '行业绝无仅有':'收益承诺', '收益第一':'收益承诺', '最牛':'收益承诺', '同类产品没有之一':'收益承诺', '全球顶尖机构':'收益承诺', '独一无二':'收益承诺', '无可匹敌':'收益承诺', '最强':'收益承诺', '绝对领先':'收益承诺', '顶级服务':'收益承诺', '理财终极方案':'收益承诺', '地位至高无上':'收益承诺', '专业度登峰造极':'收益承诺', '收益无与伦比':'收益承诺', '所向披靡':'收益承诺', '战无不胜':'收益承诺', '天下第一':'收益承诺', '行业霸主':'收益承诺', '市场垄断':'收益承诺', '独家':'收益承诺', '唯一权威':'收益承诺', '绝对权威':'收益承诺', '顶级':'收益承诺', '最权威':'收益承诺', '最专业':'收益承诺', '最可靠':'收益承诺', '利率':'收益承诺',
+  /* 不当竞争 */ '同行垃圾':'不当竞争', '那是骗局':'不当竞争', '策略太糙':'不当竞争', '分析师不行':'不当竞争', '就是小作坊':'不当竞争', '服务特差':'不当竞争', '质量劣质':'不当竞争', '收费虚高':'不当竞争', '没真东西':'不当竞争', '净忽悠人':'不当竞争', '全是套路':'不当竞争', '风险超高':'不当竞争', '收益造假':'不当竞争', '投诉一大堆':'不当竞争', '口碑烂透':'不当竞争', '资质不全':'不当竞争', '没人监管':'不当竞争', '资金没保障':'不当竞争', '操作不规范':'不当竞争', '流程太繁琐':'不当竞争', '效率极低':'不当竞争', '响应超慢':'不当竞争', '售后没保障':'不当竞争', '技术落后':'不当竞争', '团队不专业':'不当竞争', '没经验':'不当竞争', '眼光不行':'不当竞争', '垃圾友商':'不当竞争', '决策常错':'不当竞争', '风控薄弱':'不当竞争', '同行抗风险差':'不当竞争', '同行不行':'不当竞争', '别信他们':'不当竞争', '有隐藏费用':'不当竞争', '套路多':'不当竞争', '不靠谱':'不当竞争', '实力不行':'不当竞争', '产品垃圾':'不当竞争',
+};
+
+/* Content creation state */
+var createState = {
+  step: 1,
+  hotspotId: null,
+  title: '',
+  body: '',
+  tags: [],
+  imgStyle: '',
+  copyStyle: ''
+};
+
+var contentStyles = [
+  {id:'popular', name:'爆款种草风', icon:'\uD83D\uDD25', desc:'热情、感叹号多、互动感强'},
+  {id:'pro', name:'专业科普风', icon:'\uD83D\uDCCA', desc:'数据驱动、逻辑清晰、有深度'},
+  {id:'share', name:'闺蜜分享风', icon:'\uD83D\uDC6B', desc:'亲切自然、口语化、真实感'},
+  {id:'tutorial', name:'教程干货风', icon:'\uD83D\uDCDD', desc:'步骤清晰、实操性强、收藏率高'},
+  {id:'news', name:'新闻速报风', icon:'\uD83D\uDCF0', desc:'简洁高效、重点突出、时效性强'},
+  {id:'story', name:'故事叙事风', icon:'\uD83D\uDCD6', desc:'引人入胜、有代入感、传播性强'}
+];
+
+/* ========== RENDER ========== */
+
+function renderTopbar() {
+  var now = new Date();
+  var t = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 ' + ('0'+now.getHours()).slice(-2) + ':' + ('0'+now.getMinutes()).slice(-2) + ':' + ('0'+now.getSeconds()).slice(-2);
+  return '<div class="topbar"><span class="topbar-clock" id="clock">' + t + '</span><span style="font-size:13px;color:var(--text2)">小红书工作台 简易版1.2</span></span><span id="history-selector-slot"></span></div>';
+}
+
+function renderHotspots() {
+  var tier1 = hotspots.filter(function(t) { return t.tier === '一级'; });
+  var tier2 = hotspots.filter(function(t) { return t.tier === '二级'; });
+  var tierE = hotspots.filter(function(t) { return t.tier === '常青'; });
+
+  var h = renderTopbar();
+  h += '<div class="page-title">每日财经热点 <span class="badge">' + hotspots.length + '条</span></div>';
+
+  h += '<div class="tabs" id="hotTabs">';
+  h += '<div class="tab active" onclick="filterHot(\'全部\')">全部 (' + hotspots.length + ')</div>';
+  h += '<div class="tab" onclick="filterHot(\'一级\')">一级热点 (' + tier1.length + ')</div>';
+  h += '<div class="tab" onclick="filterHot(\'二级\')">二级热点 (' + tier2.length + ')</div>';
+  h += '<div class="tab" onclick="filterHot(\'常青\')">常青话题 (' + tierE.length + ')</div>';
+  h += '</div>';
+  h += '<div class="search-box"><input type="text" id="hotSearch" placeholder="搜索热点关键词..." oninput="searchHot()"></div>';
+
+  h += '<div class="card"><div id="hotTable"><table>';
+  h += '<thead><tr><th style="width:36px">#</th><th>标题</th><th>来源</th><th style="width:50px">热度</th><th style="width:56px">级别</th><th style="width:56px">类型</th><th style="width:140px">操作</th></tr></thead><tbody>';
+  hotspots.forEach(function(t) {
+    var tierCls = t.tier === '一级' ? 'tag-red' : (t.tier === '二级' ? 'tag-orange' : 'tag-blue');
+    h += '<tr class="topic-row" onclick="toggleTopic(' + t.id + ')" data-tier="' + t.tier + '">';
+    h += '<td>' + t.id + '</td><td><strong>' + t.title + '</strong></td><td>' + t.source + '</td>';
+    h += '<td><span style="color:var(--orange);font-weight:600">' + t.heat + '</span></td>';
+    h += '<td><span class="tag ' + tierCls + '">' + t.tier + '</span></td><td>' + t.biz + '</td>';
+    h += '<td style="white-space:nowrap"><a href="' + t.link + '" target="_blank" class="btn btn-sm" onclick="event.stopPropagation()">查看原文</a> <button class="btn btn-sm btn-pri" onclick="event.stopPropagation();createFromHotspot(' + t.id + ')">去创作</button></td></tr>';
+    h += '<tr class="expand-row" id="topic-' + t.id + '"><td colspan="7"><div class="topic-detail">';
+    h += '<div style="margin-bottom:12px"><strong>小红书风格标题（5条）：</strong><ul class="xhs-titles">';
+    t.titles.forEach(function(ti) { h += '<li>' + ti + ' <button class="btn btn-sm" style="float:right;margin-top:-2px" onclick="event.stopPropagation();copyText(\'' + ti.replace(/'/g, "\\'") + '\')">复制</button></li>'; });
+    h += '</ul></div>';
+    h += '<div style="margin-bottom:10px"><strong>推荐标签：</strong> ';
+    t.tags.forEach(function(tag) { h += '<span class="tag tag-purple" style="margin-right:6px">' + tag + '</span>'; });
+    h += '</div>';
+    h += '<div style="margin-bottom:10px"><strong>内容框架：</strong> ' + t.framework + '</div>';
+    h += '<button class="btn btn-sm btn-pri" onclick="event.stopPropagation();createFromHotspot(' + t.id + ')">去创作 &rarr;</button>';
+    h += '</div></td></tr>';
+  });
+  h += '</tbody></table></div></div>';
+  return h;
+}
+
+function renderViral() {
+  var platforms = {};
+  viralContent.forEach(function(v) {
+    if (!platforms[v.platform]) platforms[v.platform] = 0;
+    platforms[v.platform]++;
+  });
+  var platList = ['小红书', 'B站', '同花顺', '东方财富', '天天基金'];
+
+  var h = renderTopbar();
+  h += '<div class="page-title">平台爆款 <span class="badge">' + viralContent.length + '条</span></div>';
+
+  h += '<div class="tabs" id="viralTabs">';
+  h += '<div class="tab active" onclick="filterViral(\'全部\')">全部 (' + viralContent.length + ')</div>';
+  platList.forEach(function(p) {
+    var cnt = platforms[p] || 0;
+    h += '<div class="tab" onclick="filterViral(\'' + p + '\')">' + p + ' (' + cnt + ')</div>';
+  });
+  h += '</div>';
+
+  h += '<div class="card"><div id="viralTable"><table>';
+  h += '<thead><tr><th style="width:36px">#</th><th>标题</th><th style="width:70px">平台</th><th>作者</th><th style="width:70px">爆款指数</th><th style="width:120px">互动(点赞/收藏)</th><th style="width:70px">分类</th></tr></thead><tbody>';
+  viralContent.forEach(function(v) {
+    var platCls = 'vp-xhs';
+    if (v.platform === 'B站') platCls = 'vp-bili';
+    else if (v.platform === '同花顺') platCls = 'vp-ths';
+    else if (v.platform === '东方财富') platCls = 'vp-em';
+    else if (v.platform === '天天基金') platCls = 'vp-ttjj';
+    h += '<tr class="topic-row" onclick="toggleTopic(\'viral-' + v.id + '\')" data-platform="' + v.platform + '">';
+    h += '<td>' + v.id + '</td>';
+    h += '<td><strong>' + v.title + '</strong></td>';
+    h += '<td><span class="viral-platform ' + platCls + '">' + v.platform + '</span></td>';
+    h += '<td>' + v.author + '</td>';
+    h += '<td><span class="tag tag-red">' + v.viralScore + '</span></td>';
+    h += '<td style="font-size:12px">赞 ' + v.likes.toLocaleString() + ' / 藏 ' + v.collects.toLocaleString() + '</td>';
+    h += '<td><span class="tag tag-green">' + v.category + '</span></td>';
+    h += '</tr>';
+    h += '<tr class="expand-row" id="topic-viral-' + v.id + '"><td colspan="7"><div class="topic-detail">';
+    h += '<div style="margin-bottom:10px"><strong>爆款原因：</strong> ' + v.analysis + '</div>';
+    h += '<div style="margin-bottom:10px"><strong>创作模板：</strong> ' + v.template + '</div>';
+    h += '<div style="margin-bottom:10px"><strong>参考标签：</strong> ';
+    v.tags.forEach(function(tag) { h += '<span class="tag tag-purple" style="margin-right:6px">' + tag + '</span>'; });
+    h += '</div>';
+    h += '<div style="display:flex;gap:10px">';
+    h += '<a href="' + v.link + '" target="_blank" class="btn btn-sm" onclick="event.stopPropagation()">查看原文</a>';
+    h += '<button class="btn btn-sm btn-pri" onclick="event.stopPropagation();nav(\'create\')">去创作 &rarr;</button>';
+    h += '</div>';
+    h += '</div></td></tr>';
+  });
+  h += '</tbody></table></div></div>';
+  return h;
+}
+
+function renderTopics() {
+  var h = renderTopbar();
+  h += '<div class="page-title">今日选题计划 <span class="badge">' + topicPlans.length + '个选题</span></div>';
+
+  h += '<div class="card"><table>';
+  h += '<thead><tr><th>选题</th><th style="width:80px">推荐度</th><th style="width:70px">爆款指数</th><th>内容方向</th><th>人设</th><th style="width:80px">类型</th><th style="width:60px">发布时间</th></tr></thead><tbody>';
+  topicPlans.forEach(function(t, i) {
+    var stars = '';
+    for (var s = 0; s < 5; s++) { stars += s < t.stars ? '★' : '☆'; }
+    h += '<tr class="topic-row" onclick="toggleTopic(90' + i + ')">';
+    h += '<td><strong>' + t.name + '</strong></td><td style="color:var(--orange)">' + stars + '</td>';
+    h += '<td><span class="tag tag-red">' + t.viral + '</span></td><td>' + t.direction + '</td>';
+    h += '<td>' + t.persona + '</td><td><span class="tag tag-blue">' + t.type + '</span></td><td>' + t.time + '</td></tr>';
+    h += '<tr class="expand-row" id="topic-90' + i + '"><td colspan="7"><div class="topic-detail">';
+    h += '<div style="margin-bottom:10px"><strong>参考标题：</strong> ';
+    t.titles.forEach(function(ti) { h += '<span class="tag tag-purple" style="margin-right:6px">' + ti + '</span>'; });
+    h += '</div>';
+    h += '<div style="margin-bottom:8px"><strong>图片风格：</strong> ' + t.imgStyle + ' &nbsp;|&nbsp; <strong>文案风格：</strong> ' + t.copyStyle + '</div>';
+    h += '<div style="margin-bottom:8px"><strong>内容框架：</strong> ' + t.framework + '</div>';
+    h += '<div style="margin-bottom:12px"><strong>参考账号：</strong> ' + t.ref + '</div>';
+    h += '<button class="btn btn-sm btn-pri" onclick="event.stopPropagation();nav(\'create\')" style="margin-right:8px">去创作 &rarr;</button>';
+    h += '<button class="btn btn-sm" onclick="event.stopPropagation();nav(\'compliance\')">写完后 &rarr; 敏感词检查</button>';
+    h += '</div></td></tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
+}
+
+function renderWeekly() {
+  var h = renderTopbar();
+  h += '<div class="page-title">周历排期 <span class="badge">本周 8月11日-8月17日</span></div>';
+
+  h += '<div class="weekly-grid">';
+  weeklySchedule.forEach(function(w) {
+    var isWeekend = (w.day === '周六' || w.day === '周日');
+    var cls = isWeekend ? 'weekend' : 'weekday';
+    h += '<div class="weekly-card ' + cls + '">';
+    h += '<div class="wc-day">' + w.day + '</div>';
+    h += '<div class="wc-theme">' + w.theme + '</div>';
+    h += '<div class="wc-meta">';
+    h += '<span class="wc-time">' + w.time + '</span>';
+    h += '<span class="wc-type">' + w.type + '</span>';
+    h += '<div style="margin-top:8px">' + w.desc + '</div>';
+    h += '<div style="margin-top:6px;color:var(--blue);font-size:12px">Tips: ' + w.tips + '</div>';
+    h += '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+
+  h += '<div class="rhythm-box">';
+  h += '<h4>每日发布节奏建议</h4>';
+  h += '<div class="rhythm-item"><span class="rhythm-dot" style="background:var(--blue)"></span> 2-3条/日 &middot; 晨间速报(8:00) + 午间快讯(12:30) + 晚间深度(20:00)</div>';
+  h += '<div class="rhythm-item"><span class="rhythm-dot" style="background:var(--green)"></span> 内容配比：投教干货40% / 热点解读20% / 生活理财20% / 互动内容20%</div>';
+  h += '<div class="rhythm-item"><span class="rhythm-dot" style="background:var(--orange)"></span> 合规提醒：所有财经内容发布前需经合规审核</div>';
+  h += '</div>';
+  return h;
+}
+
+function renderCreate() {
+  var h = renderTopbar();
+  h += '<div class="page-title">内容创作工具箱</div>';
+
+  /* Wizard steps */
+  h += '<div class="wizard-steps">';
+  var stepNames = ['选择话题', '写作编辑', '预览发布'];
+  for (var si = 0; si < 3; si++) {
+    var cls = '';
+    if (si + 1 < createState.step) cls = 'done';
+    else if (si + 1 === createState.step) cls = 'active';
+    h += '<div class="wizard-step ' + cls + '"><span class="step-num">' + (si + 1) + '</span><span class="step-label">' + stepNames[si] + '</span></div>';
+  }
+  h += '</div>';
+
+  if (createState.step === 1) {
+    h += renderCreateStep1();
+  } else if (createState.step === 2) {
+    h += renderCreateStep2();
+  } else {
+    h += renderCreateStep3();
+  }
+  return h;
+}
+
+function renderCreateStep1() {
+  var h = '<div class="card"><div class="card-title">选择一个热点作为创作素材</div>';
+  h += '<div class="hotspot-grid">';
+  hotspots.slice(0, 12).forEach(function(t) {
+    var sel = createState.hotspotId === t.id ? ' selected' : '';
+    h += '<div class="hotspot-card' + sel + '" onclick="selectHotspot(' + t.id + ')">';
+    h += '<div class="hc-title">' + t.title + '</div>';
+    h += '<div class="hc-meta"><span>' + t.source + '</span><span class="hc-heat">热度 ' + t.heat + '</span>';
+    h += '<span class="tag ' + (t.tier === '一级' ? 'tag-red' : (t.tier === '二级' ? 'tag-orange' : 'tag-blue')) + '" style="font-size:10px">' + t.tier + '</span></div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  h += '<div style="margin-top:16px;display:flex;gap:10px">';
+  h += '<button class="btn btn-pri" onclick="goCreateStep(2)" ' + (createState.hotspotId ? '' : 'disabled style="opacity:0.5"') + '>下一步：写作编辑 &rarr;</button>';
+  h += '<button class="btn" onclick="createState.hotspotId=null;createState.step=2;nav(\'create\')">不选热点，直接写</button>';
+  h += '</div></div>';
+  return h;
+}
+
+function renderCreateStep2() {
+  var hotspot = null;
+  if (createState.hotspotId) {
+    for (var hi = 0; hi < hotspots.length; hi++) {
+      if (hotspots[hi].id === createState.hotspotId) { hotspot = hotspots[hi]; break; }
+    }
+  }
+
+  var h = '<div class="card"><div class="card-title">写作编辑器</div>';
+
+  if (hotspot) {
+    h += '<div style="padding:12px;background:#EFF6FF;border-radius:8px;margin-bottom:18px;font-size:13px">';
+    h += '<strong>已选素材：</strong>' + hotspot.title + ' <span class="tag tag-purple" style="margin-left:8px">' + hotspot.biz + '</span>';
+    h += '</div>';
+  }
+
+  /* Title input */
+  h += '<div class="form-group"><label class="form-label">笔记标题</label>';
+  h += '<input class="form-input" id="createTitle" placeholder="输入你的小红书标题，建议加上emoji..." value="' + createState.title.replace(/"/g, '&quot;') + '">';
+  if (hotspot) {
+    h += '<div style="margin-top:8px"><strong style="font-size:12px">推荐标题：</strong> ';
+    hotspot.titles.forEach(function(ti) {
+      h += '<button class="btn btn-sm" style="margin:3px" onclick="document.getElementById(\'createTitle\').value=\'' + ti.replace(/'/g, "\\'") + '\'">' + ti + '</button>';
+    });
+    h += '</div>';
+  }
+  h += '</div>';
+
+  /* Body textarea */
+  h += '<div class="form-group"><label class="form-label">笔记正文</label>';
+  h += '<textarea id="createBody" rows="10" placeholder="开始写你的小红书笔记正文...">' + createState.body.replace(/</g, '&lt;') + '</textarea>';
+  h += '<div style="margin-top:6px;font-size:12px;color:var(--text2)" id="wordCount">0 字</div>';
+  if (hotspot) {
+    h += '<div style="margin-top:8px;padding:10px;background:#F9FAFB;border-radius:6px">';
+    h += '<strong style="font-size:12px">内容框架参考：</strong><span style="font-size:13px;margin-left:6px">' + hotspot.framework + '</span>';
+    h += '</div>';
+  }
+  h += '</div>';
+
+  /* Style selector */
+  h += '<div class="form-group"><label class="form-label">文案风格</label>';
+  h += '<div class="style-grid">';
+  contentStyles.forEach(function(s) {
+    var sel = createState.copyStyle === s.name ? ' selected' : '';
+    h += '<div class="style-card' + sel + '" onclick="selectStyle(\'' + s.name + '\')">';
+    h += '<div class="sc-icon">' + s.icon + '</div>';
+    h += '<div class="sc-name">' + s.name + '</div>';
+    h += '<div style="font-size:11px;color:var(--text2);margin-top:2px">' + s.desc + '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  h += '<div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">';
+  h += '<button class="btn btn-pri" onclick="aiGenerate()">✨ AI生成文案</button>';
+  if (createState.copyStyle) {
+    h += '<span style="font-size:12px;color:var(--green);font-weight:600">✓ 已选风格：' + createState.copyStyle + '，点击左侧按钮生成专属提示词</span>';
+  } else {
+    h += '<span style="font-size:12px;color:var(--text2)">请先点击上方风格卡片选择风格，再点"AI生成文案"获取专属提示词</span>';
+  }
+  h += '</div></div>';
+
+  /* Tags input */
+  h += '<div class="form-group"><label class="form-label">标签（用逗号分隔）</label>';
+  h += '<input class="form-input" id="createTags" placeholder="例如：央行, 降准, 理财" value="' + createState.tags.join(', ') + '">';
+  if (hotspot) {
+    h += '<div style="margin-top:6px"><strong style="font-size:12px">推荐标签：</strong> ';
+    hotspot.tags.forEach(function(tag) {
+      h += '<button class="btn btn-sm" style="margin:3px" onclick="appendTag(\'' + tag + '\')"> ' + tag + '</button>';
+    });
+    h += '</div>';
+  }
+  h += '</div>';
+
+  h += '<div style="display:flex;gap:10px">';
+  h += '<button class="btn" onclick="goCreateStep(1)">&larr; 上一步</button>';
+  h += '<button class="btn btn-pri" onclick="goCreateStep(3)">预览效果 &rarr;</button>';
+  h += '</div>';
+  h += '</div>';
+  return h;
+}
+
+function renderCreateStep3() {
+  var title = createState.title || '未设置标题';
+  var body = createState.body || '未输入正文内容';
+  var tags = createState.tags;
+
+  var h = '<div class="card"><div class="card-title">预览与发布</div>';
+
+  h += '<div class="preview-box">';
+  h += '<div class="preview-title">' + title.replace(/</g, '&lt;') + '</div>';
+  h += '<div class="preview-body">' + body.replace(/</g, '&lt;') + '</div>';
+  if (tags.length > 0) {
+    h += '<div class="preview-tags">';
+    tags.forEach(function(tag) { h += '<span class="tag tag-purple">#' + tag + '</span>'; });
+    h += '</div>';
+  }
+  if (createState.copyStyle) {
+    h += '<div style="margin-top:10px;font-size:12px;color:var(--text2)">文案风格：' + createState.copyStyle + '</div>';
+  }
+  h += '</div>';
+
+  h += '<div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">';
+  h += '<button class="btn btn-pri" onclick="copyAllContent()">📋 复制全部内容</button>';
+  h += '<button class="btn" onclick="copyText(\'' + title.replace(/'/g, "\\'") + '\')">复制标题</button>';
+  h += '<button class="btn" onclick="copyText(\'' + body.replace(/'/g, "\\'").replace(/\n/g, '\\n') + '\')">复制正文</button>';
+  h += '<button class="btn" onclick="goCreateStep(2)">&larr; 返回编辑</button>';
+  h += '<button class="btn btn-pri" onclick="nav(\'compliance\')" style="margin-left:auto">&rarr; 去敏感词检查</button>';
+  h += '</div>';
+
+  h += '</div>';
+
+  /* Stats card */
+  h += '<div class="card"><div class="card-title">内容统计</div>';
+  h += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">';
+  h += '<div style="text-align:center;padding:12px;background:#F9FAFB;border-radius:8px"><div style="font-size:24px;font-weight:700;color:var(--pri)">' + title.length + '</div><div style="font-size:12px;color:var(--text2)">标题字数</div></div>';
+  h += '<div style="text-align:center;padding:12px;background:#F9FAFB;border-radius:8px"><div style="font-size:24px;font-weight:700;color:var(--blue)">' + body.length + '</div><div style="font-size:12px;color:var(--text2)">正文字数</div></div>';
+  h += '<div style="text-align:center;padding:12px;background:#F9FAFB;border-radius:8px"><div style="font-size:24px;font-weight:700;color:var(--green)">' + tags.length + '</div><div style="font-size:12px;color:var(--text2)">标签数量</div></div>';
+  h += '<div style="text-align:center;padding:12px;background:#F9FAFB;border-radius:8px"><div style="font-size:24px;font-weight:700;color:var(--orange)">' + (body.length > 0 && body.length < 200 ? '偏短' : (body.length >= 200 && body.length <= 800 ? '适中' : (body.length > 800 ? '偏长' : '未填'))) + '</div><div style="font-size:12px;color:var(--text2)">内容长度</div></div>';
+  h += '</div>';
+
+  h += '<div style="margin-top:14px;padding:12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:13px">';
+  h += '💡 <strong>发布建议：</strong>标题建议15-25字，正文300-600字最佳，标签5-8个。发布前请先进行敏感词检查。';
+  h += '</div></div>';
+  return h;
+}
+
+function renderCompliance() {
+  var h = renderTopbar();
+  h += '<div class="page-title">敏感词筛查中心</div>';
+
+  h += '<div class="card"><div class="card-title">输入待检测文案</div>';
+  h += '<textarea id="complianceInput" rows="8" placeholder="请粘贴你的小红书文案内容，系统将自动检测违规词、风险词及缺失的合规声明..."></textarea>';
+  h += '<div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">';
+  h += '<button class="btn btn-pri" onclick="checkCompliance()">开始检测（' + bannedWords.length + '个敏感词）</button>';
+  h += '<a href="https://www.lingkechaci.com/" target="_blank" class="btn">零克查词（在线检测）</a>';
+  h += '</div></div>';
+
+  h += '<div id="complianceResult"></div>';
+
+  h += '<div class="card" style="margin-top:20px"><div class="card-title">当前敏感词库（' + bannedWords.length + '个）</div>';
+  h += '<div style="display:flex;flex-wrap:wrap;gap:6px">';
+  bannedWords.forEach(function(w) {
+    var isDanger = dangerWords.indexOf(w) >= 0;
+    h += '<span class="tag ' + (isDanger ? 'tag-red' : 'tag-orange') + '">' + w + '</span>';
+  });
+  h += '</div></div>';
+  return h;
+}
+
+/* ========== INTERACTIONS ========== */
+
+function nav(page) {
+  currentPage = page;
+  var items = document.querySelectorAll('.nav-item');
+  items.forEach(function(item) { item.classList.remove('active'); });
+  var pageMap = {hotspots:0, viral:1, topics:2, weekly:3, create:4, compliance:5};
+  var idx = pageMap[page];
+  if (idx !== undefined) { items[idx].classList.add('active'); }
+  var renderers = {hotspots:renderHotspots, viral:renderViral, topics:renderTopics, weekly:renderWeekly, create:renderCreate, compliance:renderCompliance};
+  var fn = renderers[page];
+  if (fn) { document.getElementById('main').innerHTML = fn(); startClock(); bindCreateEvents(); }
+}
+
+function bindCreateEvents() {
+  var titleEl = document.getElementById('createTitle');
+  var bodyEl = document.getElementById('createBody');
+  var tagsEl = document.getElementById('createTags');
+  if (titleEl) {
+    titleEl.addEventListener('input', function() { createState.title = this.value; });
+  }
+  if (bodyEl) {
+    bodyEl.addEventListener('input', function() {
+      createState.body = this.value;
+      var wc = document.getElementById('wordCount');
+      if (wc) wc.textContent = this.value.length + ' \u5B57';
+    });
+    var wc = document.getElementById('wordCount');
+    if (wc) wc.textContent = bodyEl.value.length + ' \u5B57';
+  }
+  if (tagsEl) {
+    tagsEl.addEventListener('input', function() {
+      createState.tags = this.value.split(/[,，]/).map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+    });
+  }
+}
+
+function toggleTopic(id) {
+  var el = document.getElementById('topic-' + id);
+  if (el) { el.classList.toggle('show'); }
+}
+
+function filterHot(tier) {
+  var tabs = document.querySelectorAll('#hotTabs .tab');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  event.target.classList.add('active');
+  var rows = document.querySelectorAll('#hotTable .topic-row');
+  rows.forEach(function(r) {
+    if (tier === '\u5168\u90E8') { r.style.display = ''; }
+    else { r.style.display = r.dataset.tier === tier ? '' : 'none'; }
+  });
+  document.querySelectorAll('#hotTable .expand-row').forEach(function(r) { r.classList.remove('show'); });
+}
+
+function filterViral(platform) {
+  var tabs = document.querySelectorAll('#viralTabs .tab');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  event.target.classList.add('active');
+  var rows = document.querySelectorAll('#viralTable .topic-row');
+  rows.forEach(function(r) {
+    if (platform === '全部') { r.style.display = ''; }
+    else { r.style.display = r.dataset.platform === platform ? '' : 'none'; }
+  });
+  document.querySelectorAll('#viralTable .expand-row').forEach(function(r) { r.classList.remove('show'); });
+}
+
+function searchHot() {
+  var q = document.getElementById('hotSearch').value.toLowerCase();
+  var rows = document.querySelectorAll('#hotTable .topic-row');
+  rows.forEach(function(r) {
+    r.style.display = r.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+  });
+  document.querySelectorAll('#hotTable .expand-row').forEach(function(r) { r.classList.remove('show'); });
+}
+
+
+function selectHotspot(id) {
+  createState.hotspotId = id;
+  nav('create');
+}
+
+function createFromHotspot(id) {
+  createState.hotspotId = id;
+  createState.step = 2;
+  var hotspot = null;
+  for (var hi = 0; hi < hotspots.length; hi++) {
+    if (hotspots[hi].id === id) { hotspot = hotspots[hi]; break; }
+  }
+  if (hotspot) {
+    createState.title = hotspot.titles[0] || '';
+    createState.tags = hotspot.tags.slice();
+  }
+  nav('create');
+}
+
+function goCreateStep(step) {
+  /* Save current form state before navigating */
+  var titleEl = document.getElementById('createTitle');
+  var bodyEl = document.getElementById('createBody');
+  var tagsEl = document.getElementById('createTags');
+  if (titleEl) createState.title = titleEl.value;
+  if (bodyEl) createState.body = bodyEl.value;
+  if (tagsEl) createState.tags = tagsEl.value.split(/[,，]/).map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+
+  if (step === 3) {
+    if (!createState.title.trim() && !createState.body.trim()) {
+      toast('\u8BF7\u81F3\u5C11\u586B\u5199\u6807\u9898\u6216\u6B63\u6587', 'warning');
+      return;
+    }
+  }
+  createState.step = step;
+  nav('create');
+}
+
+function selectStyle(name) {
+  createState.copyStyle = name;
+  nav('create');
+  toast('\u5DF2\u9009\u62E9\u6587\u6848\u98CE\u683C\uFF1A' + name, 'success');
+}
+
+var aiPrompt = '';
+
+function aiGenerate() {
+  if (!createState.copyStyle) {
+    toast('\u8BF7\u5148\u9009\u62E9\u4E00\u4E2A\u6587\u6848\u98CE\u683C', 'warning');
+    return;
+  }
+  var style = null;
+  contentStyles.forEach(function(s) { if (s.name === createState.copyStyle) style = s; });
+  var hotspot = null;
+  if (createState.hotspotId) {
+    for (var hi = 0; hi < hotspots.length; hi++) {
+      if (hotspots[hi].id === createState.hotspotId) { hotspot = hotspots[hi]; break; }
+    }
+  }
+
+  var prompt = '\u8BF7\u6839\u636E\u4EE5\u4E0B\u6846\u67B6\u4E3A\u6211\u751F\u6210\u4E00\u7BC7\u5C0F\u7EA2\u4E66\u8D22\u7ECF\u7C7B\u7B14\u8BB0\uFF1A\n\n';
+  if (hotspot) {
+    prompt += '\u9009\u9898\u7D20\u6750\uFF1A' + hotspot.title + '\n';
+    prompt += '\u7D20\u6750\u6765\u6E90\uFF1A' + hotspot.source + '\n';
+    prompt += '\u5185\u5BB9\u6846\u67B6\uFF1A' + hotspot.framework + '\n';
+    prompt += '\u63A8\u8350\u6807\u7B7E\uFF1A' + hotspot.tags.join('\u3001') + '\n';
+  } else {
+    prompt += '\u9009\u9898\u65B9\u5411\uFF1A\u8D22\u7ECF\u79D1\u666E/\u70ED\u70B9\u89E3\u8BFB\uFF08\u8BF7\u56F4\u7ED5\u4ECA\u65E5\u8D22\u7ECF\u70ED\u70B9\u81EA\u9009\u89D2\u5EA6\uFF09\n';
+  }
+  prompt += '\u6587\u6848\u98CE\u683C\uFF1A' + style.name + '\uFF08' + style.desc + '\uFF09\n';
+  if (createState.title) { prompt += '\u53C2\u8003\u6807\u9898\uFF1A' + createState.title + '\n'; }
+  prompt += '\n\u8981\u6C42\uFF1A\n';
+  prompt += '1. \u6807\u989820\u5B57\u4EE5\u5185\uFF0C\u53EA\u4F7F\u7528\u6587\u5B57\u548C\u6807\u70B9\uFF0C\u4E0D\u4F7F\u7528emoji\uFF1B\n';
+  prompt += '2. \u6B63\u6587500-800\u5B57\uFF0C\u53EF\u9002\u5F53\u4F7F\u7528emoji\u548C\u5206\u6BB5\uFF0C\u7B26\u5408\u5C0F\u7EA2\u4E66\u9605\u8BFB\u4E60\u60EF\uFF1B\n';
+  prompt += '3. \u7ED3\u5C3E\u96445-8\u4E2A\u8BDD\u9898\u6807\u7B7E\uFF1B\n';
+  prompt += '4. \u4E25\u683C\u9075\u5B88\u8BC1\u5238\u884C\u4E1A\u5408\u89C4\u8981\u6C42\uFF1A\u4E0D\u5F97\u627F\u8BFA\u6536\u76CA\u3001\u4E0D\u5F97\u4FDD\u672C\u4FDD\u6536\u76CA\u3001\u4E0D\u5F97\u8BF1\u5BFC\u5F00\u6237\uFF0C\u63D0\u53CA\u57FA\u91D1\u9700\u9644\u98CE\u9669\u63D0\u793A\uFF0C\u63D0\u53CA\u6536\u76CA\u9700\u58F0\u660E\u201C\u8FC7\u5F80\u4E1A\u7EE9\u4E0D\u4EE3\u8868\u672A\u6765\u201D\u3002';
+  aiPrompt = prompt;
+
+  var body = '<div style="font-size:14px;line-height:1.8">';
+  body += '<p style="margin-bottom:12px">\u8BF7\u590D\u5236\u4EE5\u4E0B\u63D0\u793A\u8BCD\uFF0C\u7C98\u8D34\u5230 QoderWork \u5BF9\u8BDD\u7A97\u53E3\u4E2D\uFF0CAI\u5C06\u4E3A\u4F60\u751F\u6210\u5B8C\u6574\u6587\u6848\uFF1A</p>';
+  body += '<div class="script-box" style="font-size:12px">' + prompt.replace(/</g, '&lt;') + '</div>';
+  body += '<button class="btn btn-pri" style="margin-top:12px" onclick="copyText(aiPrompt)">\u590D\u5236\u63D0\u793A\u8BCD</button>';
+  body += '<p style="margin-top:12px;color:var(--text2);font-size:13px">\u751F\u6210\u540E\uFF0C\u5C06\u6587\u6848\u7C98\u8D34\u56DE\u4E0A\u65B9\u7684\u6807\u9898/\u6B63\u6587\u7F16\u8F91\u6846\u4E2D\uFF0C\u7136\u540E\u4F7F\u7528\u201C\u654F\u611F\u8BCD\u7B5B\u67E5\u201D\u529F\u80FD\u786E\u8BA4\u5408\u89C4\u3002</p></div>';
+  openModal('AI\u6587\u6848\u751F\u6210\u5F15\u5BFC', body);
+}
+
+function appendTag(tag) {
+  var tagsEl = document.getElementById('createTags');
+  if (tagsEl) {
+    var current = tagsEl.value;
+    var arr = current.split(/[,，]/).map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+    if (arr.indexOf(tag) < 0) { arr.push(tag); }
+    tagsEl.value = arr.join(', ');
+    createState.tags = arr;
+  }
+}
+
+function copyAllContent() {
+  var title = createState.title || '';
+  var body = createState.body || '';
+  var tags = createState.tags;
+  var all = title + '\n\n' + body;
+  if (tags.length > 0) {
+    all += '\n\n';
+    tags.forEach(function(t) { all += '#' + t + ' '; });
+  }
+  copyText(all);
+}
+
+function checkCompliance() {
+  var text = document.getElementById('complianceInput').value;
+  if (!text.trim()) { toast('\u8BF7\u5148\u8F93\u5165\u5F85\u68C0\u6D4B\u7684\u6587\u6848\u5185\u5BB9', 'warning'); return; }
+
+  var dangers = [];
+  var warnings = [];
+  var missingDecl = [];
+
+  bannedWords.forEach(function(w) {
+    if (text.indexOf(w) >= 0) {
+      if (dangerWords.indexOf(w) >= 0) { dangers.push(w); }
+      else { warnings.push(w); }
+    }
+  });
+
+  if (text.indexOf('\u57FA\u91D1') >= 0 && text.indexOf('\u98CE\u9669') < 0) { missingDecl.push('\u63D0\u53CA\u57FA\u91D1\u4EA7\u54C1\u4F46\u672A\u5305\u542B\u98CE\u9669\u63D0\u793A'); }
+  if (text.indexOf('\u6536\u76CA') >= 0 && text.indexOf('\u8FC7\u5F80') < 0 && text.indexOf('\u5386\u53F2') < 0) { missingDecl.push('\u63D0\u53CA\u6536\u76CA\u4F46\u672A\u58F0\u660E\u201C\u8FC7\u5F80\u4E1A\u7EE9\u4E0D\u4EE3\u8868\u672A\u6765\u201D'); }
+  if (text.indexOf('\u5F00\u6237') >= 0 && text.indexOf('\u98CE\u9669') < 0) { missingDecl.push('\u6D89\u53CA\u5F00\u6237\u5F15\u5BFC\u4F46\u672A\u5305\u542B\u98CE\u9669\u58F0\u660E'); }
+  if (text.indexOf('\u63A8\u8350') >= 0 && text.indexOf('\u98CE\u9669') < 0) { missingDecl.push('\u6D89\u53CA\u4EA7\u54C1\u63A8\u8350\u4F46\u672A\u5305\u542B\u98CE\u9669\u58F0\u660E'); }
+
+  var annotated = text;
+  dangers.forEach(function(w) { annotated = annotated.replace(new RegExp(w, 'g'), '<span class="text-danger">' + w + '</span>'); });
+  warnings.forEach(function(w) { annotated = annotated.replace(new RegExp(w, 'g'), '<span class="text-warning">' + w + '</span>'); });
+
+  var score = 100 - dangers.length * 20 - warnings.length * 8 - missingDecl.length * 10;
+  score = Math.max(0, score);
+  var scoreColor = score >= 80 ? 'var(--green)' : (score >= 50 ? 'var(--orange)' : 'var(--pri)');
+  var scoreLabel = score >= 80 ? '\u4F18\u79C0' : (score >= 50 ? '\u9700\u4FEE\u6539' : '\u4E25\u91CD\u8FDD\u89C4');
+
+  var h = '';
+  h += '<div class="card"><div class="card-title">\u68C0\u6D4B\u7ED3\u679C</div>';
+  h += '<div style="text-align:center;margin-bottom:20px"><div style="font-size:52px;font-weight:700;color:' + scoreColor + '">' + score + '</div>';
+  h += '<div style="font-size:14px;color:var(--text2)">\u5408\u89C4\u8BC4\u5206 \u00B7 ' + scoreLabel + '</div></div>';
+
+  if (dangers.length > 0) {
+    h += '<div class="result-box result-danger"><strong>\u9AD8\u5371\u8BCD\u6C47\uFF08' + dangers.length + '\u4E2A\uFF09\u2014 \u8BF7\u7ACB\u5373\u5220\u9664\u6216\u66FF\u6362\uFF1A</strong><br>';
+    dangers.forEach(function(d) { h += '<span class="tag tag-red" style="margin:4px">' + d + '</span> '; });
+    h += '<p style="margin-top:8px;font-size:13px">\u8FD9\u4E9B\u8BCD\u6C47\u4E25\u91CD\u8FDD\u53CD\u5E7F\u544A\u6CD5\uFF0C\u53D1\u5E03\u540E\u53EF\u80FD\u5BFC\u81F4\u7B14\u8BB0\u88AB\u9650\u6D41\u751A\u81F3\u8D26\u53F7\u5904\u7F5A\u3002</p></div>';
+  }
+  if (warnings.length > 0) {
+    h += '<div class="result-box result-warning"><strong>\u98CE\u9669\u8BCD\u6C47\uFF08' + warnings.length + '\u4E2A\uFF09\u2014 \u5EFA\u8BAE\u4FEE\u6539\u8868\u8FF0\uFF1A</strong><br>';
+    warnings.forEach(function(w) { h += '<span class="tag tag-orange" style="margin:4px">' + w + '</span> '; });
+    h += '<p style="margin-top:8px;font-size:13px">\u8FD9\u4E9B\u8BCD\u6C47\u53EF\u80FD\u5F15\u8D77\u5408\u89C4\u98CE\u9669\u6216\u5E73\u53F0\u964D\u6743\uFF0C\u5EFA\u8BAE\u66FF\u6362\u4E3A\u66F4\u6E29\u548C\u7684\u8868\u8FF0\u3002</p></div>';
+  }
+  if (missingDecl.length > 0) {
+    h += '<div class="result-box result-warning"><strong>\u7F3A\u5931\u5408\u89C4\u58F0\u660E\uFF08' + missingDecl.length + '\u9879\uFF09\uFF1A</strong><br>';
+    missingDecl.forEach(function(m) { h += '<div style="padding:5px 0;font-size:13px">\u26A0\uFE0F ' + m + '</div>'; });
+    h += '</div>';
+  }
+  if (dangers.length === 0 && warnings.length === 0 && missingDecl.length === 0) {
+    h += '<div class="result-box result-ok"><strong>\u2705 \u672C\u5730\u68C0\u6D4B\u901A\u8FC7</strong><br><p style="font-size:13px;margin-top:8px">\u672A\u68C0\u6D4B\u5230\u654F\u611F\u8BCD\u53CA\u7F3A\u5931\u58F0\u660E\u3002\u5EFA\u8BAE\u540C\u65F6\u4F7F\u7528\u201C\u96F6\u514B\u67E5\u8BCD\u201D\u8FDB\u884C\u4E8C\u6B21\u9A8C\u8BC1\u540E\u518D\u53D1\u5E03\u3002</p></div>';
+  }
+
+  h += '<div style="margin-top:18px"><strong>\u6807\u6CE8\u9884\u89C8\uFF08\u7EA2\u8272=\u9AD8\u5371\uFF0C\u9EC4\u8272=\u98CE\u9669\uFF09\uFF1A</strong></div>';
+  h += '<div style="margin-top:10px;padding:18px;background:#F9FAFB;border-radius:8px;font-size:14px;line-height:1.8;white-space:pre-wrap;border:1px solid var(--border)">' + annotated + '</div>';
+  h += '</div>';
+  document.getElementById('complianceResult').innerHTML = h;
+}
+
+/* ========== CLOCK ========== */
+var clockTimer = null;
+function startClock() {
+  if (clockTimer) clearInterval(clockTimer);
+  clockTimer = setInterval(function() {
+    var el = document.getElementById('clock');
+    if (!el) return;
+    var now = new Date();
+    el.textContent = now.getFullYear() + '\u5E74' + (now.getMonth()+1) + '\u6708' + now.getDate() + '\u65E5 ' + ('0'+now.getHours()).slice(-2) + ':' + ('0'+now.getMinutes()).slice(-2) + ':' + ('0'+now.getSeconds()).slice(-2);
+  }, 1000);
+}
+
+
+/* ========== HISTORY ========== */
+var _historyDates = [];
+var _historyLoading = false;
+
+function loadHistoryIndex() {
+  var s = document.createElement("script");
+  s.src = "../history/index.js";
+  s.onload = function() {
+    if (typeof HISTORY_DATES !== "undefined") {
+      _historyDates = HISTORY_DATES;
+    }
+    buildDateSelector(_historyDates);
+  };
+  s.onerror = function() {};
+  document.head.appendChild(s);
+}
+
+function buildDateSelector(dates) {
+  var slot = document.getElementById("history-selector-slot");
+  if (!slot) return;
+  var html = '<span class="history-selector">';
+  html += '<select id="history-date-select" onchange="onHistoryDateChange(this.value)">';
+  html += '<option value="">今日数据</option>';
+  for (var i = dates.length - 1; i >= 0; i--) {
+    var selected = (dates[i] === currentHistoryDate) ? " selected" : "";
+    html += '<option value="' + dates[i] + '"' + selected + '>' + dates[i] + '</option>';
+  }
+  html += '</select>';
+  html += '<span id="history-badge"></span>';
+  html += '</span>';
+  slot.innerHTML = html;
+  updateDateLabel(currentHistoryDate);
+}
+
+function onHistoryDateChange(dateStr) {
+  if (_historyLoading) return;
+  if (!dateStr) {
+    loadTodayData();
+    return;
+  }
+  loadHistoryData(dateStr);
+}
+
+function loadHistoryData(dateStr) {
+  _historyLoading = true;
+  var old = document.getElementById("history-data-script");
+  if (old) old.remove();
+  var s = document.createElement("script");
+  s.id = "history-data-script";
+  s.src = "../history/data-" + dateStr + ".js";
+  s.onload = function() {
+    currentHistoryDate = dateStr;
+    _historyLoading = false;
+    refreshCurrentView();
+    updateDateLabel(dateStr);
+  };
+  s.onerror = function() {
+    _historyLoading = false;
+    alert("该日期数据未找到: " + dateStr);
+  };
+  document.head.appendChild(s);
+}
+
+function loadTodayData() {
+  _historyLoading = true;
+  var old = document.getElementById("history-data-script");
+  if (old) old.remove();
+  /* Reload by re-injecting inline data from original script */
+  currentHistoryDate = "";
+  _historyLoading = false;
+  refreshCurrentView();
+  updateDateLabel("");
+}
+
+function refreshCurrentView() {
+  if (currentPage) {
+    nav(currentPage);
+  }
+}
+
+function updateDateLabel(dateStr) {
+  var badge = document.getElementById("history-badge");
+  if (!badge) return;
+  if (dateStr) {
+    badge.innerHTML = '<span class="history-badge">\u5386\u53f2: ' + dateStr + '</span>';
+  } else {
+    badge.innerHTML = "";
+  }
+  var sel = document.getElementById("history-date-select");
+  if (sel) sel.value = dateStr;
+}
+
+/* ========== INIT ========== */
+loadHistoryIndex();
+nav('hotspots');
+</script>
+</body>
+</html>
