@@ -2153,6 +2153,7 @@ function renderHotspots() {
 function renderTopics() {
   var h = renderTopbar();
   h += '<div class="page-title">今日选题计划 <span class="badge">' + topicPlans.length + '个选题</span></div>';
+  h += '<div class="card" style="padding:12px 18px;margin-bottom:16px">' + historySelectorHTML() + '</div>';
   h += '<div class="toolbar">';
   h += '<button class="btn btn-pri" onclick="exportTopicsExcel()">导出选题表</button>';
   h += '</div>';
@@ -2236,6 +2237,8 @@ function renderViralContent() {
 
   var h = renderTopbar();
   h += '<div class="page-title">平台爆款 <span class="badge">' + viralContent.length + '条</span></div>';
+
+  h += '<div class="card" style="padding:12px 18px;margin-bottom:16px">' + historySelectorHTML() + '</div>';
 
   h += '<div class="tabs" id="viralContentTabs">';
   h += '<div class="tab active" onclick="filterViral(\'全部\')">全部 (' + viralContent.length + ')</div>';
@@ -3092,6 +3095,27 @@ function startClock() {
 var _historyDates = [];
 var _historyLoading = false;
 
+function historySelectorHTML() {
+  var html = '<div class="history-selector" style="width:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap">';
+  html += '<span style="font-size:13px;font-weight:600;color:var(--text)">&#x1F4C5; 历史版本</span>';
+  if (_historyDates.length > 0) {
+    html += '<select class="history-date-select" onchange="onHistoryDateChange(this.value)" style="padding:6px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text);background:#fff;cursor:pointer;min-width:140px">';
+    html += '<option value="">今日数据</option>';
+    for (var i = _historyDates.length - 1; i >= 0; i--) {
+      var selected = (_historyDates[i] === currentHistoryDate) ? " selected" : "";
+      html += '<option value="' + _historyDates[i] + '"' + selected + '>' + _historyDates[i] + '</option>';
+    }
+    html += '</select>';
+  } else {
+    html += '<span style="font-size:12px;color:var(--text2)">暂无历史数据</span>';
+  }
+  if (currentHistoryDate) {
+    html += '<span class="history-badge" style="background:var(--pri-light);color:var(--pri);font-size:11px;padding:3px 10px;border-radius:4px;font-weight:500">当前查看: ' + currentHistoryDate + '</span>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function loadHistoryIndex() {
   if (typeof HISTORY_DATES !== "undefined" && HISTORY_DATES.length > 0) {
     _historyDates = HISTORY_DATES;
@@ -3123,7 +3147,7 @@ function buildDateSelector(dates) {
   if (!slot) return;
   var html = '<div class="history-selector">';
   if (dates.length > 0) {
-    html += '<select id="history-date-select" onchange="onHistoryDateChange(this.value)">';
+    html += '<select id="history-date-select" class="history-date-select" onchange="onHistoryDateChange(this.value)">';
     html += '<option value="">今日数据</option>';
     for (var i = dates.length - 1; i >= 0; i--) {
       var selected = (dates[i] === currentHistoryDate) ? " selected" : "";
@@ -3172,15 +3196,16 @@ function loadTodayData() {
 }
 
 function updateDateLabel(dateStr) {
-  var badge = document.getElementById("history-badge");
-  if (!badge) return;
-  if (dateStr) {
-    badge.innerHTML = '<span class="history-badge">\u5386\u53f2: ' + dateStr + '</span>';
-  } else {
-    badge.innerHTML = "";
-  }
-  var sel = document.getElementById("history-date-select");
-  if (sel) sel.value = dateStr;
+  var badges = document.querySelectorAll(".history-badge");
+  badges.forEach(function(badge) {
+    if (dateStr) {
+      badge.innerHTML = '<span class="history-badge">\u5386\u53f2: ' + dateStr + '</span>';
+    } else {
+      badge.innerHTML = "";
+    }
+  });
+  var sels = document.querySelectorAll(".history-date-select");
+  sels.forEach(function(sel) { sel.value = dateStr; });
 }
 
 /* ========== MOBILE SIDEBAR ========== */
