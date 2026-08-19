@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小红书工作台 简易版1.2 - 方正证券</title>
+<script src="../history/index.js"></script>
 <style>
 :root {
   --pri: #E01E23; --pri-light: #FFF0F0; --pri-dark: #B8161B;
@@ -1856,14 +1857,25 @@ var _historyDates = [];
 var _historyLoading = false;
 
 function loadHistoryIndex() {
+  if (typeof HISTORY_DATES !== "undefined" && HISTORY_DATES.length > 0) {
+    _historyDates = HISTORY_DATES;
+    buildDateSelector(_historyDates);
+    return;
+  }
   var s = document.createElement("script");
-  s.src = "../history/index.js";
+  s.src = "../history/index.js?t=" + Date.now();
   s.onload = function() {
     if (typeof HISTORY_DATES !== "undefined") _historyDates = HISTORY_DATES;
     buildDateSelector(_historyDates);
   };
   s.onerror = function() { buildDateSelector([]); };
   document.head.appendChild(s);
+  setTimeout(function() {
+    if (_historyDates.length === 0 && typeof HISTORY_DATES !== "undefined") {
+      _historyDates = HISTORY_DATES;
+      buildDateSelector(_historyDates);
+    }
+  }, 3000);
 }
 
 function buildDateSelector(dates) {
