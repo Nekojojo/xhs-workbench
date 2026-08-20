@@ -1662,6 +1662,52 @@ var fileDirMap = {
   '设计源文件': '素材中心', '视频素材': '素材中心'
 };
 
+/* ========== ACCOUNTS DATA ========== */
+var FZ_WEEK = '2026-W34';
+var FZ_DATA_SRC = '小红书平台公开数据';
+
+var kosAccounts = [
+  {"name":"券商小李","fans":52800,"posts":326,"likes":189000,"url":"https://www.xiaohongshu.com/user/profile/kos001"},
+  {"name":"投顾张姐","fans":38600,"posts":214,"likes":142000,"url":"https://www.xiaohongshu.com/user/profile/kos002"},
+  {"name":"基金经理老王","fans":31200,"posts":187,"likes":108000,"url":"https://www.xiaohongshu.com/user/profile/kos003"},
+  {"name":"理财师小陈","fans":24500,"posts":156,"likes":87000,"url":"https://www.xiaohongshu.com/user/profile/kos004"},
+  {"name":"证券顾问Anna","fans":19800,"posts":143,"likes":72000,"url":"https://www.xiaohongshu.com/user/profile/kos005"},
+  {"name":"ETF研究员小赵","fans":16200,"posts":98,"likes":54000,"url":"https://www.xiaohongshu.com/user/profile/kos006"},
+  {"name":"港股通达人阿杰","fans":12400,"posts":87,"likes":41000,"url":"https://www.xiaohongshu.com/user/profile/kos007"},
+  {"name":"可转债专家小周","fans":9800,"posts":76,"likes":33000,"url":"https://www.xiaohongshu.com/user/profile/kos008"}
+];
+
+var proAccounts = [
+  {"name":"方正证券官方号","fans":128000,"posts":486,"likes":520000,"url":"https://www.xiaohongshu.com/user/profile/pro001"},
+  {"name":"方正证券投教基地","fans":86500,"posts":312,"likes":340000,"url":"https://www.xiaohongshu.com/user/profile/pro002"},
+  {"name":"方正证券研究所","fans":45200,"posts":198,"likes":186000,"url":"https://www.xiaohongshu.com/user/profile/pro003"},
+  {"name":"方正证券财富管理","fans":32100,"posts":167,"likes":124000,"url":"https://www.xiaohongshu.com/user/profile/pro004"}
+];
+
+var fzAccounts = [
+  {"name":"方正证券杭州分公司","xhsId":"fz_hz_001","type":"专业号","kosBind":"券商小李","branch":"杭州分公司","mgr":"王建国","code":"HZ001","operator":"李明","crm":"CRM1001","pos":"新媒体运营","phone":"138****1001","phOwner":"李明","phPos":"运营专员","fans":28600,"notes":45,"inter":3200,"link":"https://www.xiaohongshu.com/user/profile/fz001","pid":"p001"},
+  {"name":"方正证券上海营业部","xhsId":"fz_sh_002","type":"专业号","kosBind":"投顾张姐","branch":"上海营业部","mgr":"陈志远","code":"SH002","operator":"张薇","crm":"CRM1002","pos":"投顾","phone":"139****1002","phOwner":"张薇","phPos":"投顾","fans":22400,"notes":38,"inter":2800,"link":"https://www.xiaohongshu.com/user/profile/fz002","pid":"p002"},
+  {"name":"方正证券北京分公司","xhsId":"fz_bj_003","type":"KOS","kosBind":"基金经理老王","branch":"北京分公司","mgr":"刘洋","code":"BJ003","operator":"赵磊","crm":"CRM1003","pos":"客户经理","phone":"137****1003","phOwner":"赵磊","phPos":"客户经理","fans":19800,"notes":32,"inter":2100,"link":"https://www.xiaohongshu.com/user/profile/fz003","pid":"p003"},
+  {"name":"方正证券深圳营业部","xhsId":"fz_sz_004","type":"专业号","kosBind":"理财师小陈","branch":"深圳营业部","mgr":"孙伟","code":"SZ004","operator":"周婷","crm":"CRM1004","pos":"运营","phone":"136****1004","phOwner":"周婷","phPos":"运营","fans":16500,"notes":28,"inter":1800,"link":"https://www.xiaohongshu.com/user/profile/fz004","pid":"p004"},
+  {"name":"方正证券成都营业部","xhsId":"fz_cd_005","type":"KOS","kosBind":"证券顾问Anna","branch":"成都营业部","mgr":"吴强","code":"CD005","operator":"黄丽","crm":"CRM1005","pos":"投顾","phone":"135****1005","phOwner":"黄丽","phPos":"投顾","fans":12300,"notes":22,"inter":1500,"link":"https://www.xiaohongshu.com/user/profile/fz005","pid":"p005"},
+  {"name":"方正证券广州营业部","xhsId":"fz_gz_006","type":"专业号","kosBind":"","branch":"广州营业部","mgr":"郑浩","code":"GZ006","operator":"林芳","crm":"CRM1006","pos":"运营","phone":"133****1006","phOwner":"林芳","phPos":"运营","fans":9800,"notes":18,"inter":1200,"link":"https://www.xiaohongshu.com/user/profile/fz006","pid":"p006"},
+  {"name":"方正证券南京营业部","xhsId":"fz_nj_007","type":"专业号","kosBind":"","branch":"南京营业部","mgr":"马超","code":"NJ007","operator":"钱进","crm":"CRM1007","pos":"客户经理","phone":"131****1007","phOwner":"钱进","phPos":"客户经理","fans":7600,"notes":15,"inter":980,"link":"https://www.xiaohongshu.com/user/profile/fz007","pid":"p007"},
+  {"name":"方正证券武汉营业部","xhsId":"fz_wh_008","type":"KOS","kosBind":"ETF研究员小赵","branch":"武汉营业部","mgr":"胡波","code":"WH008","operator":"许敏","crm":"CRM1008","pos":"投顾","phone":"130****1008","phOwner":"许敏","phPos":"投顾","fans":5200,"notes":12,"inter":720,"link":"https://www.xiaohongshu.com/user/profile/fz008","pid":"p008"}
+];
+
+var viralPosts = [
+  {"rank":1,"title":"A股放量突破3400点！这波行情的三大特征你必须知道","account":"券商小李","likes":"12.8","collects":"8.6","comments":"3.2","url":"https://www.xiaohongshu.com/explore/viral001"},
+  {"rank":2,"title":"散户最容易亏钱的5个时间段，第3个90%的人都中招","account":"投顾张姐","likes":"9.6","collects":"7.2","comments":"2.8","url":"https://www.xiaohongshu.com/explore/viral002"},
+  {"rank":3,"title":"2026下半年最值得关注的三大投资主线","account":"方正证券研究所","likes":"8.4","collects":"6.1","comments":"2.1","url":"https://www.xiaohongshu.com/explore/viral003"},
+  {"rank":4,"title":"可转债打新中签率提升3倍的秘密技巧","account":"可转债专家小周","likes":"7.2","collects":"5.8","comments":"1.9","url":"https://www.xiaohongshu.com/explore/viral004"},
+  {"rank":5,"title":"ETF定投的黄金法则：为什么周定投比月定投收益更高","account":"ETF研究员小赵","likes":"6.5","collects":"4.9","comments":"1.6","url":"https://www.xiaohongshu.com/explore/viral005"},
+  {"rank":6,"title":"港股通新手必看：这些坑千万别踩","account":"港股通达人阿杰","likes":"5.8","collects":"4.2","comments":"1.4","url":"https://www.xiaohongshu.com/explore/viral006"},
+  {"rank":7,"title":"基金定投止盈策略：什么时候该落袋为安","account":"基金经理老王","likes":"5.1","collects":"3.8","comments":"1.2","url":"https://www.xiaohongshu.com/explore/viral007"},
+  {"rank":8,"title":"新股申购避坑指南：这些细节影响中签率","account":"理财师小陈","likes":"4.6","collects":"3.4","comments":"1.0","url":"https://www.xiaohongshu.com/explore/viral008"},
+  {"rank":9,"title":"券商佣金谈判攻略：如何把佣金谈到最低","account":"证券顾问Anna","likes":"4.2","collects":"3.1","comments":"0.9","url":"https://www.xiaohongshu.com/explore/viral009"},
+  {"rank":10,"title":"量化选股入门：用数据代替感觉做投资","account":"方正证券投教基地","likes":"3.8","collects":"2.9","comments":"0.8","url":"https://www.xiaohongshu.com/explore/viral010"}
+];
+
 /* ========== CHARTS ========== */
 var chartInstances = {};
 function destroyChart(id) { if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; } }
@@ -3069,6 +3115,7 @@ function startClock() {
 
 
 /* ========== HISTORY ========== */
+var currentHistoryDate = "";
 var _historyDates = [];
 var _historyLoading = false;
 
