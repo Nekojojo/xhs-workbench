@@ -785,6 +785,7 @@ var hotspots = [
   }
 ];
 
+var _originalHotspots = JSON.parse(JSON.stringify(hotspots));
 
 var topicPlans = [
   {
@@ -969,6 +970,7 @@ var topicPlans = [
   }
 ];
 
+var _originalTopicPlans = JSON.parse(JSON.stringify(topicPlans));
 
 var viralContent = [
   {
@@ -1373,6 +1375,7 @@ var viralContent = [
   }
 ];
 
+var _originalViralContent = JSON.parse(JSON.stringify(viralContent));
 
 var weeklySchedule = [
   {
@@ -1502,6 +1505,8 @@ function renderHotspots() {
 
   var h = renderTopbar();
   h += '<div class="page-title">每日财经热点 <span class="badge">' + hotspots.length + '条</span></div>';
+
+  h += '<div class="card" style="padding:12px 18px;margin-bottom:16px">' + historySelectorHTML() + '</div>';
 
   h += '<div class="tabs" id="hotTabs">';
   h += '<div class="tab active" onclick="filterHot(\'全部\')">全部 (' + hotspots.length + ')</div>';
@@ -1853,7 +1858,7 @@ function nav(page) {
   if (idx !== undefined) { items[idx].classList.add('active'); }
   var renderers = {hotspots:renderHotspots, viral:renderViral, topics:renderTopics, weekly:renderWeekly, create:renderCreate, compliance:renderCompliance};
   var fn = renderers[page];
-  if (fn) { document.getElementById('main').innerHTML = fn(); startClock(); bindCreateEvents(); }
+  if (fn) { document.getElementById('main').innerHTML = fn(); startClock(); bindCreateEvents(); buildDateSelector(_historyDates); }
 }
 
 function bindCreateEvents() {
@@ -2194,6 +2199,9 @@ function loadHistoryData(dateStr) {
 
 function loadTodayData() {
   currentHistoryDate = "";
+  hotspots = JSON.parse(JSON.stringify(_originalHotspots));
+  viralContent = JSON.parse(JSON.stringify(_originalViralContent));
+  topicPlans = JSON.parse(JSON.stringify(_originalTopicPlans));
   updateDateLabel("");
   if (currentPage) nav(currentPage);
 }
