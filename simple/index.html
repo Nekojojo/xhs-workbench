@@ -170,6 +170,8 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
 
 @media (max-width: 1000px) { .sidebar { width: 60px; } .sidebar .logo-text, .sidebar .logo-sub, .sidebar .nav-group-title, .sidebar .nav-item span:not(.icon), .sidebar-footer { display: none; } .main { margin-left: 60px; } .hotspot-grid { grid-template-columns: 1fr; } .style-grid { grid-template-columns: repeat(2, 1fr); } }
 
+.tier-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
 /* ========== MOBILE RESPONSIVE ========== */
 .mobile-hamburger { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; width: 42px; height: 42px; border-radius: 10px; background: #fff; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; align-items: center; justify-content: center; font-size: 22px; color: var(--text); }
 .mobile-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 90; }
@@ -226,6 +228,7 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
   .topic-detail .xhs-titles li { font-size: 13px; }
   .rhythm-box { padding: 14px; }
   .result-box { padding: 14px; }
+  .tier-legend-grid { grid-template-columns: 1fr !important; }
 }
 
 /* History date selector */
@@ -504,6 +507,13 @@ function renderHotspots() {
   h += '<div class="tab" onclick="filterHot(\'二级\')">二级热点 (' + tier2.length + ')</div>';
   h += '<div class="tab" onclick="filterHot(\'常青\')">常青话题 (' + tierE.length + ')</div>';
   h += '</div>';
+  h += '<div style="margin:14px 0;padding:14px 18px;background:#F8F9FC;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;line-height:1.8;color:#4B5563">';
+  h += '<div style="font-weight:700;font-size:14px;color:#1A1A2E;margin-bottom:6px">&#128218; 热点级别说明（怎么用？）</div>';
+  h += '<div class="tier-legend-grid">';
+  h += '<div style="padding:10px 12px;background:#FEE2E2;border-radius:6px;border-left:3px solid #DC2626"><strong style="color:#DC2626">&#x1F534; 一级热点</strong><br>当天最重磅的券商/证券热点，时效性极强。<br><span style="color:#6B7280">建议：当天优先创作，2小时内发布</span></div>';
+  h += '<div style="padding:10px 12px;background:#FEF3C7;border-radius:6px;border-left:3px solid #D97706"><strong style="color:#D97706">&#x1F7E1; 二级热点</strong><br>重要行业新闻和板块动态，可延展创作。<br><span style="color:#6B7280">建议：24小时内发布，可结合投教角度</span></div>';
+  h += '<div style="padding:10px 12px;background:#DBEAFE;border-radius:6px;border-left:3px solid #2563EB"><strong style="color:#2563EB">&#x1F535; 常青话题</strong><br>不受时效影响的投教基础话题，随时可用。<br><span style="color:#6B7280">建议：用于日常内容填充，搭配热点使用</span></div>';
+  h += '</div></div>';
   h += '<div class="search-box"><input type="text" id="hotSearch" placeholder="搜索热点关键词..." oninput="searchHot()"></div>';
 
   h += '<div class="card"><div id="hotTable"><table>';
