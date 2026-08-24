@@ -303,7 +303,6 @@ function closeModal() { document.getElementById('modal-root').innerHTML = ''; }
 var currentHistoryDate = "";
 var currentPage = "hotspots";
 var hotspots = [
-[
   {"id": 1,"title": "四大证券报头版聚焦资本市场改革 多项新政即将落地","source": "新浪财经","heat": 97,"tier": "一级","biz": "市场策略","link": "https://finance.sina.com.cn/stock/y/2026-08-24/doc-inipkeue6372144.shtml","titles": ["四大证券报今天头版都说了什么？一文速览","资本市场改革新政即将落地｜对你的投资有何影响","8月24日四大证券报头版要点全梳理","政策风向标｜四大报释放了哪些重要信号","今日必读｜四大证券报头版核心内容解读"],"tags": ["#四大证券报","#资本市场","#政策","#A股","#投资"],"framework": "头版要点速览→政策信号解读→对各板块影响→投资者应对策略→风险提示"},
   {"id": 2,"title": "万亿级ETF基金公司格局再变 ETF托管银行竞争白热化","source": "财联社","heat": 95,"tier": "一级","biz": "ETF基金","link": "https://www.cls.cn/detail/2256185","titles": ["万亿ETF基金公司再扩容！行业格局加速分化","ETF托管格局生变｜哪些银行在抢食这块蛋糕","ETF规模持续飙升｜背后是哪些力量在推动","基金行业大变局｜ETF成兵家必争之地","万亿级ETF赛道｜普通投资者如何把握机会"],"tags": ["#ETF","#万亿规模","#基金公司","#托管银行","#指数投资"],"framework": "万亿级新闻切入→ETF行业格局变化→托管银行竞争→投资者如何选择ETF→风险提示"},
   {"id": 3,"title": "打新频现肉签 一签最高赚47万 新股市场热度持续攀升","source": "证券时报","heat": 94,"tier": "一级","biz": "新股打新","link": "https://www.stcn.com/article/detail/4088686.html","titles": ["又见肉签！打新一签最多能赚47万你心动了吗","今年打新收益太香了｜中一签赚47万不是梦","打新肉签频出｜手把手教你提高中签率","2026打新全攻略｜从开户到中签一篇搞定","新股打新收益盘点｜哪些肉签你错过了"],"tags": ["#打新","#肉签","#新股","#中签","#理财"],"framework": "肉签新闻引爆→打新收益统计→提高中签率技巧→打新全流程教学→风险提示"},
@@ -324,13 +323,11 @@ var hotspots = [
   {"id": 18,"title": "基金定投策略全指南 每月小额投入长期积累财富","source": "东方财富","heat": 74,"tier": "常青","biz": "ETF基金","link": "https://caifuhao.eastmoney.com/news/20260803110911730319430","titles": ["基金定投全攻略｜每月300元也能开始理财","定投选什么基金好？新手必看的选基指南","基金定投vs一次性买入｜哪种更适合你","定投入门｜从设置到止盈全流程教学","定投3年实录｜小额投入如何攒出第一桶金"],"tags": ["#基金定投","#理财入门","#被动收入","#攒钱","#投资新手"],"framework": "定投概念科普→优势分析→选基方法→定投策略设置→止盈技巧"},
   {"id": 19,"title": "投顾服务费vs交易佣金 两者到底有什么区别","source": "东方财富","heat": 72,"tier": "常青","biz": "投教科普","link": "https://finance.eastmoney.com/a/202608193845171794.html","titles": ["投顾费和佣金到底有什么区别？很多人搞混了","你交的钱都花在哪了？券商费用全解析","佣金和投顾费是一回事吗？3分钟搞明白","券商收费体系科普｜各种费用一次讲清","新手开户必看｜交易成本构成全拆解"],"tags": ["#投顾费","#佣金","#券商费用","#理财知识","#投资者教育"],"framework": "概念混淆现象→佣金定义与构成→投顾费定义与构成→两者核心区别→选择建议"},
   {"id": 20,"title": "港股IPO市场回暖 打新收益与A股打新全面对比","source": "证券时报","heat": 70,"tier": "常青","biz": "新股打新","link": "https://www.stcn.com/article/detail/3580280.html","titles": ["港股IPO回暖｜港股打新和A股打新有啥区别","打新全攻略｜A股vs港股打新收益全对比","港股打新入门｜从开户到中签到卖出全流程","今年打新赚了多少？A股港股打新收益盘点","打新小技巧｜提高中签率的5个实用方法"],"tags": ["#港股IPO","#打新","#A股打新","#港股","#理财技巧"],"framework": "港股IPO新闻→A股vs港股打新对比→各自流程梳理→收益统计→技巧分享"}
-]
 ];
 
 var _originalHotspots = JSON.parse(JSON.stringify(hotspots));
 
 var topicPlans = [
-[
   {"name": "打新肉签全攻略 中一签赚47万是怎么做到的","stars": 5,"viral": 96,"hotTitle": "打新频现肉签 一签最高赚47万","eduTopic": "打新实操教学","eduCategory": "实操技能","direction": "借打新肉签热点，教读者完整打新流程：从开户到申购、中签、缴款、卖出，以及提高中签率的技巧","persona": "打新达人","type": "图文","titles": ["打新肉签来了！手把手教你从开户到中签全流程","中一签赚47万？打新全攻略新手必看","提高中签率的5个技巧｜老股民都在用"],"imgStyle": "打新流程图+收益数据卡片+中签率对比表","copyStyle": "实操教学风格，每步配图，用收益数据激发兴趣但不过度承诺","framework": "热点引入（一签赚47万的肉签）→ 科普干货（打新全流程/条件/技巧）→ 实用总结（打新checklist+常见误区）","compliance": "safe","complianceNote": "打新教学是安全方向。注意：1）不要承诺一定赚钱 2）提及破发风险 3）不推荐特定新股。","time": "08:30","relatedHotId": 3},
   {"name": "两融风险科普 杠杆炒股亏起来有多惨","stars": 5,"viral": 94,"hotTitle": "两融余额持续攀升 新开户154万户","eduTopic": "融资融券风险认知","eduCategory": "风险教育","direction": "借两融开户热潮，做风险科普：什么是融资、杠杆的双刃剑效应、爆仓机制、维持担保比例","persona": "风险预警官","type": "图文","titles": ["两融开户暴增！杠杆风险一次讲透","融资买股亏起来有多惨？3个真实案例","杠杆是把双刃剑｜两融新手必看风控指南"],"imgStyle": "杠杆原理示意图+盈亏对比表+爆仓案例卡片","copyStyle": "案例驱动，用真实盈亏故事说明风险，语气偏警示但不恐吓","framework": "热点引入（154万新开户+余额创新高）→ 科普干货（融资/杠杆/爆仓/维持担保比例）→ 实用总结（什么人不适合/3条铁律）","compliance": "safe","complianceNote": "风险教育类是最安全的合规方向。强调风险而非鼓励参与，提醒投资有风险。","time": "10:00","relatedHotId": 4},
   {"name": "ETF投资入门课 万亿时代新手该怎么选第一只ETF","stars": 5,"viral": 93,"hotTitle": "万亿级ETF基金公司格局再变","eduTopic": "ETF投资入门","eduCategory": "基础知识","direction": "借ETF万亿规模热点，教读者理解ETF基本概念、主要类型、费率和如何选择第一只ETF","persona": "理财小课堂","type": "图文","titles": ["ETF万亿时代来了！新手入门全指南","比基金省心比股票稳｜ETF从零开始学","你的第一只ETF怎么选？新手必看指南"],"imgStyle": "ETF分类思维导图+购买流程步骤图+费率对比表","copyStyle": "类比法讲解（ETF=水果拼盘），降低理解门槛","framework": "热点引入（ETF万亿里程碑）→ 科普干货（ETF定义/分类/费用/交易方式）→ 实用总结（新手选ETF决策树）","compliance": "safe","complianceNote": "纯知识科普，不涉及具体ETF产品推荐。可用沪深300等宽基指数举例。","time": "12:00","relatedHotId": 2},
@@ -341,13 +338,11 @@ var topicPlans = [
   {"name": "基金投顾值不值得用 业绩排名和费用全对比","stars": 4,"viral": 87,"hotTitle": "基金投顾业绩排名出炉","eduTopic": "基金投顾认知","eduCategory": "基础知识","direction": "借投顾业绩排名热点，教读者理解基金投顾业务：什么是投顾、和自己买基金的区别、费用对比","persona": "理财顾问","type": "图文","titles": ["基金投顾值不值得用？业绩数据告诉你","投顾vs自己买基金｜费用和收益全对比","基金总是亏？投顾可能适合你的3个理由"],"imgStyle": "投顾业绩对比表+费用拆解图+适合人群判断树","copyStyle": "数据对比驱动，用真实业绩数据说话","framework": "热点引入（业绩排名出炉）→ 科普干货（投顾定义/和自己买的区别/费用）→ 实用总结（适合谁/不适合谁）","compliance": "safe","complianceNote": "投顾科普是安全的。注意：1）不推荐具体投顾产品 2）不承诺收益 3）提及投顾也有亏损可能。","time": "11:00","relatedHotId": 15},
   {"name": "基金定投从0到1 手把手教你设置第一笔定投","stars": 5,"viral": 91,"hotTitle": "基金定投策略全指南 每月小额投入长期积累财富","eduTopic": "定投设置实操","eduCategory": "实操技能","direction": "借定投话题热度，手把手教读者完成第一次定投设置：选基金、定金额、设周期、止盈策略","persona": "实操小能手","type": "图文","titles": ["基金定投从0到1｜手把手设好你的第一笔","每月300也能攒出小金库｜定投设置全教程","定投亏钱多半是这3步设错了｜新手自查"],"imgStyle": "App操作截图+参数设置对比图+收益曲线示例","copyStyle": "纯实操教学，每步都有截图标注，零基础也能跟着做","framework": "热点引入（定投是最适合上班族的理财方式）→ 科普干货（金额/周投vs月投/止盈策略）→ 实用总结（打开App跟着设置）","compliance": "safe","complianceNote": "操作教学是安全的。注意：1）不承诺定投一定赚钱 2）提及定投也有亏损风险 3）不推荐具体基金。","time": "09:00","relatedHotId": 18},
   {"name": "追涨杀跌心理学 为什么每次卖完就涨","stars": 4,"viral": 89,"hotTitle": "科技板块大反弹 AI与半导体领涨","eduTopic": "投资心理偏差认知","eduCategory": "心态管理","direction": "借板块反弹行情，教读者认识追涨杀跌的心理机制：损失厌恶、羊群效应、确认偏差","persona": "心态教练","type": "图文","titles": ["追涨杀跌不是你的错 是大脑的bug","反弹了想追？先看完这3个心理学实验","为什么每次卖完就涨？散户心理偏差全解析"],"imgStyle": "心理偏差示意图+实验案例卡片+自检清单","copyStyle": "故事驱动，用心理学实验和日常场景解释偏差，引发共鸣","framework": "热点引入（板块反弹你是不是又想追了）→ 科普干货（损失厌恶/羊群效应/确认偏差）→ 实用总结（对抗偏差的3个习惯）","compliance": "safe","complianceNote": "投资心理教育是最安全的方向之一。不涉及任何市场预测和产品推荐。","time": "20:00","relatedHotId": 11}
-]
 ];
 
 var _originalTopicPlans = JSON.parse(JSON.stringify(topicPlans));
 
 var viralContent = [
-[
   {"id": 1,"title": "打新肉签频现！中一签最高赚47万 打新全攻略来了","platform": "小红书","author": "打新小能手","viralScore": 96,"likes": 31200,"collects": 22800,"category": "打新攻略","tags": ["#打新","#肉签","#新股","#中签","#理财"],"link": "https://www.stcn.com/article/detail/4088686.html","analysis": "打新肉签话题自带爆款属性，高收益数据刺激分享和收藏，实用攻略型内容转化率极高","template": "列出近期肉签收益数据表，配打新全流程图解，附提高中签率技巧"},
   {"id": 2,"title": "两融新开户154万！杠杆炒股的风险你真的了解吗","platform": "小红书","author": "风险预警官","viralScore": 93,"likes": 26800,"collects": 18500,"category": "风险教育","tags": ["#两融","#杠杆","#风险","#融资融券","#投资"],"link": "https://www.stcn.com/article/detail/3585629.html","analysis": "风险教育类内容戳中投资者焦虑，两融话题争议性强引发讨论，收藏率远超同类","template": "用真实案例展示杠杆放大亏损的过程，配风控知识图解和两融铁律清单"},
   {"id": 3,"title": "ETF托管格局大洗牌 选ETF不只看收益还要看这个","platform": "小红书","author": "指数投资笔记","viralScore": 89,"likes": 19500,"collects": 14200,"category": "ETF指南","tags": ["#ETF","#托管","#基金选择","#指数基金","#理财"],"link": "https://www.cls.cn/detail/2456803","analysis": "ETF知识科普填补信息差，选基工具型内容收藏价值高，差异化视角引发讨论","template": "用信息图展示ETF托管格局，对比不同托管方的优劣，给出选ETF的多维度checklist"},
@@ -368,7 +363,6 @@ var viralContent = [
   {"id": 18,"title": "基金收益排行 天天基金最新业绩数据全览 2026年8月","platform": "天天基金","author": "天天基金数据中心","viralScore": 90,"likes": 21500,"collects": 17800,"category": "理财技巧","tags": ["#基金排行","#基金业绩","#选基","#基金经理","#投资"],"link": "https://fund.eastmoney.com/trade/xf.html","analysis": "排行榜类内容在天天基金平台自带流量，数据权威性高，收藏和分享双高","template": "按类型列出Top基金收益数据，附基金经理简介和投资风格标签"},
   {"id": 19,"title": "2026年券商分类评价全解读 AA级名单和评级体系科普","platform": "天天基金","author": "天天基金投教","viralScore": 84,"likes": 14200,"collects": 9800,"category": "投教科普","tags": ["#券商评级","#分类评价","#AA级","#证券行业","#投资"],"link": "https://m.10jqka.com.cn/20260724/c678422268.shtml","analysis": "行业大事件+名单公布引发关注，投教科普角度降低阅读门槛","template": "列出AA级名单，科普评级体系，分析评级对基金投资者的参考意义"},
   {"id": 20,"title": "基金定投收益计算器 看看你每月投多少最合适","platform": "天天基金","author": "天天基金投教室","viralScore": 83,"likes": 13500,"collects": 9200,"category": "ETF指南","tags": ["#定投","#收益计算","#基金","#理财工具","#投资规划"],"link": "https://fund.eastmoney.com/default.html","analysis": "计算器工具类内容互动性强，停留时间长，天天基金平台用户精准匹配","template": "展示定投收益计算公式，提供不同金额和期限的收益对比表，给出定投建议"}
-]
 ];
 
 var _originalViralContent = JSON.parse(JSON.stringify(viralContent));
