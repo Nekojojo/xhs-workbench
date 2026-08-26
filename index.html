@@ -1439,6 +1439,9 @@ var viralContent = [
 ];
 
 var _originalViralContent = JSON.parse(JSON.stringify(viralContent));
+</script>
+<script src="data.js"></script>
+<script>
 
 var weeklySchedule = [
   {
@@ -2126,14 +2129,16 @@ function renderHotspots() {
   h += '<div class="tab" onclick="filterHot(\'一级\')">一级热点 (' + hotspots.filter(function(t){return t.tier==='一级';}).length + ')</div>';
   h += '<div class="tab" onclick="filterHot(\'二级\')">二级热点 (' + hotspots.filter(function(t){return t.tier==='二级';}).length + ')</div>';
   h += '<div class="tab" onclick="filterHot(\'常青\')">常青话题 (' + hotspots.filter(function(t){return t.tier==='常青';}).length + ')</div>';
+  h += '<div class="tab" style="color:#7C3AED;font-weight:600" onclick="filterHot(\'妙想资讯\')">妙想资讯 (' + hotspots.filter(function(t){return t.mx === true;}).length + ')</div>';
   h += '</div>';
   h += '<div class="search-box"><input type="text" id="hotSearch" placeholder="搜索热点..." oninput="searchHot()"></div>';
   h += '<div class="card"><div id="hotTable">';
   h += '<table><thead><tr><th>#</th><th>标题</th><th>来源</th><th>热度</th><th>级别</th><th>类型</th><th>操作</th></tr></thead><tbody>';
   hotspots.forEach(function(t) {
     var tierCls = t.tier === '一级' ? 'tag-red' : (t.tier === '二级' ? 'tag-orange' : 'tag-blue');
-    h += '<tr class="topic-row" onclick="toggleTopic(' + t.id + ')" data-tier="' + t.tier + '">';
-    h += '<td>' + t.id + '</td><td><strong>' + t.title + '</strong></td><td>' + t.source + '</td>';
+    h += '<tr class="topic-row" onclick="toggleTopic(' + t.id + ')" data-tier="' + t.tier + '" data-src="' + (t.mx ? 'mx' : '') + '">';
+    var mxTypeCls = {'新闻':'tag-blue','研报':'tag-purple','公告':'tag-orange','政策':'tag-red','投教':'tag-green','行业资讯':'tag-blue'};
+    h += '<td>' + t.id + '</td><td><strong>' + t.title + '</strong>' + (t.mx ? ' <span class="tag" style="background:#F3E8FF;color:#7C3AED">妙想</span>' : '') + '</td><td>' + t.source + (t.mxType ? ' <span class="tag ' + (mxTypeCls[t.mxType] || 'tag-blue') + '">' + t.mxType + '</span>' : '') + '</td>';
     h += '<td><span style="color:var(--orange);font-weight:600">' + t.heat + '</span></td>';
     h += '<td><span class="tag ' + tierCls + '">' + t.tier + '</span></td><td>' + t.biz + '</td>';
     h += '<td style="white-space:nowrap"><a href="' + t.link + '" target="_blank" class="btn btn-sm" onclick="event.stopPropagation()">查看原文</a> <button class="btn btn-sm btn-pri" onclick="event.stopPropagation();createFromHotspot(' + t.id + ')">去创作</button></td></tr>';
@@ -2835,6 +2840,7 @@ function filterHot(tier) {
   var rows = document.querySelectorAll('#hotTable .topic-row');
   rows.forEach(function(r) {
     if (tier === '全部') { r.style.display = ''; }
+    else if (tier === '妙想资讯') { r.style.display = r.dataset.src === 'mx' ? '' : 'none'; }
     else { r.style.display = r.dataset.tier === tier ? '' : 'none'; }
   });
   var expands = document.querySelectorAll('#hotTable .expand-row');
