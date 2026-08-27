@@ -862,13 +862,20 @@ function renderCompliance() {
 
   h += '<div id="complianceResult"></div>';
 
-  h += '<div class="card" style="margin-top:20px"><div class="card-title">当前敏感词库（' + bannedWords.length + '个）</div>';
-  h += '<div style="display:flex;flex-wrap:wrap;gap:6px">';
-  bannedWords.forEach(function(w) {
-    var isDanger = dangerWords.indexOf(w) >= 0;
-    h += '<span class="tag ' + (isDanger ? 'tag-red' : 'tag-orange') + '">' + w + '</span>';
+  h += '<div class="card" style="margin-top:20px"><div class="card-title">当前敏感词库（' + bannedWords.length + '个 · 9大分类）</div>';
+  var cats = ['投顾业务','开户引流','信用与衍生品','违规炒股','配资','提供答案','规避行为','投诉举报','金融产品销售'];
+  cats.forEach(function(cat) {
+    var catWords = bannedWords.filter(function(w) { return wordCategory[w] === cat; });
+    if (catWords.length === 0) return;
+    h += '<div style="margin-bottom:10px"><div style="font-size:12px;color:var(--text2);font-weight:600;margin-bottom:4px">' + cat + '（' + catWords.length + '个）</div>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:4px">';
+    catWords.forEach(function(w) {
+      var isDanger = dangerWords.indexOf(w) >= 0;
+      h += '<span class="tag ' + (isDanger ? 'tag-red' : 'tag-orange') + '" style="font-size:11px">' + w + '</span>';
+    });
+    h += '</div></div>';
   });
-  h += '</div></div>';
+  h += '</div>';
   return h;
 }
 
