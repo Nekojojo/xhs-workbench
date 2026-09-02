@@ -1979,22 +1979,530 @@ var FZ_WEEK = '2026-W34';
 var FZ_DATA_SRC = '小红书平台公开数据';
 
 var kosAccounts = [
-  {"name":"券商小李","fans":52800,"posts":326,"likes":189000,"url":"https://www.xiaohongshu.com/user/profile/kos001"},
-  {"name":"投顾张姐","fans":38600,"posts":214,"likes":142000,"url":"https://www.xiaohongshu.com/user/profile/kos002"},
-  {"name":"基金经理老王","fans":31200,"posts":187,"likes":108000,"url":"https://www.xiaohongshu.com/user/profile/kos003"},
-  {"name":"理财师小陈","fans":24500,"posts":156,"likes":87000,"url":"https://www.xiaohongshu.com/user/profile/kos004"},
-  {"name":"证券顾问Anna","fans":19800,"posts":143,"likes":72000,"url":"https://www.xiaohongshu.com/user/profile/kos005"},
-  {"name":"ETF研究员小赵","fans":16200,"posts":98,"likes":54000,"url":"https://www.xiaohongshu.com/user/profile/kos006"},
-  {"name":"港股通达人阿杰","fans":12400,"posts":87,"likes":41000,"url":"https://www.xiaohongshu.com/user/profile/kos007"},
-  {"name":"可转债专家小周","fans":9800,"posts":76,"likes":33000,"url":"https://www.xiaohongshu.com/user/profile/kos008"}
-];
+  {
+    "name": "A股妍希",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/64a6ae5d000000001001d279",
+    "desc": "女性向A股投教；新手散户入门、盘面通俗复盘、交易心态、避雷科普"
+  },
+  {
+    "name": "学志聊投资",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/68c8d4180000000008032fad",
+    "desc": "价值投资主线，基金+A股赛道科普；侧重资产配置、定投体系"
+  },
+  {
+    "name": "阿弓的投资小灶",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/685e67fb0000000008038889",
+    "desc": "偏基本面赛道分析、行业逻辑拆解、财报简易解读"
+  },
+  {
+    "name": "国泰海通鑫趋势",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/643d43bc000000000d0196f9",
+    "desc": "大势复盘、板块轮动科普、ETF、场内工具投教"
+  },
+  {
+    "name": "国泰海通超人说",
+    "fans": 68000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/65348ebf000000000400952f",
+    "desc": "短视频热点市场解读、行业热点通俗拆解"
+  },
+  {
+    "name": "糖爸投资经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/59a02e9482ec39019e5b75aa",
+    "desc": "家庭理财、基金组合、低波动理财思路"
+  },
+  {
+    "name": "离火财经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/6a0a92400000000001007400",
+    "desc": "宏观周期+板块逻辑，技术面结合资金情绪复盘"
+  },
+  {
+    "name": "东吴小清东吴证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8nDP25XIbv3",
+    "desc": "可转债、ETF、理财基础科普、新手开户合规投教"
+  },
+  {
+    "name": "华泰邹哥观市",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/537bFOO3tAW",
+    "desc": "每日市场复盘、仓位管理、震荡市应对思路"
+  },
+  {
+    "name": "广发证券金牌投顾邱邱",
+    "fans": 92000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/14BfVxvb1i4",
+    "desc": "女性投顾IP；基金科普、资产配置、新手入市避坑"
+  },
+  {
+    "name": "广发证券罐罐",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5uUzRSe1ixD",
+    "desc": "年轻化新人理财IP；场内ETF、可转债基础、交易规则科普"
+  },
+  {
+    "name": "华安证券有料财经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8ADJ0QceWLa",
+    "desc": "市场热点解读、金融基础知识、防非反诈投教"
+  },
+  {
+    "name": "华兴丨理财笔记（证券）",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/6f9oEJ7cses",
+    "desc": "面向年轻上班族；闲钱理财、基金定投、A股入门科普"
+  },
+  {
+    "name": "申万宏源证券乐乐",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/2IbWu0mvseD",
+    "desc": "女性理财IP；基金挑选、持仓心态、定投实操"
+  },
+  {
+    "name": "广发证券金牌投顾邱邱",
+    "fans": 92000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/3m1iclfF4Ls",
+    "desc": "基金理财科普+新手避坑+资产配置思路+券商基础业务科普"
+  },
+  {
+    "name": "国金证券小鱼儿",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/6eu4l9yWkRZ",
+    "desc": "散户向投教；市场术语拆解、投资误区、ETF实操"
+  },
+  {
+    "name": "国金证券爱理财的张张",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7chg2XeBv5v",
+    "desc": "女性向理财账号；家庭资产规划、基金组合、稳健理财思路"
+  },
+  {
+    "name": "金多多国金证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9U2ATRHV5Cr",
+    "desc": "系统化理财科普；基金、固收+、场内工具科普"
+  },
+  {
+    "name": "证券老管家",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4avM2bxTcJp",
+    "desc": "泛市场复盘、资金面解读、散户避坑干货"
+  },
+  {
+    "name": "晓琴说财经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5qaSDukiihh",
+    "desc": "女性理财、基金投资、长期价值思路"
+  },
+  {
+    "name": "券商主力君",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/2Vgz6pCmkMU",
+    "desc": "板块轮动、资金流向、市场情绪解读"
+  },
+  {
+    "name": "广发逻辑哥",
+    "fans": 45000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7AofZwJjSt1",
+    "desc": "产业逻辑+基本面科普；赛道梳理、行业简读"
+  },
+  {
+    "name": "跟着诸葛学交易",
+    "fans": 52000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8NRensDImpM",
+    "desc": "交易体系教学、量价、交易心态、投资认知科普"
+  },
+  {
+    "name": "小汤券商干货铺",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/11rJs1XvOUs",
+    "desc": "交易规则、软件操作、开户避坑、佣金科普"
+  },
+  {
+    "name": "申万宏源贝果投研",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/6uJpla3tP8Z",
+    "desc": "基本面投研向；行业赛道简单拆解、财报入门"
+  },
+  {
+    "name": "天平投研",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9HJvwFBi1J8",
+    "desc": "宏观+行业逻辑复盘；市场周期、板块机会梳理"
+  },
+  {
+    "name": "月月理财笔记",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/3KO8hhut70U",
+    "desc": "基金定投、小额理财、资产分散配置"
+  },
+  {
+    "name": "李享财经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/bZDPQDuuEj",
+    "desc": "行情复盘、投资认知、散户常见错误总结"
+  },
+  {
+    "name": "老高侃财",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9PPxjhpKOt2",
+    "desc": "热点财经事件解读、宏观通俗分析"
+  },
+  {
+    "name": "小佳说财",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AcqtHrBLSMv",
+    "desc": "理财入门科普、避雷清单、基金基础知识"
+  },
+  {
+    "name": "江海证券小白鲸",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7ZGHohtT4bG",
+    "desc": "年轻化投教IP；ETF、理财基础、新手入市指南"
+  },
+  {
+    "name": "宗明财富论",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8yQtqqPoFXC",
+    "desc": "大类资产配置、长期投资理念，侧重价值投资"
+  },
+  {
+    "name": "财经伊姐",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/Aaajo4LOLUr",
+    "desc": "女性财商、家庭理财、基金组合搭建"
+  },
+  {
+    "name": "财女静静-德邦",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/wgPYOD1TDD",
+    "desc": "女性理财向；基金避坑、稳健理财科普"
+  },
+  {
+    "name": "财女大作手",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7Tw2ZE9JKbN",
+    "desc": "市场趋势复盘、板块机会分析"
+  },
+  {
+    "name": "昕财说",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4DwJwtk1x80",
+    "desc": "金融术语科普、市场热点简评"
+  }
+]
 
 var proAccounts = [
-  {"name":"方正证券官方号","fans":128000,"posts":486,"likes":520000,"url":"https://www.xiaohongshu.com/user/profile/pro001"},
-  {"name":"方正证券投教基地","fans":86500,"posts":312,"likes":340000,"url":"https://www.xiaohongshu.com/user/profile/pro002"},
-  {"name":"方正证券研究所","fans":45200,"posts":198,"likes":186000,"url":"https://www.xiaohongshu.com/user/profile/pro003"},
-  {"name":"方正证券财富管理","fans":32100,"posts":167,"likes":124000,"url":"https://www.xiaohongshu.com/user/profile/pro004"}
-];
+  {
+    "name": "华泰证券涨乐财富通",
+    "fans": 156000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4e7qPk5hKWB",
+    "desc": "品牌官方账号；涨乐APP功能教学、ETF科普"
+  },
+  {
+    "name": "广发证券开户申请",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/654523b50000000030033733",
+    "desc": "功能单一矩阵号；开户避坑、佣金、线上开户流程"
+  },
+  {
+    "name": "国金证券",
+    "fans": 128000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/A43Fa3aHmXc",
+    "desc": "总部官方号；标准化投教、市场观点、品牌活动"
+  },
+  {
+    "name": "A博众证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AeSx0aSHVVm",
+    "desc": "投顾服务科普、市场策略解读"
+  },
+  {
+    "name": "广发证券",
+    "fans": 320000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9mgtAc10iSe",
+    "desc": "总部官方主号；泛理财投教、财经热点、品牌活动"
+  },
+  {
+    "name": "擒股王证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5HSfapKoBOh",
+    "desc": "侧重行情复盘、短线机会解读"
+  },
+  {
+    "name": "九方智投证券策略",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/3NvzGHKSLHD",
+    "desc": "机构策略输出、市场行情解读、投资方法教学"
+  },
+  {
+    "name": "国泰证券极速开户",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/2uBK7Y066EL",
+    "desc": "纯引流工具号，内容聚焦开户流程、佣金福利"
+  },
+  {
+    "name": "国泰海通证券智投宝典",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AGLzxeOJKhO",
+    "desc": "投教干货、ETF、场内工具科普"
+  },
+  {
+    "name": "国泰海通证券开户助手",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8BdL5otbyzI",
+    "desc": "营销转化号，开户答疑、线上开户指引"
+  },
+  {
+    "name": "银河证券顺德国泰南路营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9KnTL7oelbz",
+    "desc": "区域营业部官方号；本地客户运营、理财科普"
+  },
+  {
+    "name": "国泰海通证券郑州金水东路证券营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/A8PDQsqXOXH",
+    "desc": "区域营业部账号；本地投教、行情解读"
+  },
+  {
+    "name": "中国银河证券德清营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AWSAUTRXc1H",
+    "desc": "下沉区域营业部，理财入门科普"
+  },
+  {
+    "name": "中国银河证券股份有限公司北京知春路证券营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9AJ4XERo8pn",
+    "desc": "一线城市营业部，中产资产配置、开户答疑"
+  },
+  {
+    "name": "中国银河证券北京望京营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/A9YGFxh7bz0",
+    "desc": "一线城市营业部，中产资产配置、开户答疑"
+  },
+  {
+    "name": "中国银河证券北京朝阳门营业",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/A51qkbCIQby",
+    "desc": "侧重财富管理、资产配置、基金、理财业务宣传"
+  },
+  {
+    "name": "申万宏源证券财富管理",
+    "fans": 210000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AAQTiK8LeuM",
+    "desc": "小红书券商头部官号；女性友好理财科普"
+  },
+  {
+    "name": "江海证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5ppicH2dpPa",
+    "desc": "交易软件实操、场内基金、A股基础科普"
+  },
+  {
+    "name": "东方财富证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4qDz35RkPnz",
+    "desc": "交易软件实操、场内基金、A股基础科普"
+  },
+  {
+    "name": "中金财富证券开户服务",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7TVoQFyWiNy",
+    "desc": "中产及高净值人群资产配置、养老理财"
+  },
+  {
+    "name": "中信证券财富管家",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/2GI30tOQUpo",
+    "desc": "家庭资产规划、大类资产配置、稳健投资理念"
+  },
+  {
+    "name": "国泰君安期货",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/478b2osRbpF",
+    "desc": "官方投教、市场策略、投资者风险教育"
+  },
+  {
+    "name": "平安证券财富赢家",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5jCqoMhpfOV",
+    "desc": "理财科普、防非反诈、开户知识、理财产品解读"
+  },
+  {
+    "name": "招商证券财经社牛养成记",
+    "fans": 185000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9YDDNxmtNPs",
+    "desc": "趣味化财经科普，网感强，年轻人向爆款投教内容标杆"
+  },
+  {
+    "name": "中国银河证券",
+    "fans": 245000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/6kClCnvtayC",
+    "desc": "宏观解读、市场投教、投资者保护"
+  },
+  {
+    "name": "国泰海通证券新客开户",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/1sjkOAh5lc4",
+    "desc": "开户科普、线上开户指引，私域导流"
+  },
+  {
+    "name": "申万宏源证券金融",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/3jJQmlxIm1J",
+    "desc": "策略观点、行业研究通俗化输出"
+  },
+  {
+    "name": "中信建投融资融券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/N9bx92vfT5",
+    "desc": "两融业务科普、融资融券规则、风险讲解"
+  },
+  {
+    "name": "中泰证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4wtBKAaYyGY",
+    "desc": "上班族理财、低波动资产、市场热点投教"
+  }
+]
 
 var fzAccounts = [
   {"name":"方正证券北京丹棱街营业部","xhsId":"63048531076","type":"专业号","kosBind":"","branch":"北京丹棱街","mgr":"何尧","code":"818","operator":"陈洁","crm":"81888876","pos":"后台人员","phone":"131****1156","phOwner":"粟异黛","phPos":"副职干部","fans":null,"notes":null,"inter":null,"link":"https://www.xiaohongshu.com/user/profile/6925504f0000000037006f24?xsec_token=ABWltjR1NP_n9X8YTq9rJhtZlP1ABshIDA1GI45gvELG0=&xsec_source=pc_search","pid":"p001"},
@@ -2721,6 +3229,7 @@ function renderTopics() {
 function renderBenchmarks() {
   var h = renderTopbar();
   h += '<div class="page-title">对标账号 <span class="badge">' + (kosAccounts.length + proAccounts.length) + '个</span></div>';
+  h += '<div style="padding:10px 14px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;margin-bottom:14px;font-size:12px;color:#1D4ED8">对标账号名单已同步《对标账号追踪模板》（65个：KOS 36 + 专业号 29）。标注「—」的指标待账号监控任务采集后自动补全，点击账号名称可打开主页。</div>';
   h += '<div class="toolbar">';
   h += '<button class="btn btn-pri" onclick="exportAccountsExcel()">导出全部</button>';
   h += '<button class="btn" onclick="importExcelFromFile()">导入账号</button>';
@@ -2732,11 +3241,12 @@ function renderBenchmarks() {
   h += '</div>';
   h += '<div class="search-box"><input type="text" id="benchSearch" placeholder="搜索账号名称..." oninput="filterBenchSearch()"></div>';
   h += '<div class="accounts-grid" id="benchGrid">';
-  var allAccounts = kosAccounts.map(function(a) { return {name:a.name, fans:a.fans, posts:a.posts, likes:a.likes, url:a.url, type:'KOS'}; }).concat(proAccounts.map(function(a) { return {name:a.name, fans:a.fans, posts:a.posts, likes:a.likes, url:a.url, type:'专业号'}; }));
+  var allAccounts = kosAccounts.map(function(a) { return {name:a.name, fans:a.fans, posts:a.posts, likes:a.likes, url:a.url, desc:a.desc, type:'KOS'}; }).concat(proAccounts.map(function(a) { return {name:a.name, fans:a.fans, posts:a.posts, likes:a.likes, url:a.url, desc:a.desc, type:'专业号'}; }));
   allAccounts.forEach(function(a) {
     h += '<div class="account-card" data-type="' + a.type + '" data-name="' + a.name + '">';
     h += '<div class="name"><a href="' + a.url + '" target="_blank">' + a.name + '</a> <span class="tag ' + (a.type === 'KOS' ? 'tag-blue' : 'tag-green') + '">' + a.type + '</span></div>';
     h += '<div class="meta"><span>粉丝 ' + a.fans + '</span><span>笔记 ' + a.posts + '</span><span>获赞 ' + a.likes + '</span></div>';
+    if (a.desc) h += '<div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.4">' + a.desc + '</div>';
     h += '</div>';
   });
   h += '</div>';
@@ -2783,7 +3293,7 @@ function renderViralContent() {
     h += '<td style="font-size:12px">赞 ' + v.likes.toLocaleString() + ' / 藏 ' + v.collects.toLocaleString() + '</td>';
     h += '<td><span class="tag tag-green">' + v.category + '</span></td>';
     h += '</tr>';
-    h += '<tr class="expand-row" id="topic-viral-' + v.id + '"><td colspan="7"><div class="topic-detail">';
+    h += '<tr class="expand-row" id="topic-viral-' + v.id + '"><td colspan="7"><div class="topic-detail show">';
     h += '<div style="margin-bottom:10px"><strong>爆款原因：</strong> ' + v.analysis + '</div>';
     h += '<div style="margin-bottom:10px"><strong>创作模板：</strong> ' + v.template + '</div>';
     h += '<div style="margin-bottom:10px"><strong>参考标签：</strong> ';
