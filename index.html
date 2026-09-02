@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小红书工作台 V2.3 - 方正证券</title>
+<title>小红书工作台 V2.4 - 方正证券</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="history/index.js"></script>
@@ -308,7 +308,7 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
     <svg viewBox="0 0 36 36"><rect width="36" height="36" rx="8" fill="#E01E23"/><polygon points="10,26 18,8 26,26 22,26 18,16 14,26" fill="#fff"/></svg>
     <div>
       <div class="logo-text">方正证券</div>
-      <div class="logo-sub">小红书工作台 V2.3</div>
+      <div class="logo-sub">小红书工作台 V2.4</div>
     </div>
   </div>
   <div class="nav-group">
@@ -318,7 +318,6 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
     <div class="nav-item" onclick="nav('hotspots')"><span class="icon">&#x1F525;</span>每日财经热点</div>
     <div class="nav-item" onclick="nav('topics')"><span class="icon">&#x1F4CB;</span>今日选题计划</div>
     <div class="nav-item" onclick="nav('benchmarks')"><span class="icon">&#x1F3AF;</span>对标账号</div>
-    <div class="nav-item" onclick="nav('viral')"><span class="icon">&#x1F4C8;</span>爆款监测</div>
     <div class="nav-item" onclick="nav('viralContent')"><span class="icon">&#x1F4A5;</span>平台爆款</div>
     <div class="nav-item" onclick="nav('teardown')"><span class="icon">&#x1F50D;</span>账号拆解</div>
   </div>
@@ -326,6 +325,7 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
     <div class="nav-group-title">支撑模块</div>
     <div class="nav-item" onclick="nav('scripts')"><span class="icon">&#x1F4AC;</span>话术库</div>
     <div class="nav-item" onclick="nav('create')"><span class="icon">&#x270F;&#xFE0F;</span>内容创作</div>
+    <div class="nav-item" onclick="nav('posters')"><span class="icon">&#x1F5BC;&#xFE0F;</span>海报设计</div>
     <div class="nav-item" onclick="nav('library')"><span class="icon">&#x1F4DA;</span>素材知识库</div>
     <div class="nav-item" onclick="nav('analytics')"><span class="icon">&#x1F4CA;</span>数据分析</div>
         <div class="nav-item" onclick="nav('weekly')"><span class="icon">&#x1F4C5;</span>周历排期</div>
@@ -1914,6 +1914,17 @@ var wordCategory = {
   /* 不当竞争 */ '同行垃圾':'不当竞争', '那是骗局':'不当竞争', '策略太糙':'不当竞争', '分析师不行':'不当竞争', '就是小作坊':'不当竞争', '服务特差':'不当竞争', '质量劣质':'不当竞争', '收费虚高':'不当竞争', '没真东西':'不当竞争', '净忽悠人':'不当竞争', '全是套路':'不当竞争', '风险超高':'不当竞争', '收益造假':'不当竞争', '投诉一大堆':'不当竞争', '口碑烂透':'不当竞争', '资质不全':'不当竞争', '没人监管':'不当竞争', '资金没保障':'不当竞争', '操作不规范':'不当竞争', '流程太繁琐':'不当竞争', '效率极低':'不当竞争', '响应超慢':'不当竞争', '售后没保障':'不当竞争', '技术落后':'不当竞争', '团队不专业':'不当竞争', '没经验':'不当竞争', '眼光不行':'不当竞争', '垃圾友商':'不当竞争', '决策常错':'不当竞争', '风控薄弱':'不当竞争', '同行抗风险差':'不当竞争', '同行不行':'不当竞争', '别信他们':'不当竞争', '有隐藏费用':'不当竞争', '套路多':'不当竞争', '不靠谱':'不当竞争', '实力不行':'不当竞争', '产品垃圾':'不当竞争',
 };
 
+var _draft = loadFromLS('createDraft', null);
+if (_draft && (_draft.title || _draft.body)) {
+  for (var _k in _draft) { if (typeof createState[_k] !== 'undefined') createState[_k] = _draft[_k]; }
+  createState.step = 1;
+}
+var _customBanned = loadFromLS('customBanned', []);
+if (_customBanned && _customBanned.length) {
+  for (var _ci = 0; _ci < _customBanned.length; _ci++) {
+    if (bannedWords.indexOf(_customBanned[_ci]) < 0) bannedWords.push(_customBanned[_ci]);
+  }
+}
 var taskData = loadFromLS('taskData', {
   today: [
     {text:'发布央行降准解读笔记', done:false, pri:'高'},
@@ -2179,24 +2190,13 @@ var fzAccounts = [
   {"name":"罗罗小方","xhsId":"49311581128","type":"KOS","kosBind":"方正证券","branch":"沈阳分公司","mgr":"徐岩","code":"837","operator":"罗予辰","crm":"80790020","pos":"不带包理经","phone":"130****0625","phOwner":"罗予辰","phPos":"不带包理经","fans":null,"notes":null,"inter":null,"link":"https://www.xiaohongshu.com/user/profile/67a2e63c000000000d00b30f?xsec_token=ABEtCZrYVLuphcWMUg31aqsjUkfAfRZDd26T__TYo4Z8I=&xsec_source=pc_search","pid":"p191"}
 ];
 
-var viralPosts = [
-  {"rank":1,"title":"A股放量突破3400点！这波行情的三大特征你必须知道","account":"券商小李","likes":"12.8","collects":"8.6","comments":"3.2","url":"https://www.xiaohongshu.com/search_result?keyword=A%E8%82%A1%E8%A1%8C%E6%83%85"},
-  {"rank":2,"title":"散户最容易亏钱的5个时间段，第3个90%的人都中招","account":"投顾张姐","likes":"9.6","collects":"7.2","comments":"2.8","url":"https://www.xiaohongshu.com/search_result?keyword=%E6%95%A3%E6%88%B7%E4%BA%8F%E9%92%B1"},
-  {"rank":3,"title":"2026下半年最值得关注的三大投资主线","account":"方正证券研究所","likes":"8.4","collects":"6.1","comments":"2.1","url":"https://www.xiaohongshu.com/search_result?keyword=%E6%8A%95%E8%B5%84%E4%B8%BB%E7%BA%BF"},
-  {"rank":4,"title":"可转债打新中签率提升3倍的秘密技巧","account":"可转债专家小周","likes":"7.2","collects":"5.8","comments":"1.9","url":"https://www.xiaohongshu.com/search_result?keyword=%E5%8F%AF%E8%BD%AC%E5%80%BA%E6%89%93%E6%96%B0"},
-  {"rank":5,"title":"ETF定投的黄金法则：为什么周定投比月定投收益更高","account":"ETF研究员小赵","likes":"6.5","collects":"4.9","comments":"1.6","url":"https://www.xiaohongshu.com/search_result?keyword=ETF%E5%AE%9A%E6%8A%95"},
-  {"rank":6,"title":"港股通新手必看：这些坑千万别踩","account":"港股通达人阿杰","likes":"5.8","collects":"4.2","comments":"1.4","url":"https://www.xiaohongshu.com/search_result?keyword=%E6%B8%AF%E8%82%A1%E9%80%9A"},
-  {"rank":7,"title":"基金定投止盈策略：什么时候该落袋为安","account":"基金经理老王","likes":"5.1","collects":"3.8","comments":"1.2","url":"https://www.xiaohongshu.com/search_result?keyword=%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%E6%AD%A2%E7%9B%88"},
-  {"rank":8,"title":"新股申购避坑指南：这些细节影响中签率","account":"理财师小陈","likes":"4.6","collects":"3.4","comments":"1.0","url":"https://www.xiaohongshu.com/search_result?keyword=%E6%96%B0%E8%82%A1%E7%94%B3%E8%B4%AD"},
-  {"rank":9,"title":"券商佣金谈判攻略：如何把佣金谈到最低","account":"证券顾问Anna","likes":"4.2","collects":"3.1","comments":"0.9","url":"https://www.xiaohongshu.com/search_result?keyword=%E5%88%B8%E5%95%86%E4%BD%A3%E9%87%91"},
-  {"rank":10,"title":"量化选股入门：用数据代替感觉做投资","account":"方正证券投教基地","likes":"3.8","collects":"2.9","comments":"0.8","url":"https://www.xiaohongshu.com/search_result?keyword=%E9%87%8F%E5%8C%96%E9%80%89%E8%82%A1"}
-];
 
 /* ========== CHARTS ========== */
 var chartInstances = {};
 function destroyChart(id) { if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; } }
 
 function initHomeChart() {
+  if (typeof Chart === 'undefined') { toast('图表组件未加载（需联网），图表暂不可用，请检查网络后刷新页面', 'warning'); return; }
   destroyChart('homeChart');
   var ctx = document.getElementById('homeChart');
   if (!ctx) return;
@@ -2213,6 +2213,7 @@ function initHomeChart() {
 }
 
 function initAccountsChart() {
+  if (typeof Chart === 'undefined') { toast('图表组件未加载（需联网），图表暂不可用，请检查网络后刷新页面', 'warning'); return; }
   destroyChart('accountsChart');
   var ctx = document.getElementById('accountsChart');
   if (!ctx) return;
@@ -2228,22 +2229,10 @@ function initAccountsChart() {
   });
 }
 
-function initViralChart() {
-  destroyChart('viralChart');
-  var ctx = document.getElementById('viralChart');
-  if (!ctx) return;
-  var likesNum = viralPosts.map(function(p) { return parseFloat(p.likes) * 10000; });
-  chartInstances['viralChart'] = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: viralPosts.map(function(p) { return p.title.substring(0,12) + '...'; }),
-      datasets: [{label:'点赞', data: likesNum, backgroundColor:'#E01E23'}]
-    },
-    options: {responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}}
-  });
-}
+
 
 function initTeardownChart(idx) {
+  if (typeof Chart === 'undefined') { toast('图表组件未加载（需联网），图表暂不可用，请检查网络后刷新页面', 'warning'); return; }
   destroyChart('teardownChart');
   var ctx = document.getElementById('teardownChart');
   if (!ctx) return;
@@ -2265,6 +2254,7 @@ function initTeardownChart(idx) {
 }
 
 function initAnalyticsCharts() {
+  if (typeof Chart === 'undefined') { toast('图表组件未加载（需联网），图表暂不可用，请检查网络后刷新页面', 'warning'); return; }
   destroyChart('analyticsBar');
   destroyChart('analyticsPie');
   destroyChart('analyticsLine');
@@ -2300,6 +2290,7 @@ function initAnalyticsCharts() {
 /* ========== EXCEL EXPORT HELPERS ========== */
 
 function exportAccountsExcel() {
+  if (typeof XLSX === 'undefined') { toast('Excel组件未加载（需联网），导出/导入功能暂不可用，请检查网络后刷新页面', 'warning'); return; }
   var wb = XLSX.utils.book_new();
   var allData = [['类型','账号名称','粉丝数','笔记数','获赞数','主页链接']];
   kosAccounts.forEach(function(a) {
@@ -2316,6 +2307,7 @@ function exportAccountsExcel() {
 }
 
 function exportFzAccountsExcel() {
+  if (typeof XLSX === 'undefined') { toast('Excel组件未加载（需联网），导出/导入功能暂不可用，请检查网络后刷新页面', 'warning'); return; }
   var wb = XLSX.utils.book_new();
   var data = [['数据周期','账号名称','小红书号','账号类型','KOS绑定专业号','营业部','营业部负责人','营业部编码','运营人员','CRM人员编号','岗位','绑定手机号','手机号归属人','归属人岗位','粉丝数','发文数','互动数','博主链接']];
   fzAccounts.forEach(function(a) {
@@ -2328,20 +2320,10 @@ function exportFzAccountsExcel() {
   toast('方正证券账号Excel已导出', 'success');
 }
 
-function exportViralExcel() {
-  var wb = XLSX.utils.book_new();
-  var data = [['排名','标题','账号','点赞','收藏','评论']];
-  viralPosts.forEach(function(p) {
-    data.push([p.rank, p.title, p.account, p.likes, p.collects, p.comments]);
-  });
-  var ws = XLSX.utils.aoa_to_sheet(data);
-  ws['!cols'] = [{wch:6},{wch:40},{wch:16},{wch:10},{wch:10},{wch:10}];
-  XLSX.utils.book_append_sheet(wb, ws, '爆款TOP10');
-  XLSX.writeFile(wb, todayStr() + '_爆款监测TOP10.xlsx');
-  toast('爆款监测Excel已导出', 'success');
-}
+
 
 function generateReportExcel(type) {
+  if (typeof XLSX === 'undefined') { toast('Excel组件未加载（需联网），导出/导入功能暂不可用，请检查网络后刷新页面', 'warning'); return; }
   var wb = XLSX.utils.book_new();
   var ds = todayStr();
   var ws, filename;
@@ -2377,6 +2359,7 @@ function generateReportExcel(type) {
 }
 
 function importExcelFromFile() {
+  if (typeof XLSX === 'undefined') { toast('Excel组件未加载（需联网），导出/导入功能暂不可用，请检查网络后刷新页面', 'warning'); return; }
   var input = document.createElement('input');
   input.type = 'file';
   input.accept = '.xlsx,.xls,.csv';
@@ -2653,7 +2636,7 @@ function renderHotspots() {
     h += '<td style="white-space:nowrap"><a href="' + t.link + '" target="_blank" class="btn btn-sm" onclick="event.stopPropagation()">查看原文</a> <button class="btn btn-sm btn-pri" onclick="event.stopPropagation();createFromHotspot(' + t.id + ')">去创作</button></td></tr>';
     h += '<tr class="expand-row" id="topic-' + t.id + '"><td colspan="7"><div class="topic-detail show">';
     h += '<div style="margin-bottom:10px"><strong>小红书风格标题（5条）：</strong><ul class="xhs-titles">';
-    t.titles.forEach(function(ti) { h += '<li>' + ti + '</li>'; });
+    t.titles.forEach(function(ti) { h += '<li style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>' + ti + '</span><button class="btn btn-sm" data-t="' + String(ti).replace('"', '&quot;') + '" onclick="event.stopPropagation();copyText(this.getAttribute(\'data-t\'))">复制</button></li>'; });
     h += '</ul></div>';
     h += '<div style="margin-bottom:8px"><strong>标签：</strong> ';
     t.tags.forEach(function(tag) { h += '<span class="tag tag-purple" style="margin-right:4px">#' + tag + '</span> '; });
@@ -2760,23 +2743,7 @@ function renderBenchmarks() {
   return h;
 }
 
-function renderViral() {
-  var h = renderTopbar();
-  h += '<div class="page-title">爆款监测 <span class="badge">TOP 10</span></div>';
-  h += '<div class="toolbar">';
-  h += '<button class="btn btn-pri" onclick="exportViralExcel()">导出Excel</button>';
-  h += '</div>';
-  h += '<div class="card"><div class="card-title">爆款内容排行</div>';
-  h += '<table><thead><tr><th>排名</th><th>标题</th><th>账号</th><th>点赞</th><th>收藏</th><th>评论</th></tr></thead><tbody>';
-  viralPosts.forEach(function(p) {
-    h += '<tr><td><span class="rank' + (p.rank <= 3 ? ' top3' : '') + '" style="display:inline-flex">' + p.rank + '</span></td>';
-    h += '<td><strong><a href="' + p.url + '" target="_blank" style="color:var(--text);text-decoration:none">' + p.title + '</a></strong></td><td>' + p.account + '</td>';
-    h += '<td style="color:var(--pri);font-weight:600">' + p.likes + '</td><td>' + p.collects + '</td><td>' + p.comments + '</td></tr>';
-  });
-  h += '</tbody></table></div>';
-  h += '<div class="card"><div class="card-title">爆款数据可视化</div><div class="chart-container"><canvas id="viralChart"></canvas></div></div>';
-  return h;
-}
+
 
 function renderViralContent() {
   var platforms = {};
@@ -2921,7 +2888,7 @@ function renderScriptItems(cat) {
   items.forEach(function(item, i) {
     h += '<div class="card" style="display:flex;align-items:center;justify-content:space-between">';
     h += '<div style="flex:1;font-size:14px;line-height:1.6">' + (i+1) + '. ' + item + '</div>';
-    h += '<button class="copy-btn" onclick="copyText(\'' + item.replace(/'/g, "\\'") + '\')">复制</button>';
+    h += '<button class="copy-btn" data-t="' + String(item).split('"').join('&quot;') + '" onclick="copyText(this.getAttribute(\'data-t\'))">复制</button>';
     h += '</div>';
   });
   return h;
@@ -2967,7 +2934,7 @@ function renderCreate() {
 }
 
 function renderCreateStep1() {
-  var h = '<div class="card"><div class="card-title">\u9009\u62E9\u4E00\u4E2A\u70ED\u70B9\u4F5C\u4E3A\u521B\u4F5C\u7D20\u6750</div>';
+  var h = '<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn btn-sm" onclick="clearCreateDraft()">🗑 清空草稿</button></div><div class="card"><div class="card-title">\u9009\u62E9\u4E00\u4E2A\u70ED\u70B9\u4F5C\u4E3A\u521B\u4F5C\u7D20\u6750</div>';
   h += '<div class="hotspot-grid">';
   hotspots.slice(0, 12).forEach(function(t) {
     var sel = createState.hotspotId === t.id ? ' selected' : '';
@@ -3003,7 +2970,7 @@ function renderCreateStep2() {
   if (hotspot) {
     h += '<div style="margin-top:8px"><strong style="font-size:12px">\u63A8\u8350\u6807\u9898\uFF1A</strong> ';
     hotspot.titles.forEach(function(ti) {
-      h += '<button class="btn btn-sm" style="margin:3px" onclick="document.getElementById(\'createTitle\').value=\'' + ti.replace(/'/g, "\\'") + '\'">' + ti + '</button>';
+    h += '<button class="btn btn-sm" style="margin:3px" data-t="' + String(ti).split('"').join('&quot;') + '" onclick="document.getElementById(\'createTitle\').value=this.getAttribute(\'data-t\')">' + ti + '</button>';
     });
     h += '</div>';
   }
@@ -3065,7 +3032,7 @@ function renderCreateStep3() {
   h += '</div>';
   h += '<div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">';
   h += '<button class="btn btn-pri" onclick="copyAllContent()">\uD83D\uDCCB \u590D\u5236\u5168\u90E8\u5185\u5BB9</button>';
-  h += '<button class="btn" onclick="copyText(\'' + title.replace(/'/g, "\\'") + '\')">\u590D\u5236\u6807\u9898</button>';
+  h += '<button class="btn" onclick="copyText(createState.title)">\u590D\u5236\u6807\u9898</button>';
   h += '<button class="btn" onclick="copyBodyWithDisclaimer()">\u590D\u5236\u6B63\u6587</button>';
   h += '<button class="btn" onclick="goCreateStep(2)">\u2190 \u8FD4\u56DE\u7F16\u8F91</button>';
   h += '<button class="btn btn-pri" onclick="nav(\'compliance\')" style="margin-left:auto">\u2192 \u53BB\u654F\u611F\u8BCD\u68C0\u67E5</button>';
@@ -3079,6 +3046,10 @@ function renderCreateStep3() {
   h += '</div>';
   h += '<div style="margin-top:14px;padding:12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:13px">';
   h += '\uD83D\uDCA1 <strong>\u53D1\u5E03\u5EFA\u8BAE\uFF1A</strong>\u6807\u9898\u5EFA\u8BAE15-25\u5B57\uFF0C\u6B63\u6587300-600\u5B57\u6700\u4F73\uFF0C\u6807\u7B7E5-8\u4E2A\u3002\u53D1\u5E03\u524D\u8BF7\u5148\u8FDB\u884C\u654F\u611F\u8BCD\u68C0\u67E5\u3002';
+  h += '<div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">';
+  h += '<button class="btn btn-pri" onclick="posterFromCreate()">🎨 生成配套海报</button>';
+  h += '<span style="font-size:12px;color:var(--text2)">一键带入当前标题与正文，跳转海报设计模块</span>';
+  h += '</div>';
   h += '</div></div>';
   return h;
 }
@@ -3135,6 +3106,15 @@ function renderCompliance() {
     });
     h += '</div></div>';
   });
+  h += '</div>';
+  h += '<div class="card" style="margin-top:16px"><div class="card-title">🛠 自定义敏感词（本机保存）</div>';
+  h += '<div style="display:flex;gap:8px;margin-bottom:10px"><input id="customWordInput" type="text" placeholder="输入要新增的敏感词，回车或点击添加" style="flex:1" onkeydown="if(event.key===\'Enter\')addCustomWord()"><button class="btn btn-pri" onclick="addCustomWord()">添加</button></div>';
+  var _cw = loadFromLS('customBanned', []);
+  if (_cw.length > 0) {
+    _cw.forEach(function(w, i) { h += '<span class="tag tag-red" style="margin:2px;cursor:default">' + escAttr(w) + ' <span style="cursor:pointer;font-weight:bold" onclick="removeCustomWord(' + i + ')">✕</span></span>'; });
+  } else {
+    h += '<div style="color:var(--text2);font-size:12px">暂无自定义敏感词。添加后对所有合规检测立即生效（仅保存在本机浏览器）。</div>';
+  }
   h += '</div>';
   return h;
 }
@@ -3218,10 +3198,11 @@ function bindCreateEvents() {
   var titleEl = document.getElementById('createTitle');
   var bodyEl = document.getElementById('createBody');
   var tagsEl = document.getElementById('createTags');
-  if (titleEl) { titleEl.addEventListener('input', function() { createState.title = this.value; }); }
+  if (titleEl) { titleEl.addEventListener('input', function() { createState.title = this.value; saveToLS('createDraft', createState); }); }
   if (bodyEl) {
     bodyEl.addEventListener('input', function() {
       createState.body = this.value;
+      saveToLS('createDraft', createState);
       var wc = document.getElementById('wordCount');
       if (wc) wc.textContent = this.value.length + ' \u5B57';
     });
@@ -3231,6 +3212,7 @@ function bindCreateEvents() {
   if (tagsEl) {
     tagsEl.addEventListener('input', function() {
       createState.tags = this.value.split(/[,，]/).map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+      saveToLS('createDraft', createState);
     });
   }
 }
@@ -3315,14 +3297,14 @@ function nav(page) {
   currentPage = page;
   var items = document.querySelectorAll('.nav-item');
   items.forEach(function(item) { item.classList.remove('active'); });
-  var pageMap = {home:0,accounts:1,hotspots:2,topics:3,benchmarks:4,viral:5,viralContent:6,teardown:7,scripts:8,create:9,library:10,analytics:11,weekly:12,compliance:13,tasks:14,reports:15,files:16};
+  var pageMap = {home:0,accounts:1,hotspots:2,topics:3,benchmarks:4,viralContent:5,teardown:6,scripts:7,create:8,posters:9,library:10,analytics:11,weekly:12,compliance:13,tasks:14,reports:15,files:16};
   var idx = pageMap[page];
   if (idx !== undefined) { items[idx].classList.add('active'); }
-  var renderers = {home:renderHome,accounts:renderAccounts,hotspots:renderHotspots,topics:renderTopics,benchmarks:renderBenchmarks,viral:renderViral,viralContent:renderViralContent,teardown:renderTeardown,scripts:renderScripts,create:renderCreate,library:renderLibrary,analytics:renderAnalytics,weekly:renderWeekly,compliance:renderCompliance,tasks:renderTasks,reports:renderReports,files:renderFiles};
+  var renderers = {home:renderHome,accounts:renderAccounts,hotspots:renderHotspots,topics:renderTopics,benchmarks:renderBenchmarks,viralContent:renderViralContent,teardown:renderTeardown,scripts:renderScripts,create:renderCreate,posters:renderPosters,library:renderLibrary,analytics:renderAnalytics,weekly:renderWeekly,compliance:renderCompliance,tasks:renderTasks,reports:renderReports,files:renderFiles};
   var fn = renderers[page];
   if (fn) {
     document.getElementById('main').innerHTML = fn();
-    var chartInits = {home:initHomeChart,accounts:initAccountsChart,viral:initViralChart,teardown:function(){initTeardownChart();},analytics:initAnalyticsCharts};
+    var chartInits = {home:initHomeChart,accounts:initAccountsChart,teardown:function(){initTeardownChart();},analytics:initAnalyticsCharts,posters:drawPoster};
     var chartFn = chartInits[page];
     if (chartFn) { setTimeout(chartFn, 100); }
     startClock();
@@ -3455,6 +3437,7 @@ function checkFromCreate(i) {
   }
 }
 
+var aiPrompt = '';
 function aiGenerate(templateIdx) {
   var t = contentTemplates[templateIdx];
   var prompt = '请根据以下框架为我生成一篇小红书财经类笔记：\n\n';
@@ -3466,10 +3449,11 @@ function aiGenerate(templateIdx) {
   prompt += '要求：小红书风格，使用emoji，标题吸引眼球，字数500-800字\n';
   prompt += '合规要求：不得承诺收益、不得保本保收益、不得诱导开户，提及基金需附风险提示，提及收益需声明"过往业绩不代表未来"\n';
   prompt += '文章结尾必须附上：市场有风险，投资需谨慎。';
+  aiPrompt = prompt;
   openModal('AI文案生成引导', '<div style="font-size:14px;line-height:1.8">' +
     '<p style="margin-bottom:12px">请复制以下提示词，粘贴到 QoderWork 对话窗口中，AI将为你生成完整文案：</p>' +
     '<div class="script-box" style="font-size:12px">' + prompt.replace(/</g,'&lt;') + '</div>' +
-    '<button class="btn btn-pri" style="margin-top:12px" onclick="copyText(\'' + prompt.replace(/'/g, "\\'").replace(/\n/g, '\\n') + '\')">复制提示词</button>' +
+    '<button class="btn btn-pri" style="margin-top:12px" onclick="copyText(aiPrompt)">复制提示词</button>' +
     '<p style="margin-top:12px;color:var(--text2);font-size:13px">生成后，将文案粘贴回上方的编辑框中，然后使用"敏感词检查"功能确认合规。</p></div>');
 }
 
@@ -3606,6 +3590,7 @@ function addScript() {
 }
 
 function exportTopicsExcel() {
+  if (typeof XLSX === 'undefined') { toast('Excel组件未加载（需联网），导出/导入功能暂不可用，请检查网络后刷新页面', 'warning'); return; }
   var wb = XLSX.utils.book_new();
   var data = [['选题名称','推荐度','借热点','投教主题','投教分类','投教方向','合规等级','合规提示','发布时间','参考标题','图片风格','文案风格','内容框架']];
   topicPlans.forEach(function(t) {
@@ -3620,6 +3605,7 @@ function exportTopicsExcel() {
 }
 
 function exportScriptsExcel() {
+  if (typeof XLSX === 'undefined') { toast('Excel组件未加载（需联网），导出/导入功能暂不可用，请检查网络后刷新页面', 'warning'); return; }
   var wb = XLSX.utils.book_new();
   var data = [['分类','序号','话术内容']];
   Object.keys(scriptCategories).forEach(function(cat) {
@@ -3788,6 +3774,326 @@ function closeSidebar() {
 archiveFzWeek();
 loadHistoryIndex();
 nav('home');
+
+/* ===================== 海报设计模块 (V2.4) ===================== */
+var posterTemplates = [
+  {id:'bigtitle', name:'大字报', icon:'📢', desc:'主标题撑满封面，适合热点快评', bg:'#1E3A8A', accent:'#F59E0B', light:false},
+  {id:'checklist', name:'清单干货', icon:'📋', desc:'要点卡片排版，适合攻略指南', bg:'#FFFFFF', accent:'#E01E24', light:true},
+  {id:'datacard', name:'数据卡片', icon:'📊', desc:'关键数字放大，适合行情复盘', bg:'#0F172A', accent:'#10B981', light:false},
+  {id:'compare', name:'对比解读', icon:'⚖️', desc:'左右对照排版，适合政策解读', bg:'#FFFBEB', accent:'#2563EB', light:true},
+  {id:'quote', name:'金句投教', icon:'💬', desc:'金句留白设计，适合心态投教', bg:'#FDF2F8', accent:'#DB2777', light:true}
+];
+var posterState = loadFromLS('poster', {tpl:'bigtitle', title:'', sub:'', points:['','',''], bigNum:'', numLabel:'', tags:'', quote:'', author:''});
+function savePosterState() { saveToLS('poster', posterState); }
+function escAttr(x) { return String(x === undefined || x === null ? '' : x).split('&').join('&amp;').split('"').join('&quot;').split('<').join('&lt;'); }
+
+function clearCreateDraft() {
+  createState = { step: 1, hotspotId: null, title: '', body: '', tags: [], imgStyle: '', copyStyle: '' };
+  saveToLS('createDraft', createState);
+  nav('create');
+  toast('草稿已清空', 'success');
+}
+function addCustomWord() {
+  var el = document.getElementById('customWordInput');
+  if (!el) return;
+  var w = el.value.trim();
+  if (!w) { toast('请输入敏感词', 'warning'); return; }
+  if (bannedWords.indexOf(w) >= 0) { toast('该词已在词库中', 'warning'); return; }
+  bannedWords.push(w);
+  var custom = loadFromLS('customBanned', []);
+  custom.push(w);
+  saveToLS('customBanned', custom);
+  toast('已添加自定义敏感词：' + w, 'success');
+  nav('compliance');
+}
+function removeCustomWord(i) {
+  var custom = loadFromLS('customBanned', []);
+  if (i < 0 || i >= custom.length) return;
+  var w = custom.splice(i, 1)[0];
+  var idx = bannedWords.indexOf(w);
+  if (idx >= 0) bannedWords.splice(idx, 1);
+  saveToLS('customBanned', custom);
+  toast('已移除：' + w, 'success');
+  nav('compliance');
+}
+
+function posterFromCreate() {
+  if (!createState.title && !createState.body) { toast('请先在创作模块填写标题或正文', 'warning'); return; }
+  posterState.title = createState.title || '';
+  var lines = (createState.body || '').split('\n').map(function(l) { return l.replace(/^[#*\-–—\s]+/, '').trim(); }).filter(function(l) { return l.length > 1; });
+  posterState.points = lines.slice(0, 5);
+  while (posterState.points.length < 3) posterState.points.push('');
+  posterState.tags = (createState.tags || []).join('  ');
+  savePosterState();
+  nav('posters');
+  toast('已带入文案，请选择模板微调', 'success');
+}
+function posterSelectTpl(id) { posterState.tpl = id; savePosterState(); nav('posters'); }
+function posterField(k, el) { posterState[k] = el.value; savePosterState(); drawPoster(); }
+function posterPoint(i, el) { posterState.points[i] = el.value; savePosterState(); drawPoster(); }
+function posterReset() {
+  posterState = {tpl: posterState.tpl, title:'', sub:'', points:['','',''], bigNum:'', numLabel:'', tags:'', quote:'', author:''};
+  savePosterState();
+  nav('posters');
+  toast('海报内容已清空', 'success');
+}
+function posterText() {
+  var parts = [];
+  if (posterState.title) parts.push(posterState.title);
+  if (posterState.sub) parts.push(posterState.sub);
+  if (posterState.bigNum) parts.push(posterState.bigNum + ' ' + posterState.numLabel);
+  posterState.points.forEach(function(p) { if (p) parts.push(p); });
+  if (posterState.quote) parts.push(posterState.quote);
+  if (posterState.tags) parts.push(posterState.tags);
+  return parts.join('\n');
+}
+function posterCheckWords() {
+  var text = posterText();
+  var hits = [];
+  bannedWords.forEach(function(w) { if (w.length >= 2 && text.indexOf(w) >= 0 && hits.indexOf(w) < 0) hits.push(w); });
+  return hits;
+}
+
+function renderPosters() {
+  var h = renderTopbar();
+  h += '<div class="page-title">海报设计 <span class="badge">1080×1440 · 3:4</span></div>';
+  h += '<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">';
+  /* 左侧控制区 */
+  h += '<div style="flex:1;min-width:320px">';
+  h += '<div class="card" style="padding:16px;margin-bottom:16px"><div class="card-title">🎨 选择模板</div>';
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">';
+  posterTemplates.forEach(function(t) {
+    var sel = posterState.tpl === t.id ? 'border:2px solid var(--pri);background:#F3E8FF' : 'border:1px solid var(--border)';
+    h += '<div style="padding:10px;border-radius:8px;cursor:pointer;' + sel + '" onclick="posterSelectTpl(\'' + t.id + '\')">';
+    h += '<div style="font-size:22px">' + t.icon + '</div><div style="font-weight:600;margin:4px 0">' + t.name + '</div>';
+    h += '<div style="font-size:11px;color:var(--text2)">' + t.desc + '</div></div>';
+  });
+  h += '</div></div>';
+  h += '<div class="card" style="padding:16px;margin-bottom:16px"><div class="card-title">✏️ 海报文案</div>';
+  h += '<div style="font-size:12px;color:var(--text2);margin-bottom:10px">提示：在"内容创作"模块完成后点击"生成配套海报"可一键带入文案。海报自动添加合规底栏，导出前自动做敏感词预检。</div>';
+  h += '<div style="margin-bottom:10px"><label style="font-size:12px;color:var(--text2)">主标题</label><input id="pTitle" type="text" value="' + escAttr(posterState.title) + '" oninput="posterField(\'title\', this)" style="width:100%"></div>';
+  h += '<div style="margin-bottom:10px"><label style="font-size:12px;color:var(--text2)">副标题 / 补充说明</label><input id="pSub" type="text" value="' + escAttr(posterState.sub) + '" oninput="posterField(\'sub\', this)" style="width:100%"></div>';
+  if (posterState.tpl === 'datacard') {
+    h += '<div style="display:flex;gap:10px;margin-bottom:10px"><div style="flex:1"><label style="font-size:12px;color:var(--text2)">关键数字</label><input id="pNum" type="text" value="' + escAttr(posterState.bigNum) + '" oninput="posterField(\'bigNum\', this)" style="width:100%"></div>';
+    h += '<div style="flex:2"><label style="font-size:12px;color:var(--text2)">数字说明</label><input id="pNumLabel" type="text" value="' + escAttr(posterState.numLabel) + '" oninput="posterField(\'numLabel\', this)" style="width:100%"></div></div>';
+  }
+  if (posterState.tpl === 'quote') {
+    h += '<div style="margin-bottom:10px"><label style="font-size:12px;color:var(--text2)">金句内容</label><textarea id="pQuote" rows="3" oninput="posterField(\'quote\', this)" style="width:100%">' + escAttr(posterState.quote) + '</textarea></div>';
+    h += '<div style="margin-bottom:10px"><label style="font-size:12px;color:var(--text2)">署名/来源</label><input id="pAuthor" type="text" value="' + escAttr(posterState.author) + '" oninput="posterField(\'author\', this)" style="width:100%"></div>';
+  } else {
+    h += '<label style="font-size:12px;color:var(--text2)">要点（每行一条，最多5条' + (posterState.tpl === 'compare' ? '，前2条为左右栏内容' : '') + '）</label>';
+    posterState.points.forEach(function(p, i) {
+      h += '<input type="text" value="' + escAttr(p) + '" oninput="posterPoint(' + i + ', this)" style="width:100%;margin:4px 0" placeholder="要点 ' + (i + 1) + '">';
+    });
+  }
+  h += '<div style="margin:10px 0"><label style="font-size:12px;color:var(--text2)">话题标签（显示在底部）</label><input id="pTags" type="text" value="' + escAttr(posterState.tags) + '" oninput="posterField(\'tags\', this)" style="width:100%"></div>';
+  h += '<div style="display:flex;gap:10px;flex-wrap:wrap">';
+  h += '<button class="btn btn-pri" onclick="exportPoster()">⬇️ 导出PNG</button>';
+  h += '<button class="btn" onclick="copyText(posterText())">复制海报文案</button>';
+  h += '<button class="btn" onclick="posterReset()">清空</button>';
+  h += '</div></div></div>';
+  /* 右侧预览 */
+  h += '<div class="card" style="width:380px;max-width:100%;padding:16px">';
+  h += '<div class="card-title">👁 实时预览</div>';
+  h += '<canvas id="posterCanvas" width="1080" height="1440" style="width:100%;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.18)"></canvas>';
+  h += '<div style="font-size:11px;color:var(--text2);margin-top:8px">导出尺寸 1080×1440（小红书3:4）。底栏含风险提示，请勿裁剪。</div>';
+  h += '</div>';
+  h += '</div>';
+  return h;
+}
+
+function posterWrap(ctx, text, maxWidth) {
+  var lines = [], line = '';
+  text = String(text || '');
+  for (var i = 0; i < text.length; i++) {
+    var test = line + text.charAt(i);
+    if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = text.charAt(i); }
+    else { line = test; }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+function posterRoundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+function drawPoster() {
+  var c = document.getElementById('posterCanvas');
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  var tpl = posterTemplates[0];
+  posterTemplates.forEach(function(t) { if (t.id === posterState.tpl) tpl = t; });
+  var W = 1080, H = 1440, M = 72;
+  var light = !!tpl.light;
+  var mainColor = light ? '#1F2937' : '#FFFFFF';
+  var subColor = light ? '#6B7280' : 'rgba(255,255,255,0.72)';
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = tpl.bg;
+  ctx.fillRect(0, 0, W, H);
+  ctx.textBaseline = 'middle';
+  /* 顶部品牌条 */
+  ctx.fillStyle = tpl.accent;
+  ctx.fillRect(0, 0, W, 14);
+  ctx.font = 'bold 34px "Microsoft YaHei", "PingFang SC", sans-serif';
+  ctx.fillText('方正证券 · 投教小课堂', M, 98);
+  ctx.font = '24px "Microsoft YaHei", sans-serif';
+  ctx.fillStyle = subColor;
+  var d = new Date();
+  ctx.fillText(d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日', M, 150);
+  var title = posterState.title || '在这里输入主标题';
+  var sub = posterState.sub || '';
+  var y = 0;
+
+  if (tpl.id === 'bigtitle') {
+    y = 420;
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 96px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = mainColor;
+    posterWrap(ctx, title, W - M * 2 - 40).slice(0, 4).forEach(function(ln) { ctx.fillText(ln, W / 2, y); y += 118; });
+    if (sub) {
+      ctx.font = '42px "Microsoft YaHei", sans-serif';
+      ctx.fillStyle = tpl.accent;
+      posterWrap(ctx, sub, W - M * 2).slice(0, 2).forEach(function(ln) { ctx.fillText(ln, W / 2, y + 30); y += 60; });
+    }
+    ctx.textAlign = 'left';
+  } else if (tpl.id === 'checklist') {
+    y = 270;
+    ctx.textAlign = 'left';
+    ctx.font = 'bold 62px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = mainColor;
+    posterWrap(ctx, title, W - M * 2).slice(0, 2).forEach(function(ln) { ctx.fillText(ln, M, y); y += 80; });
+    y += 40;
+    var pts = posterState.points.filter(function(p) { return p; }).slice(0, 5);
+    pts.forEach(function(p, i) {
+      if (y + 150 > H - 250) return;
+      ctx.fillStyle = light ? '#F3F4F6' : 'rgba(255,255,255,0.08)';
+      posterRoundRect(ctx, M, y, W - M * 2, 150, 20);
+      ctx.fill();
+      ctx.fillStyle = tpl.accent;
+      posterRoundRect(ctx, M, y, 12, 150, 6);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(M + 80, y + 75, 34, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = light ? '#FFFFFF' : '#0F172A';
+      ctx.font = 'bold 34px "Microsoft YaHei", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(String(i + 1), M + 80, y + 77);
+      ctx.textAlign = 'left';
+      ctx.fillStyle = mainColor;
+      ctx.font = '38px "Microsoft YaHei", sans-serif';
+      var pl = posterWrap(ctx, p, W - M * 2 - 180);
+      pl.slice(0, 2).forEach(function(ln, j) { ctx.fillText(ln, M + 145, y + 75 - (pl.length > 1 ? 32 : 0) + j * 56); });
+      y += 176;
+    });
+  } else if (tpl.id === 'datacard') {
+    y = 360;
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 58px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = mainColor;
+    posterWrap(ctx, title, W - M * 2).slice(0, 2).forEach(function(ln) { ctx.fillText(ln, W / 2, y); y += 76; });
+    y += 130;
+    ctx.font = 'bold 200px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = tpl.accent;
+    ctx.fillText(posterState.bigNum || '49.8%', W / 2, y);
+    y += 150;
+    ctx.font = '42px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = mainColor;
+    ctx.fillText(posterState.numLabel || '关键数字说明', W / 2, y);
+    y += 100;
+    ctx.font = '32px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = subColor;
+    posterState.points.filter(function(p) { return p; }).slice(0, 3).forEach(function(p) {
+      posterWrap(ctx, p, W - M * 2).slice(0, 2).forEach(function(ln) { ctx.fillText(ln, W / 2, y); y += 48; });
+      y += 18;
+    });
+    ctx.textAlign = 'left';
+  } else if (tpl.id === 'compare') {
+    y = 260;
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 58px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = mainColor;
+    posterWrap(ctx, title, W - M * 2).slice(0, 2).forEach(function(ln) { ctx.fillText(ln, W / 2, y); y += 74; });
+    y += 60;
+    var colW = (W - M * 2 - 40) / 2;
+    var boxH = 540;
+    var cols = [[M, posterState.points[0] || '左侧要点', 0], [M + colW + 40, posterState.points[1] || '右侧要点', 1]];
+    cols.forEach(function(col) {
+      var bx = col[0], content = col[1], ci = col[2];
+      ctx.fillStyle = ci === 0 ? 'rgba(224,30,36,0.08)' : 'rgba(37,99,235,0.08)';
+      posterRoundRect(ctx, bx, y, colW, boxH, 24);
+      ctx.fill();
+      ctx.fillStyle = ci === 0 ? '#E01E24' : '#2563EB';
+      ctx.font = 'bold 38px "Microsoft YaHei", sans-serif';
+      ctx.fillText(ci === 0 ? (sub || '旧模式') : (posterState.tags || '新模式'), bx + colW / 2, y + 70);
+      ctx.fillStyle = mainColor;
+      ctx.font = '32px "Microsoft YaHei", sans-serif';
+      var cy = y + 150;
+      posterWrap(ctx, content, colW - 60).slice(0, 8).forEach(function(ln) { ctx.fillText(ln, bx + colW / 2, cy); cy += 50; });
+    });
+    ctx.font = 'bold 50px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = tpl.accent;
+    ctx.fillText('VS', W / 2, y + boxH / 2);
+    ctx.textAlign = 'left';
+  } else if (tpl.id === 'quote') {
+    y = 500;
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 170px Georgia, serif';
+    ctx.fillStyle = tpl.accent;
+    ctx.fillText('"', W / 2, y - 60);
+    ctx.font = 'bold 56px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = mainColor;
+    posterWrap(ctx, posterState.quote || '在这里输入金句内容', W - M * 2 - 60).slice(0, 6).forEach(function(ln) { ctx.fillText(ln, W / 2, y); y += 82; });
+    if (posterState.author) {
+      y += 60;
+      ctx.font = '34px "Microsoft YaHei", sans-serif';
+      ctx.fillStyle = subColor;
+      ctx.fillText('— ' + posterState.author, W / 2, y);
+    }
+    ctx.textAlign = 'left';
+  }
+
+  /* 底部标签行（compare 模板中 tags 用作右栏标题，跳过） */
+  if (tpl.id !== 'compare' && posterState.tags) {
+    ctx.font = '30px "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = subColor;
+    var tw = posterWrap(ctx, posterState.tags, W - M * 2);
+    ctx.fillText(tw[0] || '', M, H - 195);
+  }
+  /* 合规底栏 */
+  ctx.fillStyle = light ? '#1F2937' : 'rgba(255,255,255,0.12)';
+  ctx.fillRect(0, H - 130, W, 130);
+  ctx.font = '25px "Microsoft YaHei", sans-serif';
+  ctx.fillStyle = light ? '#FFFFFF' : 'rgba(255,255,255,0.8)';
+  ctx.fillText('市场有风险，投资需谨慎 | 本内容仅供参考，不构成投资建议', M, H - 88);
+  ctx.fillStyle = light ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.55)';
+  ctx.fillText('© 方正证券 投教内容', M, H - 46);
+}
+
+function exportPoster() {
+  drawPoster();
+  var c = document.getElementById('posterCanvas');
+  if (!c) return;
+  var hits = posterCheckWords();
+  try {
+    var url = c.toDataURL('image/png');
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'xhs-poster-' + (posterState.title ? posterState.title.substring(0, 15) : 'untitled') + '.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    if (hits.length) toast('海报已导出，但检测到敏感词：' + hits.slice(0, 5).join('、') + '，请务必复核！', 'warning');
+    else toast('海报已导出（含合规底栏）', 'success');
+  } catch (e) {
+    toast('导出失败：' + e.message, 'error');
+  }
+}
 </script>
 </body>
 </html>
