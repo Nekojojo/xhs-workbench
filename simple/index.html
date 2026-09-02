@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小红书工作台 简易版1.2 - 方正证券 - 9月1日</title>
+<title>小红书工作台 简易版1.3 - 方正证券 - 9月1日</title>
 <script src="../history/index.js"></script>
 <style>
 :root {
@@ -258,7 +258,7 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
     <div class="nav-item" onclick="nav('create')"><span class="icon">&#x270F;&#xFE0F;</span><span>内容创作</span></div>
     <div class="nav-item" onclick="nav('compliance')"><span class="icon">&#x26A0;&#xFE0F;</span><span>敏感词筛查</span></div>
   </div>
-  <div class="sidebar-footer">小红书工作台 简易版1.2<br>方正证券新媒体团队</div>
+  <div class="sidebar-footer">小红书工作台 简易版1.3<br>方正证券新媒体团队</div>
 </div>
 <div class="main" id="main"></div>
 <div id="toast-container"></div>
@@ -1795,7 +1795,7 @@ var contentStyles = [
 function renderTopbar() {
   var now = new Date();
   var t = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 ' + ('0'+now.getHours()).slice(-2) + ':' + ('0'+now.getMinutes()).slice(-2) + ':' + ('0'+now.getSeconds()).slice(-2);
-  return '<div class="topbar"><span class="topbar-clock" id="clock">' + t + '</span><span style="font-size:13px;color:var(--text2)">小红书工作台 简易版1.2</span></span><span id="history-selector-slot"></span></div>';
+  return '<div class="topbar"><span class="topbar-clock" id="clock">' + t + '</span><span style="font-size:13px;color:var(--text2)">小红书工作台 简易版1.3</span></span><span id="history-selector-slot"></span></div>';
 }
 
 function renderHotspots() {
@@ -1837,7 +1837,7 @@ function renderHotspots() {
     h += '<td style="white-space:nowrap"><a href="' + t.link + '" target="_blank" class="btn btn-sm" onclick="event.stopPropagation()">查看原文</a> <button class="btn btn-sm btn-pri" onclick="event.stopPropagation();createFromHotspot(' + t.id + ')">去创作</button></td></tr>';
     h += '<tr class="expand-row" id="topic-' + t.id + '"><td colspan="7"><div class="topic-detail">';
     h += '<div style="margin-bottom:12px"><strong>小红书风格标题（5条）：</strong><ul class="xhs-titles">';
-    t.titles.forEach(function(ti) { h += '<li>' + ti + ' <button class="btn btn-sm" style="float:right;margin-top:-2px" onclick="event.stopPropagation();copyText(\'' + ti.replace(/'/g, "\\'") + '\')">复制</button></li>'; });
+    t.titles.forEach(function(ti) { h += '<li style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>' + ti + '</span><button class="btn btn-sm" data-t="' + String(ti).split('"').join('&quot;') + '" onclick="event.stopPropagation();copyText(this.getAttribute(\'data-t\'))">复制</button></li>'; });
     h += '</ul></div>';
     h += '<div style="margin-bottom:10px"><strong>推荐标签：</strong> ';
     t.tags.forEach(function(tag) { h += '<span class="tag tag-purple" style="margin-right:6px">' + tag + '</span>'; });
@@ -2042,7 +2042,7 @@ function renderCreateStep2() {
   if (hotspot) {
     h += '<div style="margin-top:8px"><strong style="font-size:12px">推荐标题：</strong> ';
     hotspot.titles.forEach(function(ti) {
-      h += '<button class="btn btn-sm" style="margin:3px" onclick="document.getElementById(\'createTitle\').value=\'' + ti.replace(/'/g, "\\'") + '\'">' + ti + '</button>';
+    h += '<button class="btn btn-sm" style="margin:3px" data-t="' + String(ti).split('"').join('&quot;') + '" onclick="document.getElementById(\'createTitle\').value=this.getAttribute(\'data-t\')">' + ti + '</button>';
     });
     h += '</div>';
   }
@@ -2123,7 +2123,7 @@ function renderCreateStep3() {
 
   h += '<div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">';
   h += '<button class="btn btn-pri" onclick="copyAllContent()">\uD83D\uDCCB \u590D\u5236\u5168\u90E8\u5185\u5BB9</button>';
-  h += '<button class="btn" onclick="copyText(\'' + title.replace(/'/g, "\\'") + '\')">\u590D\u5236\u6807\u9898</button>';
+  h += '<button class="btn" onclick="copyText(createState.title)">\u590D\u5236\u6807\u9898</button>';
   h += '<button class="btn" onclick="copyBodyWithDisclaimer()">\u590D\u5236\u6B63\u6587</button>';
   h += '<button class="btn" onclick="goCreateStep(2)">&larr; 返回编辑</button>';
   h += '<button class="btn btn-pri" onclick="nav(\'compliance\')" style="margin-left:auto">&rarr; 去敏感词检查</button>';
@@ -2196,11 +2196,12 @@ function bindCreateEvents() {
   var bodyEl = document.getElementById('createBody');
   var tagsEl = document.getElementById('createTags');
   if (titleEl) {
-    titleEl.addEventListener('input', function() { createState.title = this.value; });
+    titleEl.addEventListener('input', function() { createState.title = this.value; saveToLS('createDraft', createState); });
   }
   if (bodyEl) {
     bodyEl.addEventListener('input', function() {
       createState.body = this.value;
+      saveToLS('createDraft', createState);
       var wc = document.getElementById('wordCount');
       if (wc) wc.textContent = this.value.length + ' \u5B57';
     });
@@ -2210,6 +2211,7 @@ function bindCreateEvents() {
   if (tagsEl) {
     tagsEl.addEventListener('input', function() {
       createState.tags = this.value.split(/[,，]/).map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+      saveToLS('createDraft', createState);
     });
   }
 }
@@ -2372,60 +2374,80 @@ function copyBodyWithDisclaimer() {
 
 function checkCompliance() {
   var text = document.getElementById('complianceInput').value;
-  if (!text.trim()) { toast('\u8BF7\u5148\u8F93\u5165\u5F85\u68C0\u6D4B\u7684\u6587\u6848\u5185\u5BB9', 'warning'); return; }
-
+  if (!text.trim()) { toast('请输入待检测内容', 'warning'); return; }
   var dangers = [];
   var warnings = [];
   var missingDecl = [];
-
   bannedWords.forEach(function(w) {
     if (text.indexOf(w) >= 0) {
-      if (dangerWords.indexOf(w) >= 0) { dangers.push(w); }
-      else { warnings.push(w); }
+      if (dangerWords.indexOf(w) >= 0) {
+        dangers.push(w);
+      } else {
+        warnings.push(w);
+      }
     }
   });
+  /* Compliance statement checks */
+  if (text.indexOf('基金') >= 0 && text.indexOf('风险') < 0) { missingDecl.push('提及基金产品但未包含风险提示'); }
+  if (text.indexOf('收益') >= 0 && text.indexOf('过往') < 0 && text.indexOf('历史') < 0) { missingDecl.push('提及收益但未声明"过往业绩不代表未来"'); }
+  if (text.indexOf('开户') >= 0 && text.indexOf('风险') < 0) { missingDecl.push('涉及开户引导但未包含风险声明'); }
+  if (text.indexOf('推荐') >= 0 && text.indexOf('风险') < 0) { missingDecl.push('涉及产品推荐但未包含风险声明'); }
+  if (text.indexOf('期货') >= 0 && text.indexOf('风险') < 0) { missingDecl.push('涉及期货产品但未包含风险提示'); }
+  if (text.indexOf('配资') >= 0) { missingDecl.push('配资属于严重违规行为，请立即删除相关内容'); }
+  if ((text.indexOf('帮我') >= 0 || text.indexOf('替我') >= 0) && (text.indexOf('买') >= 0 || text.indexOf('卖') >= 0 || text.indexOf('操作') >= 0)) { missingDecl.push('涉嫌代客操作，请立即删除相关表述'); }
+  if (text.indexOf('创业板') >= 0 && (text.indexOf('答案') >= 0 || text.indexOf('测评') >= 0)) { missingDecl.push('涉及创业板/风险测评答案属于严重违规'); }
+  if ((text.indexOf('微信说') >= 0 || text.indexOf('微信发') >= 0 || text.indexOf('95571') >= 0) && text.indexOf('不要') >= 0) { missingDecl.push('涉嫌引导规避监管，请立即删除'); }
+  if (text.indexOf('密码发') >= 0 || text.indexOf('出借账户') >= 0 || text.indexOf('借用账户') >= 0) { missingDecl.push('涉及账户安全违规，请立即删除'); }
+  if (text.indexOf('市场有风险') < 0 || text.indexOf('投资需谨慎') < 0) { missingDecl.push('文章结尾缺少标准风险提示：市场有风险，投资需谨慎'); }
 
-  if (text.indexOf('\u57FA\u91D1') >= 0 && text.indexOf('\u98CE\u9669') < 0) { missingDecl.push('\u63D0\u53CA\u57FA\u91D1\u4EA7\u54C1\u4F46\u672A\u5305\u542B\u98CE\u9669\u63D0\u793A'); }
-  if (text.indexOf('\u6536\u76CA') >= 0 && text.indexOf('\u8FC7\u5F80') < 0 && text.indexOf('\u5386\u53F2') < 0) { missingDecl.push('\u63D0\u53CA\u6536\u76CA\u4F46\u672A\u58F0\u660E\u201C\u8FC7\u5F80\u4E1A\u7EE9\u4E0D\u4EE3\u8868\u672A\u6765\u201D'); }
-  if (text.indexOf('\u5F00\u6237') >= 0 && text.indexOf('\u98CE\u9669') < 0) { missingDecl.push('\u6D89\u53CA\u5F00\u6237\u5F15\u5BFC\u4F46\u672A\u5305\u542B\u98CE\u9669\u58F0\u660E'); }
-  if (text.indexOf('\u63A8\u8350') >= 0 && text.indexOf('\u98CE\u9669') < 0) { missingDecl.push('\u6D89\u53CA\u4EA7\u54C1\u63A8\u8350\u4F46\u672A\u5305\u542B\u98CE\u9669\u58F0\u660E'); }
-  if (text.indexOf('\u5E02\u573A\u6709\u98CE\u9669') < 0 || text.indexOf('\u6295\u8D44\u9700\u8C28\u614E') < 0) { missingDecl.push('\u6587\u7AE0\u7ED3\u5C3E\u7F3A\u5C11\u6807\u51C6\u98CE\u9669\u63D0\u793A\uFF1A\u5E02\u573A\u6709\u98CE\u9669\uFF0C\u6295\u8D44\u9700\u8C28\u614E'); }
+  /* Sort matched words by length (longest first) for annotation */
+  var allMatched = dangers.concat(warnings);
+  allMatched.sort(function(a, b) { return b.length - a.length; });
 
   var annotated = text;
-  dangers.forEach(function(w) { annotated = annotated.replace(new RegExp(w, 'g'), '<span class="text-danger">' + w + '</span>'); });
-  warnings.forEach(function(w) { annotated = annotated.replace(new RegExp(w, 'g'), '<span class="text-warning">' + w + '</span>'); });
+  allMatched.forEach(function(w) {
+    var escaped = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var cls = dangerWords.indexOf(w) >= 0 ? 'text-danger' : 'text-warning';
+    annotated = annotated.replace(new RegExp(escaped, 'g'), '<span class="' + cls + '">' + w + '</span>');
+  });
 
-  var score = 100 - dangers.length * 20 - warnings.length * 8 - missingDecl.length * 10;
+  var score = 100 - dangers.length * 15 - warnings.length * 5 - missingDecl.length * 10;
   score = Math.max(0, score);
   var scoreColor = score >= 80 ? 'var(--green)' : (score >= 50 ? 'var(--orange)' : 'var(--pri)');
-  var scoreLabel = score >= 80 ? '\u4F18\u79C0' : (score >= 50 ? '\u9700\u4FEE\u6539' : '\u4E25\u91CD\u8FDD\u89C4');
+  var scoreLabel = score >= 80 ? '优秀' : (score >= 50 ? '需修改' : '严重违规');
 
   var h = '';
-  h += '<div class="card"><div class="card-title">\u68C0\u6D4B\u7ED3\u679C</div>';
-  h += '<div style="text-align:center;margin-bottom:20px"><div style="font-size:52px;font-weight:700;color:' + scoreColor + '">' + score + '</div>';
-  h += '<div style="font-size:14px;color:var(--text2)">\u5408\u89C4\u8BC4\u5206 \u00B7 ' + scoreLabel + '</div></div>';
+  h += '<div class="card" style="margin-top:16px"><div class="card-title">检测结果</div>';
+  h += '<div style="text-align:center;margin-bottom:16px"><div style="font-size:48px;font-weight:700;color:' + scoreColor + '">' + score + '</div>';
+  h += '<div style="font-size:14px;color:var(--text2)">合规评分 · ' + scoreLabel + ' · 已收录' + bannedWords.length + '个敏感词</div></div>';
 
   if (dangers.length > 0) {
-    h += '<div class="result-box result-danger"><strong>\u9AD8\u5371\u8BCD\u6C47\uFF08' + dangers.length + '\u4E2A\uFF09\u2014 \u8BF7\u7ACB\u5373\u5220\u9664\u6216\u66FF\u6362\uFF1A</strong><br>';
-    dangers.forEach(function(d) { h += '<span class="tag tag-red" style="margin:4px">' + d + '</span> '; });
-    h += '<p style="margin-top:8px;font-size:13px">\u8FD9\u4E9B\u8BCD\u6C47\u4E25\u91CD\u8FDD\u53CD\u5E7F\u544A\u6CD5\uFF0C\u53D1\u5E03\u540E\u53EF\u80FD\u5BFC\u81F4\u7B14\u8BB0\u88AB\u9650\u6D41\u751A\u81F3\u8D26\u53F7\u5904\u7F5A\u3002</p></div>';
+    h += '<div class="result-box result-danger"><strong>高危词汇（' + dangers.length + '个）— 请立即删除或替换：</strong><br>';
+    dangers.forEach(function(d) {
+      var cat = wordCategory[d] || '';
+      h += '<span class="tag tag-red" style="margin:4px">' + d + '</span> <span style="font-size:11px;color:var(--text2)">' + cat + '</span> ';
+    });
+    h += '</div>';
   }
   if (warnings.length > 0) {
-    h += '<div class="result-box result-warning"><strong>\u98CE\u9669\u8BCD\u6C47\uFF08' + warnings.length + '\u4E2A\uFF09\u2014 \u5EFA\u8BAE\u4FEE\u6539\u8868\u8FF0\uFF1A</strong><br>';
-    warnings.forEach(function(w) { h += '<span class="tag tag-orange" style="margin:4px">' + w + '</span> '; });
-    h += '<p style="margin-top:8px;font-size:13px">\u8FD9\u4E9B\u8BCD\u6C47\u53EF\u80FD\u5F15\u8D77\u5408\u89C4\u98CE\u9669\u6216\u5E73\u53F0\u964D\u6743\uFF0C\u5EFA\u8BAE\u66FF\u6362\u4E3A\u66F4\u6E29\u548C\u7684\u8868\u8FF0\u3002</p></div>';
+    h += '<div class="result-box result-warning"><strong>风险词汇（' + warnings.length + '个）— 建议修改表述：</strong><br>';
+    warnings.forEach(function(w) {
+      var cat = wordCategory[w] || '';
+      h += '<span class="tag tag-orange" style="margin:4px">' + w + '</span> <span style="font-size:11px;color:var(--text2)">' + cat + '</span> ';
+    });
+    h += '</div>';
   }
   if (missingDecl.length > 0) {
-    h += '<div class="result-box result-warning"><strong>\u7F3A\u5931\u5408\u89C4\u58F0\u660E\uFF08' + missingDecl.length + '\u9879\uFF09\uFF1A</strong><br>';
-    missingDecl.forEach(function(m) { h += '<div style="padding:5px 0;font-size:13px">\u26A0\uFE0F ' + m + '</div>'; });
+    h += '<div class="result-box result-warning"><strong>缺失合规声明（' + missingDecl.length + '项）：</strong><br>';
+    missingDecl.forEach(function(m) { h += '<div style="padding:4px 0;font-size:13px">' + String.fromCharCode(9888, 65039) + ' ' + m + '</div>'; });
     h += '</div>';
   }
   if (dangers.length === 0 && warnings.length === 0 && missingDecl.length === 0) {
-    h += '<div class="result-box result-ok"><strong>\u2705 \u672C\u5730\u68C0\u6D4B\u901A\u8FC7</strong><br><p style="font-size:13px;margin-top:8px">\u672A\u68C0\u6D4B\u5230\u654F\u611F\u8BCD\u53CA\u7F3A\u5931\u58F0\u660E\u3002\u5EFA\u8BAE\u540C\u65F6\u4F7F\u7528\u201C\u96F6\u514B\u67E5\u8BCD\u201D\u8FDB\u884C\u4E8C\u6B21\u9A8C\u8BC1\u540E\u518D\u53D1\u5E03\u3002</p></div>';
+    h += '<div class="result-box result-ok"><strong>✅ 本地检测通过</strong><br><p style="font-size:13px;margin-top:8px">未检测到敏感词，建议同时使用"零克查词"进行二次验证。</p></div>';
   }
 
-  h += '<div style="margin-top:18px"><strong>\u6807\u6CE8\u9884\u89C8\uFF08\u7EA2\u8272=\u9AD8\u5371\uFF0C\u9EC4\u8272=\u98CE\u9669\uFF09\uFF1A</strong></div>';
-  h += '<div style="margin-top:10px;padding:18px;background:#F9FAFB;border-radius:8px;font-size:14px;line-height:1.8;white-space:pre-wrap;border:1px solid var(--border)">' + annotated + '</div>';
+  h += '<div style="margin-top:16px"><strong>标注预览：</strong></div>';
+  h += '<div style="margin-top:8px;padding:16px;background:#F9FAFB;border-radius:8px;font-size:14px;line-height:1.8;white-space:pre-wrap">' + annotated + '</div>';
   h += '</div>';
   document.getElementById('complianceResult').innerHTML = h;
 }
@@ -2562,7 +2584,27 @@ function closeSidebar() {
   document.body.classList.remove('sidebar-open');
 }
 
+function saveToLS(key, data) {
+  try { localStorage.setItem('xhs_wb_' + key, JSON.stringify(data)); } catch(e) {}
+}
+function loadFromLS(key, fallback) {
+  try {
+    var v = localStorage.getItem('xhs_wb_' + key);
+    return v ? JSON.parse(v) : fallback;
+  } catch(e) { return fallback; }
+}
+function clearCreateDraft() {
+  createState = { step: 1, hotspotId: null, title: '', body: '', tags: [], imgStyle: '', copyStyle: '' };
+  saveToLS('createDraft', createState);
+  nav('create');
+  toast('草稿已清空', 'success');
+}
 /* ========== INIT ========== */
+var _draft = loadFromLS('createDraft', null);
+if (_draft && (_draft.title || _draft.body)) {
+  for (var _k in _draft) { if (typeof createState[_k] !== 'undefined') createState[_k] = _draft[_k]; }
+  createState.step = 1;
+}
 loadHistoryIndex();
 nav('hotspots');
 </script>
