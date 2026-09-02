@@ -41,6 +41,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC"
 .topbar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-radius: 0 0 var(--radius) var(--radius); }
 .topbar-left { display: flex; align-items: center; gap: 16px; }
 .topbar-clock { font-size: 14px; color: var(--text2); font-weight: 500; }
+.compliance-reminder { font-size: 12px; font-weight: 600; color: #B91C1C; background: #FEE2E2; border: 1px solid #FCA5A5; padding: 5px 14px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.compliance-reminder:hover { background: #FECACA; }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
 .main { margin-left: var(--sidebar-w); flex: 1; padding: 24px; min-height: 100vh; }
 .page-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
@@ -1124,642 +1126,10 @@ var hotspots = [
 ];
 var _originalHotspots = JSON.parse(JSON.stringify(hotspots));
 
-var topicPlans = [
-  {
-    "name": "燧原科技申购日攻略｜国产GPU四小龙怎么打",
-    "stars": 5,
-    "viral": 96,
-    "hotTitle": "大肉签来了！燧原科技、腾信精密今日申购",
-    "eduTopic": "打新实操教学",
-    "eduCategory": "实操技能",
-    "direction": "借燧原科技今日申购热点，教学申购流程、市值准备、顶格申购计算（需配沪市市值6.5万）与高价新股申购的风险提示",
-    "persona": "打新达人",
-    "type": "图文",
-    "titles": [
-      "今天打新燧原科技！这份攻略先收藏",
-      "142元的AI芯片新股怎么打？一篇讲透",
-      "中一签缴款7.1万｜燧原科技申购全流程"
-    ],
-    "imgStyle": "申购流程图+发行数据卡片+风险提示条",
-    "copyStyle": "实操教学风，数据表格+分步指引",
-    "framework": "热点引入→干货教学→实用总结",
-    "compliance": "safe",
-    "complianceNote": "打新教学安全。不预测上市涨跌，提示破发风险和申购规则。",
-    "time": "08:30",
-    "relatedHotId": 21
-  },
-  {
-    "name": "格林生物上市首日怎么看｜新股上市首日的门道",
-    "stars": 4,
-    "viral": 88,
-    "hotTitle": "9月2日新股提示：腾信精密、燧原科技申购，格林生物上市",
-    "eduTopic": "新股上市首日知识",
-    "eduCategory": "基础知识",
-    "direction": "借格林生物今日登陆创业板热点，科普上市首日的交易规则、开盘竞价机制、首日波动特征与追高风险",
-    "persona": "新股观察员",
-    "type": "图文",
-    "titles": [
-      "格林生物今天上市！首日这些规则要知道",
-      "新股首日怎么走？开盘前先补这一课",
-      "别急着追！新股上市首日避坑指南"
-    ],
-    "imgStyle": "首日交易规则图解+历史首日数据+风险清单",
-    "copyStyle": "规则科普风，图文结合，不预测走势",
-    "framework": "热点事件→规则科普→风险提示",
-    "compliance": "caution",
-    "complianceNote": "涉及新股首日表现，严禁预测涨跌和给出买卖建议，重点做规则科普。",
-    "time": "10:00",
-    "relatedHotId": 22
-  },
-  {
-    "name": "券商中报收官｜43家净赚1554亿怎么看",
-    "stars": 5,
-    "viral": 92,
-    "hotTitle": "43家上市券商半年净赚1554亿，净利百亿俱乐部扩至5家",
-    "eduTopic": "财报数据解读方法",
-    "eduCategory": "基础知识",
-    "direction": "借券商中报收官热点，教普通投资者看懂券商财报的核心指标（经纪、自营、投行收入结构），不推荐个股",
-    "persona": "研报翻译官",
-    "type": "图文",
-    "titles": [
-      "券商半年赚1554亿！数据背后看什么",
-      "3分钟看懂券商中报的核心指标",
-      "百亿俱乐部扩容！券商格局变了吗"
-    ],
-    "imgStyle": "业绩总览卡片+收入结构饼图+座次变化表",
-    "copyStyle": "数据解读风，只讲方法不荐股",
-    "framework": "业绩总览→指标解读→格局观察",
-    "compliance": "safe",
-    "complianceNote": "财报数据解读安全。不预测券商股走势，不推荐具体标的。",
-    "time": "11:30",
-    "relatedHotId": 29
-  },
-  {
-    "name": "中金三合一过会｜券商并购大时代解读",
-    "stars": 5,
-    "viral": 93,
-    "hotTitle": "中金公司重大资产重组过会，又一万亿级券商呼之欲出",
-    "eduTopic": "券商并购与行业格局",
-    "eduCategory": "行业认知",
-    "direction": "借中金公司吸收合并东兴证券、信达证券过会热点，科普券业并购潮的背景、监管导向与行业格局演变",
-    "persona": "行业观察员",
-    "type": "图文",
-    "titles": [
-      "77天过会！中金三合一什么来头",
-      "万亿券商要来了，券商板块怎么看",
-      "券业并购潮：一场正在加速的整合"
-    ],
-    "imgStyle": "并购时间线+券商格局变化图+影响分析",
-    "copyStyle": "行业科普风，讲故事+摆事实",
-    "framework": "事件回顾→格局分析→影响展望",
-    "compliance": "safe",
-    "complianceNote": "行业事件解读安全。不构成投资建议，不推荐券商股买卖。",
-    "time": "14:00",
-    "relatedHotId": 16
-  },
-  {
-    "name": "交易外接新规正式实施｜对你的交易有何影响",
-    "stars": 4,
-    "viral": 86,
-    "hotTitle": "正式实施！券商交易外接新规落地，划定多项禁止性红线",
-    "eduTopic": "交易规则与合规",
-    "eduCategory": "合规提醒",
-    "direction": "借交易外接新规正式实施热点，科普新规的适用范围、主要红线和对普通投资者、量化用户的影响",
-    "persona": "合规卫士",
-    "type": "图文",
-    "titles": [
-      "交易外接新规今天实施！这些红线要知道",
-      "新规落地｜普通股民会受影响吗",
-      "量化用户必看：交易外接新规解读"
-    ],
-    "imgStyle": "新规要点卡片+适用范围图+红线清单",
-    "copyStyle": "合规科普风，逐条解读，通俗易懂",
-    "framework": "政策引入→逐条解读→影响提示",
-    "compliance": "safe",
-    "complianceNote": "监管政策解读安全。客观转述规则，不评价监管，不引导规避监管。",
-    "time": "15:30",
-    "relatedHotId": 8
-  },
-  {
-    "name": "两融余额环比增加｜融资客在买什么",
-    "stars": 4,
-    "viral": 84,
-    "hotTitle": "科创板两融余额3549.77亿元，较上一交易日环比增加8.21亿元",
-    "eduTopic": "两融数据解读入门",
-    "eduCategory": "数据素养",
-    "direction": "借两融余额数据发布热点，科普什么是融资融券、两融余额怎么看、融资客行为对判断市场情绪的参考意义",
-    "persona": "数据侦探",
-    "type": "图文",
-    "titles": [
-      "两融余额3549亿！杠杆资金在干嘛",
-      "看懂两融数据，少踩追涨杀跌的坑",
-      "融资客加仓8亿，意味着什么"
-    ],
-    "imgStyle": "两融数据走势图+名词解释卡+风险提示",
-    "copyStyle": "数据科普风，图表+大白话解释",
-    "framework": "数据呈现→名词科普→风险提示",
-    "compliance": "caution",
-    "complianceNote": "两融属杠杆工具科普，必须提示杠杆双刃剑风险，不构成投资建议。",
-    "time": "17:00",
-    "relatedHotId": 24
-  },
-  {
-    "name": "油价破90｜油气板块行情还能追吗",
-    "stars": 4,
-    "viral": 89,
-    "hotTitle": "美军空袭伊朗能源枢纽，国际油价飙升5.2%突破90美元",
-    "eduTopic": "地缘事件与板块传导",
-    "eduCategory": "风险教育",
-    "direction": "借国际油价突破90美元热点，科普地缘冲突向A股板块的传导逻辑、油气板块历史表现规律与追高风险",
-    "persona": "风险教练",
-    "type": "图文",
-    "titles": [
-      "油价一夜破90！油气板块还能上车吗",
-      "地缘冲突下，油气板块的传导逻辑",
-      "追高油气股之前，先看完这篇"
-    ],
-    "imgStyle": "油价走势图+板块传导链示意+历史复盘",
-    "copyStyle": "风险教育风，讲逻辑不喊单",
-    "framework": "事件引入→传导科普→风险提示",
-    "compliance": "caution",
-    "complianceNote": "地缘事件敏感，不预测油价和板块走势，重点提示追高风险，避免情绪化表述。",
-    "time": "18:00",
-    "relatedHotId": 3
-  },
-  {
-    "name": "上海金ETF迎配置窗口｜黄金投资新姿势",
-    "stars": 4,
-    "viral": 85,
-    "hotTitle": "人民币黄金新基准崛起，上海金ETF迎配置窗口",
-    "eduTopic": "黄金ETF投资入门",
-    "eduCategory": "实操技能",
-    "direction": "借上海金ETF配置窗口热点，科普上海金与伦敦金的区别、上海金ETF的特点与黄金在资产配置中的作用",
-    "persona": "配置顾问",
-    "type": "图文",
-    "titles": [
-      "上海金ETF是什么？和普通黄金ETF有啥区别",
-      "黄金还能配吗？先搞懂上海金ETF",
-      "人民币定价的黄金投资，了解一下"
-    ],
-    "imgStyle": "产品对比表+配置比例示意+要点卡片",
-    "copyStyle": "产品科普风，对比+场景化讲解",
-    "framework": "概念科普→产品对比→配置提示",
-    "compliance": "caution",
-    "complianceNote": "涉及具体产品类别，不推荐具体基金代码，提示黄金价格波动风险，不构成投资建议。",
-    "time": "19:30",
-    "relatedHotId": 13
-  },
-  {
-    "name": "债券ETF规模破9200亿｜股债跷跷板科普",
-    "stars": 3,
-    "viral": 82,
-    "hotTitle": "30年国债ETF五日吸金近5亿，债券ETF规模突破9200亿",
-    "eduTopic": "股债配置基础",
-    "eduCategory": "基础知识",
-    "direction": "借债券ETF规模创新高热点，科普股债跷跷板效应、债券ETF的类型与在震荡市中的配置角色",
-    "persona": "理财科普员",
-    "type": "图文",
-    "titles": [
-      "债券ETF破9200亿！资金为什么往这跑",
-      "股债跷跷板：震荡市的生存法则",
-      "不懂债券ETF？一篇补齐基础课"
-    ],
-    "imgStyle": "规模数据图+股债对比示意+类型卡片",
-    "copyStyle": "基础科普风，比喻+图表",
-    "framework": "数据引入→原理科普→配置常识",
-    "compliance": "safe",
-    "complianceNote": "配置科普安全。不预测债市走势，不推荐具体产品，提示利率风险。",
-    "time": "20:30",
-    "relatedHotId": 14
-  },
-  {
-    "name": "券商9月策略横评｜反弹未止还是二次筑底",
-    "stars": 4,
-    "viral": 90,
-    "hotTitle": "招商证券9月观点：反弹未止，先攻后守",
-    "eduTopic": "研报观点解读方法",
-    "eduCategory": "基础知识",
-    "direction": "汇总招商、湘财、中信建投等券商9月观点，教普通投资者如何阅读策略研报、区分观点与预测",
-    "persona": "研报翻译官",
-    "type": "图文",
-    "titles": [
-      "9月行情怎么看？券商观点大汇总",
-      "先攻后守还是二次筑底？券商观点对比",
-      "3分钟看懂券商9月策略报告"
-    ],
-    "imgStyle": "券商观点对比表+金句卡片+方法总结",
-    "copyStyle": "中立客观，重点教方法论",
-    "framework": "观点汇总→方法教学→总结收尾",
-    "compliance": "safe",
-    "complianceNote": "研报汇总安全。不预测指数点位，注明观点不构成投资建议。",
-    "time": "21:00",
-    "relatedHotId": 10
-  }
-];
+var topicPlans = [{"name": "燧原科技申购日攻略｜国产GPU四小龙怎么打","stars": 5,"viral": 96,"hotTitle": "大肉签来了！燧原科技、腾信精密今日申购","eduTopic": "打新实操教学","eduCategory": "实操技能","direction": "借燧原科技今日申购热点，教学申购流程、市值准备、顶格申购计算（需配沪市市值6.5万）与高价新股申购的风险提示","persona": "打新达人","type": "图文","titles": ["今天打新燧原科技！这份攻略先收藏","142元的AI芯片新股怎么打？一篇讲透","中一签缴款7.1万｜燧原科技申购全流程"],"imgStyle": "申购流程图+发行数据卡片+风险提示条","copyStyle": "实操教学风，数据表格+分步指引","framework": "热点引入→干货教学→实用总结","compliance": "safe","complianceNote": "打新教学安全。不预测上市涨跌，提示破发风险和申购规则。","time": "08:30","relatedHotId": 21,"bizLine": "打新"},{"name": "格林生物上市首日怎么看｜新股上市首日的门道","stars": 4,"viral": 88,"hotTitle": "9月2日新股提示：腾信精密、燧原科技申购，格林生物上市","eduTopic": "新股上市首日知识","eduCategory": "基础知识","direction": "借格林生物今日登陆创业板热点，科普上市首日的交易规则、开盘竞价机制、首日波动特征与追高风险","persona": "新股观察员","type": "图文","titles": ["格林生物今天上市！首日这些规则要知道","新股首日怎么走？开盘前先补这一课","别急着追！新股上市首日避坑指南"],"imgStyle": "首日交易规则图解+历史首日数据+风险清单","copyStyle": "规则科普风，图文结合，不预测走势","framework": "热点事件→规则科普→风险提示","compliance": "caution","complianceNote": "涉及新股首日表现，严禁预测涨跌和给出买卖建议，重点做规则科普。","time": "10:00","relatedHotId": 22,"bizLine": "打新"},{"name": "券商中报收官｜43家净赚1554亿怎么看","stars": 5,"viral": 92,"hotTitle": "43家上市券商半年净赚1554亿，净利百亿俱乐部扩至5家","eduTopic": "财报数据解读方法","eduCategory": "基础知识","direction": "借券商中报收官热点，教普通投资者看懂券商财报的核心指标（经纪、自营、投行收入结构），不推荐个股","persona": "研报翻译官","type": "图文","titles": ["券商半年赚1554亿！数据背后看什么","3分钟看懂券商中报的核心指标","百亿俱乐部扩容！券商格局变了吗"],"imgStyle": "业绩总览卡片+收入结构饼图+座次变化表","copyStyle": "数据解读风，只讲方法不荐股","framework": "业绩总览→指标解读→格局观察","compliance": "safe","complianceNote": "财报数据解读安全。不预测券商股走势，不推荐具体标的。","time": "11:30","relatedHotId": 29,"bizLine": "券商业务"},{"name": "中金三合一过会｜券商并购大时代解读","stars": 5,"viral": 93,"hotTitle": "中金公司重大资产重组过会，又一万亿级券商呼之欲出","eduTopic": "券商并购与行业格局","eduCategory": "行业认知","direction": "借中金公司吸收合并东兴证券、信达证券过会热点，科普券业并购潮的背景、监管导向与行业格局演变","persona": "行业观察员","type": "图文","titles": ["77天过会！中金三合一什么来头","万亿券商要来了，券商板块怎么看","券业并购潮：一场正在加速的整合"],"imgStyle": "并购时间线+券商格局变化图+影响分析","copyStyle": "行业科普风，讲故事+摆事实","framework": "事件回顾→格局分析→影响展望","compliance": "safe","complianceNote": "行业事件解读安全。不构成投资建议，不推荐券商股买卖。","time": "14:00","relatedHotId": 16,"bizLine": "券商业务"},{"name": "交易外接新规正式实施｜对你的交易有何影响","stars": 4,"viral": 86,"hotTitle": "正式实施！券商交易外接新规落地，划定多项禁止性红线","eduTopic": "交易规则与合规","eduCategory": "合规提醒","direction": "借交易外接新规正式实施热点，科普新规的适用范围、主要红线和对普通投资者、量化用户的影响","persona": "合规卫士","type": "图文","titles": ["交易外接新规今天实施！这些红线要知道","新规落地｜普通股民会受影响吗","量化用户必看：交易外接新规解读"],"imgStyle": "新规要点卡片+适用范围图+红线清单","copyStyle": "合规科普风，逐条解读，通俗易懂","framework": "政策引入→逐条解读→影响提示","compliance": "safe","complianceNote": "监管政策解读安全。客观转述规则，不评价监管，不引导规避监管。","time": "15:30","relatedHotId": 8,"bizLine": "投教"},{"name": "两融余额环比增加｜融资客在买什么","stars": 4,"viral": 84,"hotTitle": "科创板两融余额3549.77亿元，较上一交易日环比增加8.21亿元","eduTopic": "两融数据解读入门","eduCategory": "数据素养","direction": "借两融余额数据发布热点，科普什么是融资融券、两融余额怎么看、融资客行为对判断市场情绪的参考意义","persona": "数据侦探","type": "图文","titles": ["两融余额3549亿！杠杆资金在干嘛","看懂两融数据，少踩追涨杀跌的坑","融资客加仓8亿，意味着什么"],"imgStyle": "两融数据走势图+名词解释卡+风险提示","copyStyle": "数据科普风，图表+大白话解释","framework": "数据呈现→名词科普→风险提示","compliance": "caution","complianceNote": "两融属杠杆工具科普，必须提示杠杆双刃剑风险，不构成投资建议。","time": "17:00","relatedHotId": 24,"bizLine": "两融"},{"name": "油价破90｜油气板块行情还能追吗","stars": 4,"viral": 89,"hotTitle": "美军空袭伊朗能源枢纽，国际油价飙升5.2%突破90美元","eduTopic": "地缘事件与板块传导","eduCategory": "风险教育","direction": "借国际油价突破90美元热点，科普地缘冲突向A股板块的传导逻辑、油气板块历史表现规律与追高风险","persona": "风险教练","type": "图文","titles": ["油价一夜破90！油气板块还能上车吗","地缘冲突下，油气板块的传导逻辑","追高油气股之前，先看完这篇"],"imgStyle": "油价走势图+板块传导链示意+历史复盘","copyStyle": "风险教育风，讲逻辑不喊单","framework": "事件引入→传导科普→风险提示","compliance": "caution","complianceNote": "地缘事件敏感，不预测油价和板块走势，重点提示追高风险，避免情绪化表述。","time": "18:00","relatedHotId": 3,"bizLine": "投教"},{"name": "上海金ETF迎配置窗口｜黄金投资新姿势","stars": 4,"viral": 85,"hotTitle": "人民币黄金新基准崛起，上海金ETF迎配置窗口","eduTopic": "黄金ETF投资入门","eduCategory": "实操技能","direction": "借上海金ETF配置窗口热点，科普上海金与伦敦金的区别、上海金ETF的特点与黄金在资产配置中的作用","persona": "配置顾问","type": "图文","titles": ["上海金ETF是什么？和普通黄金ETF有啥区别","黄金还能配吗？先搞懂上海金ETF","人民币定价的黄金投资，了解一下"],"imgStyle": "产品对比表+配置比例示意+要点卡片","copyStyle": "产品科普风，对比+场景化讲解","framework": "概念科普→产品对比→配置提示","compliance": "caution","complianceNote": "涉及具体产品类别，不推荐具体基金代码，提示黄金价格波动风险，不构成投资建议。","time": "19:30","relatedHotId": 13,"bizLine": "ETF"},{"name": "债券ETF规模破9200亿｜股债跷跷板科普","stars": 3,"viral": 82,"hotTitle": "30年国债ETF五日吸金近5亿，债券ETF规模突破9200亿","eduTopic": "股债配置基础","eduCategory": "基础知识","direction": "借债券ETF规模创新高热点，科普股债跷跷板效应、债券ETF的类型与在震荡市中的配置角色","persona": "理财科普员","type": "图文","titles": ["债券ETF破9200亿！资金为什么往这跑","股债跷跷板：震荡市的生存法则","不懂债券ETF？一篇补齐基础课"],"imgStyle": "规模数据图+股债对比示意+类型卡片","copyStyle": "基础科普风，比喻+图表","framework": "数据引入→原理科普→配置常识","compliance": "safe","complianceNote": "配置科普安全。不预测债市走势，不推荐具体产品，提示利率风险。","time": "20:30","relatedHotId": 14,"bizLine": "ETF"},{"name": "券商9月策略横评｜反弹未止还是二次筑底","stars": 4,"viral": 90,"hotTitle": "招商证券9月观点：反弹未止，先攻后守","eduTopic": "研报观点解读方法","eduCategory": "基础知识","direction": "汇总招商、湘财、中信建投等券商9月观点，教普通投资者如何阅读策略研报、区分观点与预测","persona": "研报翻译官","type": "图文","titles": ["9月行情怎么看？券商观点大汇总","先攻后守还是二次筑底？券商观点对比","3分钟看懂券商9月策略报告"],"imgStyle": "券商观点对比表+金句卡片+方法总结","copyStyle": "中立客观，重点教方法论","framework": "观点汇总→方法教学→总结收尾","compliance": "safe","complianceNote": "研报汇总安全。不预测指数点位，注明观点不构成投资建议。","time": "21:00","relatedHotId": 10,"bizLine": "券商业务"}];
 var _originalTopicPlans = JSON.parse(JSON.stringify(topicPlans));
 
-var viralContent = [
-  {
-    "id": 1,
-    "title": "燧原科技今日申购！142元AI芯片股打新攻略",
-    "platform": "小红书",
-    "author": "券商观察员",
-    "viralScore": 96,
-    "likes": 38200,
-    "collects": 29500,
-    "category": "打新攻略",
-    "tags": [
-      "#打新",
-      "#燧原科技",
-      "#新股申购",
-      "#AI芯片",
-      "#科创板"
-    ],
-    "link": "https://finance.eastmoney.com/a/202609023861955559.html",
-    "analysis": "AI热点+高价新股双话题加持，实操性强收藏率高",
-    "template": "整理发行数据、申购上限和市值要求，附高价股申购提醒"
-  },
-  {
-    "id": 2,
-    "title": "中一签或赚超20万！大肉签打新日来了",
-    "platform": "小红书",
-    "author": "打新小能手",
-    "viralScore": 94,
-    "likes": 35600,
-    "collects": 27200,
-    "category": "打新攻略",
-    "tags": [
-      "#打新收益",
-      "#中签",
-      "#新股",
-      "#理财",
-      "#A股"
-    ],
-    "link": "https://www.sfccn.com/2026/9-2/1NMDE0MDRfMjIyODA1Nw.html",
-    "analysis": "收益数字直观刺激，引发打新用户围观和收藏",
-    "template": "列打新收益测算，附历史同类新股首日表现对比"
-  },
-  {
-    "id": 3,
-    "title": "43家券商半年净赚1554亿！券商人成绩单",
-    "platform": "小红书",
-    "author": "财经观察员",
-    "viralScore": 91,
-    "likes": 26800,
-    "collects": 21300,
-    "category": "券商解读",
-    "tags": [
-      "#券商中报",
-      "#券商板块",
-      "#半年报",
-      "#金融行业",
-      "#业绩"
-    ],
-    "link": "https://m.21jingji.com/article/20260831/herald/84f6eb38ac8751489017a663dc0ddb6d.html",
-    "analysis": "行业整体业绩数据吸睛，券商从业者与投资者双重受众",
-    "template": "做业绩排行卡片，头部券商逐一点评，结尾带板块逻辑"
-  },
-  {
-    "id": 4,
-    "title": "油价一夜破90！油气板块起飞前必看",
-    "platform": "小红书",
-    "author": "板块追踪者",
-    "viralScore": 89,
-    "likes": 24500,
-    "collects": 18700,
-    "category": "板块解读",
-    "tags": [
-      "#油价",
-      "#油气板块",
-      "#板块轮动",
-      "#A股",
-      "#投资"
-    ],
-    "link": "https://caifuhao.eastmoney.com/news/20260902040239000311430",
-    "analysis": "地缘事件+价格数字冲击力强，时效性内容转发率高",
-    "template": "事件速报+受益板块梳理，附追高风险提示"
-  },
-  {
-    "id": 5,
-    "title": "8月ETF资金地图：谁在抄底谁在跑",
-    "platform": "小红书",
-    "author": "ETF情报员",
-    "viralScore": 88,
-    "likes": 23100,
-    "collects": 19600,
-    "category": "数据解读",
-    "tags": [
-      "#ETF",
-      "#资金流向",
-      "#基金",
-      "#数据",
-      "#理财"
-    ],
-    "link": "https://xueqiu.com/7437424816/407610706",
-    "analysis": "月末资金数据节点，数据党最爱的内容类型",
-    "template": "做净流入流出对比图，突出重点ETF，分析资金去向"
-  },
-  {
-    "id": 6,
-    "title": "ETF10讲：系统学会ETF投资",
-    "platform": "B站",
-    "author": "金融学长",
-    "viralScore": 93,
-    "likes": 45200,
-    "collects": 32800,
-    "category": "系统课程",
-    "tags": [
-      "#ETF",
-      "#投资课程",
-      "#理财入门",
-      "#基金",
-      "#B站财经"
-    ],
-    "link": "https://www.bilibili.com/cheese/play/ss696606343",
-    "analysis": "系统化课程完播率高，知识密度大适合收藏",
-    "template": "按知识点分集讲解，每讲配案例和实操演示"
-  },
-  {
-    "id": 7,
-    "title": "深交所投教《来！聊聊ETF》：如何用ETF做定投",
-    "platform": "B站",
-    "author": "深交所投教",
-    "viralScore": 90,
-    "likes": 38600,
-    "collects": 30100,
-    "category": "官方投教",
-    "tags": [
-      "#ETF定投",
-      "#深交所投教",
-      "#官方科普",
-      "#基金定投",
-      "#理财"
-    ],
-    "link": "https://finance.sina.com.cn/wm/2026-05-08/doc-inhxewcz2154470.shtml",
-    "analysis": "官方背书+权威科普，新手信任度高传播稳定",
-    "template": "官方投教系列风格，动画+讲解，定投方法分步拆解"
-  },
-  {
-    "id": 8,
-    "title": "什么是ETF？新手也能看懂的入门科普",
-    "platform": "B站",
-    "author": "玩转ETF基金",
-    "viralScore": 87,
-    "likes": 31200,
-    "collects": 25400,
-    "category": "入门科普",
-    "tags": [
-      "#ETF入门",
-      "#理财科普",
-      "#基金",
-      "#新手",
-      "#干货"
-    ],
-    "link": "https://space.bilibili.com/509673468",
-    "analysis": "入门刚需内容长尾流量稳定，持续吸引新粉",
-    "template": "用生活化比喻讲清ETF原理，附开户购买流程"
-  },
-  {
-    "id": 9,
-    "title": "ETF定投财富自由：UP主实盘复盘",
-    "platform": "B站",
-    "author": "ETF定投财富自由",
-    "viralScore": 85,
-    "likes": 28600,
-    "collects": 22900,
-    "category": "实盘复盘",
-    "tags": [
-      "#ETF定投",
-      "#实盘",
-      "#复盘",
-      "#理财",
-      "#长期投资"
-    ],
-    "link": "https://space.bilibili.com/472248135",
-    "analysis": "实盘晒收益引发共鸣，定投人群互动率高",
-    "template": "晒实盘曲线，拆解每期定投决策，坦诚讲失误"
-  },
-  {
-    "id": 10,
-    "title": "如何在网上开股票账户？最详细的开户流程",
-    "platform": "B站",
-    "author": "开户指南君",
-    "viralScore": 86,
-    "likes": 27400,
-    "collects": 24800,
-    "category": "开户教程",
-    "tags": [
-      "#股票开户",
-      "#开户流程",
-      "#新手入门",
-      "#证券",
-      "#教程"
-    ],
-    "link": "https://www.bilibili.com/opus/877499657237823525",
-    "analysis": "开户是新手第一需求，教程类收藏率极高",
-    "template": "截图分步演示开户全流程，标注常见卡点"
-  },
-  {
-    "id": 11,
-    "title": "焦炭期权上市十问十答：新手扫盲",
-    "platform": "同花顺",
-    "author": "同花顺投教",
-    "viralScore": 84,
-    "likes": 19800,
-    "collects": 17600,
-    "category": "期权科普",
-    "tags": [
-      "#期权",
-      "#焦炭期权",
-      "#投资者教育",
-      "#新手入门",
-      "#期货"
-    ],
-    "link": "http://stock.10jqka.com.cn/20260901/c679484670.shtml",
-    "analysis": "新品种上市带动期权科普搜索热，问答式易读",
-    "template": "十问十答排版，每问配一句大白话解释"
-  },
-  {
-    "id": 12,
-    "title": "2026年证券开户科普：渠道怎么选、平台如何判断正规",
-    "platform": "同花顺",
-    "author": "同花顺问答",
-    "viralScore": 82,
-    "likes": 16500,
-    "collects": 14200,
-    "category": "开户科普",
-    "tags": [
-      "#股票开户",
-      "#开户科普",
-      "#防诈骗",
-      "#新手",
-      "#证券"
-    ],
-    "link": "https://licai.cofool.com/ask/qa_7530360.html",
-    "analysis": "开户防骗是刚需，正规渠道判断方法实用性强",
-    "template": "列渠道对比表，附官方验证方法清单"
-  },
-  {
-    "id": 13,
-    "title": "券商开户后有小白理财课吗？免费投教资源盘点",
-    "platform": "同花顺",
-    "author": "新手加油站",
-    "viralScore": 80,
-    "likes": 15200,
-    "collects": 13800,
-    "category": "投教资源",
-    "tags": [
-      "#投教资源",
-      "#理财课",
-      "#新手入门",
-      "#券商服务",
-      "#免费"
-    ],
-    "link": "https://licai.cofool.com/ask/qa_7505171.html",
-    "analysis": "免费资源盘点类内容收藏率高，覆盖理财新手",
-    "template": "按券商列投教资源入口，附学习路径建议"
-  },
-  {
-    "id": 14,
-    "title": "9月2日盘前：3979点蓄势，外围出现新变化",
-    "platform": "东方财富",
-    "author": "东方财富财富号",
-    "viralScore": 88,
-    "likes": 22400,
-    "collects": 16800,
-    "category": "盘前分析",
-    "tags": [
-      "#盘前必读",
-      "#A股",
-      "#外围市场",
-      "#早盘",
-      "#投资策略"
-    ],
-    "link": "https://caifuhao.eastmoney.com/news/20260902085933849110340",
-    "analysis": "盘前内容时效刚需，开盘前阅读高峰流量稳定",
-    "template": "列外围市场要点，附今日关注方向清单"
-  },
-  {
-    "id": 15,
-    "title": "中金三合一重组过会！股吧热议万亿券商",
-    "platform": "东方财富",
-    "author": "东方财富股吧",
-    "viralScore": 92,
-    "likes": 31500,
-    "collects": 18700,
-    "category": "热门讨论",
-    "tags": [
-      "#中金公司",
-      "#券商并购",
-      "#股吧热帖",
-      "#重组",
-      "#券商板块"
-    ],
-    "link": "https://guba.eastmoney.com/news,601995,1765378291.html",
-    "analysis": "重磅并购+股吧热议，情绪驱动传播快",
-    "template": "事件回顾+股民观点精选，理性分析影响"
-  },
-  {
-    "id": 16,
-    "title": "中金三合一77天火速过会：券业并购传导链",
-    "platform": "东方财富",
-    "author": "财富号评论",
-    "viralScore": 90,
-    "likes": 26300,
-    "collects": 19400,
-    "category": "深度解读",
-    "tags": [
-      "#中金公司",
-      "#券业并购",
-      "#深度解读",
-      "#券商板块",
-      "#金融行业"
-    ],
-    "link": "https://guba.eastmoney.com/news,cfhpl,1766177016.html",
-    "analysis": "深度长文满足进阶读者，77天速度数字抓眼球",
-    "template": "时间线复盘+传导链分析，落点在行业格局"
-  },
-  {
-    "id": 17,
-    "title": "沪指4000点得而复失，多空在争什么",
-    "platform": "东方财富",
-    "author": "财富号作者",
-    "viralScore": 89,
-    "likes": 25100,
-    "collects": 17300,
-    "category": "市场解读",
-    "tags": [
-      "#沪指",
-      "#4000点",
-      "#市场分析",
-      "#A股",
-      "#多空博弈"
-    ],
-    "link": "https://caifuhao.eastmoney.com/news/20260901152659565858420",
-    "analysis": "整数关口话题自带流量，多空观点对比引发讨论",
-    "template": "多空双方论据并列呈现，结尾给观察清单不给结论"
-  },
-  {
-    "id": 18,
-    "title": "昨日及八月ETF资金流入排名出炉",
-    "platform": "天天基金",
-    "author": "天天基金资讯",
-    "viralScore": 87,
-    "likes": 21800,
-    "collects": 24500,
-    "category": "数据排行",
-    "tags": [
-      "#ETF排名",
-      "#资金流向",
-      "#基金",
-      "#数据",
-      "#理财"
-    ],
-    "link": "https://fund.eastmoney.com/a/202609013861458525.html",
-    "analysis": "排名类数据内容收藏率高，月末月初流量高峰",
-    "template": "表格列净流入TOP榜，点评资金偏好变化"
-  },
-  {
-    "id": 19,
-    "title": "债券ETF规模突破9200亿，什么信号",
-    "platform": "天天基金",
-    "author": "基金观察",
-    "viralScore": 85,
-    "likes": 19400,
-    "collects": 21600,
-    "category": "债券ETF",
-    "tags": [
-      "#债券ETF",
-      "#国债ETF",
-      "#避险资产",
-      "#基金投资",
-      "#资产配置"
-    ],
-    "link": "https://www.163.com/dy/article/L5O211PJ051987V2.html",
-    "analysis": "避险情绪下债券ETF关注度高，科普+数据结合",
-    "template": "规模数据图表化，讲清股债跷跷板逻辑"
-  },
-  {
-    "id": 20,
-    "title": "定投收益排行：哪些基金适合长期定投",
-    "platform": "天天基金",
-    "author": "定投研究所",
-    "viralScore": 83,
-    "likes": 17600,
-    "collects": 28300,
-    "category": "定投策略",
-    "tags": [
-      "#基金定投",
-      "#定投排行",
-      "#长期投资",
-      "#理财",
-      "#基金"
-    ],
-    "link": "https://fund.eastmoney.com/dingtou/syph_yndt.html",
-    "analysis": "定投工具页复访率高，实用性强",
-    "template": "演示定投排行工具用法，附定投纪律建议"
-  }
-];
+var viralContent = [{"id": 1,"title": "燧原科技今日申购！142元AI芯片股打新攻略","platform": "小红书","author": "券商观察员","viralScore": 96,"likes": 38200,"collects": 29500,"category": "打新攻略","tags": ["#打新","#燧原科技","#新股申购","#AI芯片","#科创板"],"link": "https://finance.eastmoney.com/a/202609023861955559.html","analysis": "AI热点+高价新股双话题加持，实操性强收藏率高","template": "整理发行数据、申购上限和市值要求，附高价股申购提醒","bizLine": "打新"},{"id": 2,"title": "中一签或赚超20万！大肉签打新日来了","platform": "小红书","author": "打新小能手","viralScore": 94,"likes": 35600,"collects": 27200,"category": "打新攻略","tags": ["#打新收益","#中签","#新股","#理财","#A股"],"link": "https://www.sfccn.com/2026/9-2/1NMDE0MDRfMjIyODA1Nw.html","analysis": "收益数字直观刺激，引发打新用户围观和收藏","template": "列打新收益测算，附历史同类新股首日表现对比","bizLine": "打新"},{"id": 3,"title": "43家券商半年净赚1554亿！券商人成绩单","platform": "小红书","author": "财经观察员","viralScore": 91,"likes": 26800,"collects": 21300,"category": "券商解读","tags": ["#券商中报","#券商板块","#半年报","#金融行业","#业绩"],"link": "https://m.21jingji.com/article/20260831/herald/84f6eb38ac8751489017a663dc0ddb6d.html","analysis": "行业整体业绩数据吸睛，券商从业者与投资者双重受众","template": "做业绩排行卡片，头部券商逐一点评，结尾带板块逻辑","bizLine": "券商业务"},{"id": 4,"title": "油价一夜破90！油气板块起飞前必看","platform": "小红书","author": "板块追踪者","viralScore": 89,"likes": 24500,"collects": 18700,"category": "板块解读","tags": ["#油价","#油气板块","#板块轮动","#A股","#投资"],"link": "https://caifuhao.eastmoney.com/news/20260902040239000311430","analysis": "地缘事件+价格数字冲击力强，时效性内容转发率高","template": "事件速报+受益板块梳理，附追高风险提示","bizLine": "投教"},{"id": 5,"title": "8月ETF资金地图：谁在抄底谁在跑","platform": "小红书","author": "ETF情报员","viralScore": 88,"likes": 23100,"collects": 19600,"category": "数据解读","tags": ["#ETF","#资金流向","#基金","#数据","#理财"],"link": "https://xueqiu.com/7437424816/407610706","analysis": "月末资金数据节点，数据党最爱的内容类型","template": "做净流入流出对比图，突出重点ETF，分析资金去向","bizLine": "ETF"},{"id": 6,"title": "ETF10讲：系统学会ETF投资","platform": "B站","author": "金融学长","viralScore": 93,"likes": 45200,"collects": 32800,"category": "系统课程","tags": ["#ETF","#投资课程","#理财入门","#基金","#B站财经"],"link": "https://www.bilibili.com/cheese/play/ss696606343","analysis": "系统化课程完播率高，知识密度大适合收藏","template": "按知识点分集讲解，每讲配案例和实操演示","bizLine": "ETF"},{"id": 7,"title": "深交所投教《来！聊聊ETF》：如何用ETF做定投","platform": "B站","author": "深交所投教","viralScore": 90,"likes": 38600,"collects": 30100,"category": "官方投教","tags": ["#ETF定投","#深交所投教","#官方科普","#基金定投","#理财"],"link": "https://finance.sina.com.cn/wm/2026-05-08/doc-inhxewcz2154470.shtml","analysis": "官方背书+权威科普，新手信任度高传播稳定","template": "官方投教系列风格，动画+讲解，定投方法分步拆解","bizLine": "ETF"},{"id": 8,"title": "什么是ETF？新手也能看懂的入门科普","platform": "B站","author": "玩转ETF基金","viralScore": 87,"likes": 31200,"collects": 25400,"category": "入门科普","tags": ["#ETF入门","#理财科普","#基金","#新手","#干货"],"link": "https://space.bilibili.com/509673468","analysis": "入门刚需内容长尾流量稳定，持续吸引新粉","template": "用生活化比喻讲清ETF原理，附开户购买流程","bizLine": "ETF"},{"id": 9,"title": "ETF定投财富自由：UP主实盘复盘","platform": "B站","author": "ETF定投财富自由","viralScore": 85,"likes": 28600,"collects": 22900,"category": "实盘复盘","tags": ["#ETF定投","#实盘","#复盘","#理财","#长期投资"],"link": "https://space.bilibili.com/472248135","analysis": "实盘晒收益引发共鸣，定投人群互动率高","template": "晒实盘曲线，拆解每期定投决策，坦诚讲失误","bizLine": "ETF"},{"id": 10,"title": "如何在网上开股票账户？最详细的开户流程","platform": "B站","author": "开户指南君","viralScore": 86,"likes": 27400,"collects": 24800,"category": "开户教程","tags": ["#股票开户","#开户流程","#新手入门","#证券","#教程"],"link": "https://www.bilibili.com/opus/877499657237823525","analysis": "开户是新手第一需求，教程类收藏率极高","template": "截图分步演示开户全流程，标注常见卡点","bizLine": "券商业务"},{"id": 11,"title": "焦炭期权上市十问十答：新手扫盲","platform": "同花顺","author": "同花顺投教","viralScore": 84,"likes": 19800,"collects": 17600,"category": "期权科普","tags": ["#期权","#焦炭期权","#投资者教育","#新手入门","#期货"],"link": "http://stock.10jqka.com.cn/20260901/c679484670.shtml","analysis": "新品种上市带动期权科普搜索热，问答式易读","template": "十问十答排版，每问配一句大白话解释","bizLine": "投教"},{"id": 12,"title": "2026年证券开户科普：渠道怎么选、平台如何判断正规","platform": "同花顺","author": "同花顺问答","viralScore": 82,"likes": 16500,"collects": 14200,"category": "开户科普","tags": ["#股票开户","#开户科普","#防诈骗","#新手","#证券"],"link": "https://licai.cofool.com/ask/qa_7530360.html","analysis": "开户防骗是刚需，正规渠道判断方法实用性强","template": "列渠道对比表，附官方验证方法清单","bizLine": "券商业务"},{"id": 13,"title": "券商开户后有小白理财课吗？免费投教资源盘点","platform": "同花顺","author": "新手加油站","viralScore": 80,"likes": 15200,"collects": 13800,"category": "投教资源","tags": ["#投教资源","#理财课","#新手入门","#券商服务","#免费"],"link": "https://licai.cofool.com/ask/qa_7505171.html","analysis": "免费资源盘点类内容收藏率高，覆盖理财新手","template": "按券商列投教资源入口，附学习路径建议","bizLine": "投教"},{"id": 14,"title": "9月2日盘前：3979点蓄势，外围出现新变化","platform": "东方财富","author": "东方财富财富号","viralScore": 88,"likes": 22400,"collects": 16800,"category": "盘前分析","tags": ["#盘前必读","#A股","#外围市场","#早盘","#投资策略"],"link": "https://caifuhao.eastmoney.com/news/20260902085933849110340","analysis": "盘前内容时效刚需，开盘前阅读高峰流量稳定","template": "列外围市场要点，附今日关注方向清单","bizLine": "投教"},{"id": 15,"title": "中金三合一重组过会！股吧热议万亿券商","platform": "东方财富","author": "东方财富股吧","viralScore": 92,"likes": 31500,"collects": 18700,"category": "热门讨论","tags": ["#中金公司","#券商并购","#股吧热帖","#重组","#券商板块"],"link": "https://guba.eastmoney.com/news,601995,1765378291.html","analysis": "重磅并购+股吧热议，情绪驱动传播快","template": "事件回顾+股民观点精选，理性分析影响","bizLine": "券商业务"},{"id": 16,"title": "中金三合一77天火速过会：券业并购传导链","platform": "东方财富","author": "财富号评论","viralScore": 90,"likes": 26300,"collects": 19400,"category": "深度解读","tags": ["#中金公司","#券业并购","#深度解读","#券商板块","#金融行业"],"link": "https://guba.eastmoney.com/news,cfhpl,1766177016.html","analysis": "深度长文满足进阶读者，77天速度数字抓眼球","template": "时间线复盘+传导链分析，落点在行业格局","bizLine": "券商业务"},{"id": 17,"title": "沪指4000点得而复失，多空在争什么","platform": "东方财富","author": "财富号作者","viralScore": 89,"likes": 25100,"collects": 17300,"category": "市场解读","tags": ["#沪指","#4000点","#市场分析","#A股","#多空博弈"],"link": "https://caifuhao.eastmoney.com/news/20260901152659565858420","analysis": "整数关口话题自带流量，多空观点对比引发讨论","template": "多空双方论据并列呈现，结尾给观察清单不给结论","bizLine": "投教"},{"id": 18,"title": "昨日及八月ETF资金流入排名出炉","platform": "天天基金","author": "天天基金资讯","viralScore": 87,"likes": 21800,"collects": 24500,"category": "数据排行","tags": ["#ETF排名","#资金流向","#基金","#数据","#理财"],"link": "https://fund.eastmoney.com/a/202609013861458525.html","analysis": "排名类数据内容收藏率高，月末月初流量高峰","template": "表格列净流入TOP榜，点评资金偏好变化","bizLine": "ETF"},{"id": 19,"title": "债券ETF规模突破9200亿，什么信号","platform": "天天基金","author": "基金观察","viralScore": 85,"likes": 19400,"collects": 21600,"category": "债券ETF","tags": ["#债券ETF","#国债ETF","#避险资产","#基金投资","#资产配置"],"link": "https://www.163.com/dy/article/L5O211PJ051987V2.html","analysis": "避险情绪下债券ETF关注度高，科普+数据结合","template": "规模数据图表化，讲清股债跷跷板逻辑","bizLine": "ETF"},{"id": 20,"title": "定投收益排行：哪些基金适合长期定投","platform": "天天基金","author": "定投研究所","viralScore": 83,"likes": 17600,"collects": 28300,"category": "定投策略","tags": ["#基金定投","#定投排行","#长期投资","#理财","#基金"],"link": "https://fund.eastmoney.com/dingtou/syph_yndt.html","analysis": "定投工具页复访率高，实用性强","template": "演示定投排行工具用法，附定投纪律建议","bizLine": "投教"}];
 var _originalViralContent = JSON.parse(JSON.stringify(viralContent));
 
 var weeklySchedule = [
@@ -1915,6 +1285,170 @@ var wordCategory = {
   /* 买卖建议 */ '买入':'买卖建议', '卖出':'买卖建议', '加仓':'买卖建议', '减仓':'买卖建议', '清仓':'买卖建议', '建仓':'买卖建议', '平仓':'买卖建议', '重仓':'买卖建议', '满仓':'买卖建议', '空仓':'买卖建议', '轻仓':'买卖建议', '补仓':'买卖建议', '止损':'买卖建议', '止盈':'买卖建议', '做多':'买卖建议', '做空':'买卖建议', '逃顶':'买卖建议', '挂单':'买卖建议', '现价买':'买卖建议', '现价卖':'买卖建议', '赶紧买':'买卖建议', '赶紧卖':'买卖建议', '可以进了':'买卖建议', '能上了':'买卖建议', '马上买':'买卖建议', '不要卖':'买卖建议', '继续持有':'买卖建议', '拿住了':'买卖建议', '别下车':'买卖建议', '回调就买':'买卖建议', '反弹就卖':'买卖建议', '冲高卖出':'买卖建议', '急跌买入':'买卖建议', '波段操作':'买卖建议', '明天必涨':'买卖建议', '明天必跌':'买卖建议', '快上车':'买卖建议', '跌停价挂':'买卖建议', '尾盘卖':'买卖建议', '融资干':'买卖建议', '闭眼买':'买卖建议', '开盘买':'买卖建议', '抛掉':'买卖建议', '抛了':'买卖建议', 'all in':'买卖建议', '拿住':'买卖建议', '满仓干':'买卖建议', '必赚':'买卖建议', '小白稳赢':'买卖建议', '适合各类':'买卖建议', '轻松投资':'买卖建议', '轻松理财':'买卖建议', '简单操作':'买卖建议', '低门槛':'买卖建议', '小投入':'买卖建议', '零投入高回报':'买卖建议', '实现暴富':'买卖建议', '赚大钱':'买卖建议', '现金返现':'买卖建议', '高额返佣':'买卖建议', '马上入场':'买卖建议', '清盘':'买卖建议', '割肉':'买卖建议',
   /* 收益承诺 */ '不赔':'收益承诺', '保本保息':'收益承诺', '本金安全':'收益承诺', '收益保障':'收益承诺', '承诺收益':'收益承诺', '保证盈利':'收益承诺', '稳赢':'收益承诺', '躺赚':'收益承诺', '有米':'收益承诺', '只赚不亏':'收益承诺', '永不亏损':'收益承诺', '%收益':'收益承诺', '百分百赚钱':'收益承诺', '翻倍收益':'收益承诺', '收益翻倍':'收益承诺', '财富自由':'收益承诺', '财务自由':'收益承诺', '一夜暴富':'收益承诺', '快速致富':'收益承诺', '投资神话':'收益承诺', '资金安全':'收益承诺', '风险稳健':'收益承诺', '最高收益':'收益承诺', '最低风险':'收益承诺', '风险极小':'收益承诺', '没有风险':'收益承诺', '绝无风险':'收益承诺', '风险忽略不计':'收益承诺', '跑赢通胀':'收益承诺', '战胜市场':'收益承诺', '绝对靠谱':'收益承诺', '安心之选':'收益承诺', '睡觉赚钱':'收益承诺', '印钞机':'收益承诺', '捡钱':'收益承诺', '送钱':'收益承诺', '白给':'收益承诺', '捡钱行情':'收益承诺', '牛市启动':'收益承诺', '牛市来了':'收益承诺', '吃肉':'收益承诺', '暴增':'收益承诺', '狂飙':'收益承诺', '爆棚':'收益承诺', '丰沛':'收益承诺', '丰厚':'收益承诺', '飙升':'收益承诺', '领跑':'收益承诺', '领先':'收益承诺', '稳拿':'收益承诺', '稳获':'收益承诺', '无上限':'收益承诺', '不封顶':'收益承诺', '高企':'收益承诺', '碾压':'收益承诺', '秒杀':'收益承诺', '独占鳌头':'收益承诺', '一骑绝尘':'收益承诺', '超预期':'收益承诺', '保本高息':'收益承诺', '稳如泰山':'收益承诺', '尽享牛市':'收益承诺', '安享收益':'收益承诺', '收益稳健':'收益承诺', '年化收益超':'收益承诺', '收益率翻倍':'收益承诺', '行业绝无仅有':'收益承诺', '收益第一':'收益承诺', '最牛':'收益承诺', '同类产品没有之一':'收益承诺', '全球顶尖机构':'收益承诺', '独一无二':'收益承诺', '无可匹敌':'收益承诺', '最强':'收益承诺', '绝对领先':'收益承诺', '顶级服务':'收益承诺', '理财终极方案':'收益承诺', '地位至高无上':'收益承诺', '专业度登峰造极':'收益承诺', '收益无与伦比':'收益承诺', '所向披靡':'收益承诺', '战无不胜':'收益承诺', '天下第一':'收益承诺', '行业霸主':'收益承诺', '市场垄断':'收益承诺', '独家':'收益承诺', '唯一权威':'收益承诺', '绝对权威':'收益承诺', '顶级':'收益承诺', '最权威':'收益承诺', '最专业':'收益承诺', '最可靠':'收益承诺', '利率':'收益承诺',
   /* 不当竞争 */ '同行垃圾':'不当竞争', '那是骗局':'不当竞争', '策略太糙':'不当竞争', '分析师不行':'不当竞争', '就是小作坊':'不当竞争', '服务特差':'不当竞争', '质量劣质':'不当竞争', '收费虚高':'不当竞争', '没真东西':'不当竞争', '净忽悠人':'不当竞争', '全是套路':'不当竞争', '风险超高':'不当竞争', '收益造假':'不当竞争', '投诉一大堆':'不当竞争', '口碑烂透':'不当竞争', '资质不全':'不当竞争', '没人监管':'不当竞争', '资金没保障':'不当竞争', '操作不规范':'不当竞争', '流程太繁琐':'不当竞争', '效率极低':'不当竞争', '响应超慢':'不当竞争', '售后没保障':'不当竞争', '技术落后':'不当竞争', '团队不专业':'不当竞争', '没经验':'不当竞争', '眼光不行':'不当竞争', '垃圾友商':'不当竞争', '决策常错':'不当竞争', '风控薄弱':'不当竞争', '同行抗风险差':'不当竞争', '同行不行':'不当竞争', '别信他们':'不当竞争', '有隐藏费用':'不当竞争', '套路多':'不当竞争', '不靠谱':'不当竞争', '实力不行':'不当竞争', '产品垃圾':'不当竞争',
+};
+
+var wordReplace = {
+  "微信说": "可通过主页/私信与运营人员联系",
+  "微信发你": "可通过私信发送给您",
+  "不要在这里说": "请通过官方渠道继续沟通",
+  "回访电话不要接": "请保持电话畅通以便服务回访",
+  "回访电话不用管": "请留意官方回访来电",
+  "回访电话不用接": "请留意官方回访来电",
+  "95571不要接": "请留意方正证券官方客服来电",
+  "95571不用接": "请留意方正证券官方客服来电",
+  "速来开户": "如需开户，可了解详细流程",
+  "马上开户": "如需开户，可了解详细流程",
+  "免开户费": "开户不额外收取费用",
+  "大礼相送": "新客专享服务",
+  "零佣金": "佣金费率优惠",
+  "返佣": "费率优惠",
+  "免五": "费率优惠",
+  "保本": "注重本金安全",
+  "保收益": "力争稳健回报",
+  "保证收益": "力争稳健回报",
+  "保证赚钱": "注重风险控制",
+  "高收益": "较高收益弹性",
+  "零风险": "低风险",
+  "无风险": "风险较低",
+  "收益有保障": "配置注重稳健",
+  "本金无忧": "重视本金安全",
+  "绝对安全": "相对稳健",
+  "只涨不跌": "波动向上",
+  "稳赚": "相对稳健",
+  "必赚": "关注长期价值",
+  "翻倍": "有望较大增长",
+  "涨停": "大幅上涨",
+  "内幕": "重要信息",
+  "必涨": "值得关注",
+  "躺赚": "被动投资",
+  "躺着赚钱": "长期持有",
+  "买入": "关注",
+  "卖出": "了解",
+  "加仓": "关注",
+  "减仓": "控制仓位",
+  "清仓": "调整仓位",
+  "抄底": "逢低关注",
+  "止损": "控制风险",
+  "止盈": "落袋为安",
+  "继续持有": "长期关注",
+  "拿住": "长期关注",
+  "赶紧买": "可关注",
+  "赶紧卖": "可留意",
+  "快上车": "值得关注",
+  "割肉": "理性调整",
+  "all in": "适度配置",
+  "暴跌": "较大波动",
+  "崩盘": "深度调整",
+  "股灾": "大幅回调",
+  "熊市": "震荡市",
+  "血亏": "回撤",
+  "亏麻": "回撤",
+  "被套": "持仓波动",
+  "韭菜": "普通投资者",
+  "快跑": "理性应对",
+  "赶紧撤": "理性应对",
+  "爆雷": "风险事件",
+  "爆仓": "强平风险"
+};
+
+var commentScripts = {
+  "identities": [
+    "专业号",
+    "KOS号",
+    "员工个人号"
+  ],
+  "scenarios": [
+    "首评留人",
+    "评论回复",
+    "私信承接"
+  ],
+  "data": {
+    "专业号": {
+      "首评留人": [
+        "感谢关注！这里是方正证券XX营业部官方账号，专注本地投资者服务~",
+        "这条笔记讲的是XX，有疑问欢迎在评论区交流，我们逐一解答",
+        "开户、理财、资产配置问题都可以问，官方渠道有问必答"
+      ],
+      "评论回复": [
+        "您好，具体问题可以私信我们，安排专人对接~",
+        "感谢支持！更多本地投教活动会在主页持续发布",
+        "您的建议收到啦，我们会持续优化内容质量"
+      ],
+      "私信承接": [
+        "您好，请问您想了解开户还是理财配置？",
+        "感谢信任！为您匹配就近营业部的专属顾问",
+        "您的需求我记下了，稍后给您详细回复"
+      ]
+    },
+    "KOS号": {
+      "首评留人": [
+        "关注我，每天一个理财小知识，帮你少走弯路~",
+        "这个问题问得好，主页有完整系列讲解，欢迎来翻",
+        "投资路上不孤单，我陪你一起把基础打牢"
+      ],
+      "评论回复": [
+        "感谢认可！想深入聊可以私信我，免费答疑",
+        "这个知识点主页有专门一篇展开讲，可以去看看",
+        "你的情况我了解了，私信我帮你分析下思路"
+      ],
+      "私信承接": [
+        "您好，想先了解下您的投资经验和目标，好给您建议",
+        "感谢信任！建议先关注主页，很多干货都能直接看",
+        "您的需求我记下了，后续有合适的内容第一时间发您"
+      ]
+    },
+    "员工个人号": {
+      "首评留人": [
+        "作为一个在券商工作的普通打工人，说说我的真实感受~",
+        "后台总有人问这个，今天一次性讲清楚",
+        "说点大实话，这些坑我自己都踩过"
+      ],
+      "评论回复": [
+        "谢谢交流！你的经历我感同身受，一起加油",
+        "具体问题欢迎评论区或私信聊，我看到了都会回",
+        "这个视角很有意思，我再补充一点我的经验"
+      ],
+      "私信承接": [
+        "您好，您的需求我这边可以对接官方专业同事",
+        "感谢交流！为了合规，具体业务请走方正证券官方渠道",
+        "我把您的问题转给专业同事，稍后给您正式答复"
+      ]
+    }
+  },
+  "compliant": [
+    {
+      "bad": "微信说",
+      "good": "可通过主页/私信与我联系"
+    },
+    {
+      "bad": "私下聊",
+      "good": "欢迎通过官方渠道进一步交流"
+    },
+    {
+      "bad": "回访电话不用接",
+      "good": "请留意官方回访来电"
+    },
+    {
+      "bad": "速来开户",
+      "good": "如需开户可了解详细流程"
+    },
+    {
+      "bad": "马上开户",
+      "good": "如需开户可了解详细流程"
+    },
+    {
+      "bad": "免五",
+      "good": "佣金费率优惠"
+    },
+    {
+      "bad": "保本",
+      "good": "注重本金安全"
+    },
+    {
+      "bad": "稳赚",
+      "good": "相对稳健"
+    }
+  ]
 };
 
 var _draft = loadFromLS('createDraft', null);
@@ -6213,6 +5747,7 @@ function renderTopbar() {
   var h = '<div class="topbar">';
   h += '<div class="topbar-left">';
   h += '<span class="topbar-clock" id="clock">' + timeStr + '</span>';
+  h += '<span class="compliance-reminder" onclick="nav(\'compliance\')">&#x26A0;&#xFE0F; 发布前务必过敏感词筛查</span>';
   h += '</div>';
   h += '<div class="topbar-right">';
   h += '<div id="history-selector-slot"></div>';
@@ -6279,6 +5814,47 @@ function renderHome() {
 function fzNum(v) {
   if (v === null || v === undefined || v === '') return '-';
   return Number(v).toLocaleString();
+}
+
+function fzPosition(a) {
+  if (a.type === 'KOS') return '个人IP投教';
+  if (a.type === '专业号') return '营业部品牌服务';
+  return '未分类';
+}
+
+function fzStatus(a) {
+  var hasData = (Number(a.fans) > 0 || Number(a.notes) > 0 || Number(a.inter) > 0);
+  return hasData ? '运营中' : '待激活';
+}
+
+function renderAccountMatrix() {
+  var types = {};
+  var statuses = { '运营中': 0, '待激活': 0 };
+  var positions = {};
+  fzAccounts.forEach(function(a) {
+    var t = a.type || '未分类';
+    types[t] = (types[t] || 0) + 1;
+    statuses[fzStatus(a)]++;
+    var p = fzPosition(a);
+    positions[p] = (positions[p] || 0) + 1;
+  });
+  var h = '<div class="card" style="border-left:4px solid var(--purple)"><div class="card-title">🗂 账号矩阵档案 <span class="tag tag-purple" style="margin-left:8px">统管视图</span></div>';
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">';
+  Object.keys(types).forEach(function(t) {
+    var cls = t === '专业号' ? 'tag-green' : (t === 'KOS' ? 'tag-purple' : 'tag-blue');
+    h += '<div style="text-align:center;padding:14px;background:#F9FAFB;border-radius:8px"><div style="font-size:26px;font-weight:700;color:var(--pri)">' + types[t] + '</div><div style="font-size:12px;color:var(--text2);margin-top:4px"><span class="tag ' + cls + '">' + t + '</span></div></div>';
+  });
+  Object.keys(statuses).forEach(function(s) {
+    var cls = s === '运营中' ? 'tag-green' : 'tag-orange';
+    h += '<div style="text-align:center;padding:14px;background:#F9FAFB;border-radius:8px"><div style="font-size:26px;font-weight:700;color:' + (s === '运营中' ? 'var(--green)' : 'var(--orange)') + '">' + statuses[s] + '</div><div style="font-size:12px;color:var(--text2);margin-top:4px"><span class="tag ' + cls + '">' + s + '</span></div></div>';
+  });
+  Object.keys(positions).forEach(function(p) {
+    h += '<div style="text-align:center;padding:14px;background:#F9FAFB;border-radius:8px"><div style="font-size:26px;font-weight:700;color:var(--blue)">' + positions[p] + '</div><div style="font-size:12px;color:var(--text2);margin-top:4px">' + p + '</div></div>';
+  });
+  h += '</div>';
+  h += '<div style="margin-top:12px;font-size:12px;color:var(--text2)">定位与状态为系统按账号类型与数据自动归类：专业号=营业部品牌服务、KOS=个人IP投教；有粉丝/笔记/互动数据记为「运营中」，否则「待激活」。</div>';
+  h += '</div>';
+  return h;
 }
 
 function getFzHistory() {
@@ -6368,14 +5944,17 @@ function renderAccounts() {
   h += '<button class="btn btn-pri" onclick="exportFzAccountsExcel()">导出Excel</button>';
   h += '</div>';
   h += renderFzWeeklyBoard();
+  h += renderAccountMatrix();
   h += '<div class="card"><div class="card-title">账号粉丝 TOP10 <span class="more">粉丝数与互动数对比</span></div><div class="chart-container"><canvas id="accountsChart"></canvas></div></div>';
   h += '<div class="card"><div class="card-title">账号数据明细 <span class="more">粉丝数/发文数/互动数为 ' + FZ_WEEK + ' 自动抓取</span></div>';
   h += '<div class="search-box"><input type="text" id="fzFilter" placeholder="搜索账号名称 / 营业部 / 运营人员..." oninput="filterFzTable()"></div>';
   h += '<div style="overflow-x:auto"><table id="fzTable"><thead><tr>';
-  h += '<th>序号</th><th>账号名称</th><th>小红书号</th><th>账号类型</th><th>KOS绑定专业号</th><th>营业部</th><th>营业部负责人</th><th>营业部编码</th><th>运营人员</th><th>CRM人员编号</th><th>岗位</th><th>绑定手机号</th><th>手机号归属人</th><th>归属人岗位</th><th>粉丝数</th><th>发文数</th><th>互动数</th><th>主页</th>';
+  h += '<th>序号</th><th>账号名称</th><th>小红书号</th><th>账号类型</th><th>KOS绑定专业号</th><th>营业部</th><th>营业部负责人</th><th>营业部编码</th><th>运营人员</th><th>CRM人员编号</th><th>岗位</th><th>绑定手机号</th><th>手机号归属人</th><th>归属人岗位</th><th>粉丝数</th><th>发文数</th><th>互动数</th><th>定位</th><th>状态</th><th>主页</th>';
   h += '</tr></thead><tbody>';
   fzAccounts.forEach(function(a, i) {
     var t = a.type === '专业号' ? '<span class="tag tag-green">专业号</span>' : (a.type === 'KOS' ? '<span class="tag tag-purple">KOS号</span>' : '-');
+    var st = fzStatus(a);
+    var stCls = st === '运营中' ? 'tag-green' : 'tag-orange';
     h += '<tr>';
     h += '<td>' + (i+1) + '</td>';
     h += '<td style="white-space:nowrap"><strong>' + a.name + '</strong></td>';
@@ -6394,6 +5973,8 @@ function renderAccounts() {
     h += '<td style="font-weight:600;color:var(--pri)">' + fzNum(a.fans) + '</td>';
     h += '<td>' + fzNum(a.notes) + '</td>';
     h += '<td>' + fzNum(a.inter) + '</td>';
+    h += '<td>' + fzPosition(a) + '</td>';
+    h += '<td><span class="tag ' + stCls + '">' + st + '</span></td>';
     h += '<td>' + (a.link ? '<a href="' + a.link + '" target="_blank" class="btn btn-sm">打开</a>' : '-') + '</td>';
     h += '</tr>';
   });
@@ -6469,9 +6050,20 @@ function renderTopics() {
   h += '<button class="btn btn-pri" onclick="exportTopicsExcel()" style="margin-left:auto">导出选题表</button>';
   h += '</div>';
 
+  h += '<div class="toolbar" style="margin-bottom:0">';
+  var bizLines = ['全部','券商业务','ETF','打新','投教','两融'];
+  var curBiz = window._topicBizFilter || '全部';
+  bizLines.forEach(function(b) {
+    var cls = (curBiz === b) ? 'btn btn-sm btn-pri' : 'btn btn-sm';
+    h += '<button class="' + cls + '" onclick="window._topicBizFilter=\'' + b + '\';nav(\'topics\')" style="margin-right:4px">' + (b === '全部' ? '全部业务线' : b) + '</button>';
+  });
+  h += '<span style="font-size:12px;color:var(--text2);margin-left:8px">按业务线筛选选题</span>';
+  h += '</div>';
+
   var filtered = topicPlans.filter(function(t) {
     if (curCat !== '全部' && t.eduCategory !== curCat) return false;
     if (curComp !== 'all' && t.compliance !== curComp) return false;
+    if (curBiz !== '全部' && (t.bizLine || '') !== curBiz) return false;
     return true;
   });
 
@@ -6487,7 +6079,7 @@ function renderTopics() {
     else if (t.compliance === 'caution') compTag = '<span class="tag" style="background:#FFF3E0;color:#E65100">\u26A0\uFE0F 注意</span>';
     else compTag = '<span class="tag" style="background:#FFEBEE;color:#C62828">\uD83D\uDEAB 高风险</span>';
     h += '<tr class="topic-row" onclick="toggleTopic(90' + realIdx + ')">';
-    h += '<td><strong>' + t.name + '</strong><br><span class="tag" style="background:#E3F2FD;color:#1565C0;font-size:10px;margin-top:4px">' + t.eduCategory + '</span></td>';
+    h += '<td><strong>' + t.name + '</strong><br><span class="tag" style="background:#E3F2FD;color:#1565C0;font-size:10px;margin-top:4px">' + t.eduCategory + '</span>' + (t.bizLine ? ' <span class="tag tag-purple" style="font-size:10px;margin-top:4px">' + t.bizLine + '</span>' : '') + '</td>';
     h += '<td style="color:var(--orange)">' + stars + '</td>';
     h += '<td style="font-size:12px;color:var(--text2)">' + (t.hotTitle || '-') + '</td>';
     h += '<td style="font-size:13px">' + t.direction + '</td>';
@@ -6567,9 +6159,25 @@ function renderViralContent() {
   });
   h += '</div>';
 
+  h += '<div class="toolbar" style="margin-bottom:12px">';
+  var bizLines = ['全部','券商业务','ETF','打新','投教','两融'];
+  var curViralBiz = window._viralBizFilter || '全部';
+  bizLines.forEach(function(b) {
+    var cls = (curViralBiz === b) ? 'btn btn-sm btn-pri' : 'btn btn-sm';
+    h += '<button class="' + cls + '" onclick="window._viralBizFilter=\'' + b + '\';nav(\'viralContent\')" style="margin-right:4px">' + (b === '全部' ? '全部业务线' : b) + '</button>';
+  });
+  h += '<span style="font-size:12px;color:var(--text2);margin-left:8px">按业务线筛选爆款</span>';
+  h += '</div>';
+
+  var filteredViral = viralContent.filter(function(v) {
+    if (curViralBiz !== '全部' && (v.bizLine || '') !== curViralBiz) return false;
+    return true;
+  });
+  h += '<div style="padding:8px 12px;font-size:12px;color:var(--text2)">显示 ' + filteredViral.length + '/' + viralContent.length + ' 条爆款</div>';
+
   h += '<div class="card"><div id="viralContentTable"><table>';
-  h += '<thead><tr><th style="width:36px">#</th><th>标题</th><th style="width:70px">平台</th><th>作者</th><th style="width:70px">爆款指数</th><th style="width:120px">互动(点赞/收藏)</th><th style="width:70px">分类</th></tr></thead><tbody>';
-  viralContent.forEach(function(v) {
+  h += '<thead><tr><th style="width:36px">#</th><th>标题</th><th style="width:70px">平台</th><th>作者</th><th style="width:70px">爆款指数</th><th style="width:120px">互动(点赞/收藏)</th><th style="width:70px">分类</th><th style="width:70px">业务线</th></tr></thead><tbody>';
+  filteredViral.forEach(function(v) {
     var platCls = 'vp-xhs';
     if (v.platform === 'B站') platCls = 'vp-bili';
     else if (v.platform === '同花顺') platCls = 'vp-ths';
@@ -6584,8 +6192,9 @@ function renderViralContent() {
     h += '<td><span class="tag tag-red">' + v.viralScore + '</span></td>';
     h += '<td style="font-size:12px">赞 ' + v.likes.toLocaleString() + ' / 藏 ' + v.collects.toLocaleString() + '</td>';
     h += '<td><span class="tag tag-green">' + v.category + '</span></td>';
+    h += '<td>' + (v.bizLine ? '<span class="tag tag-purple">' + v.bizLine + '</span>' : '-') + '</td>';
     h += '</tr>';
-    h += '<tr class="expand-row" id="topic-viral-' + v.id + '"><td colspan="7"><div class="topic-detail show">';
+    h += '<tr class="expand-row" id="topic-viral-' + v.id + '"><td colspan="8"><div class="topic-detail show">';
     h += '<div style="margin-bottom:10px"><strong>爆款原因：</strong> ' + v.analysis + '</div>';
     h += '<div style="margin-bottom:10px"><strong>创作模板：</strong> ' + v.template + '</div>';
     h += '<div style="margin-bottom:10px"><strong>参考标签：</strong> ';
@@ -6683,9 +6292,46 @@ function renderTeardown() {
   return h;
 }
 
+var commentState = { identity: '专业号', scenario: '首评留人' };
+
 function renderScripts() {
   var h = renderTopbar();
   h += '<div class="page-title">话术库</div>';
+
+  /* ===== 评论区互动话术库（按账号身份） ===== */
+  h += '<div class="card" style="margin-bottom:20px"><div class="card-title">💬 评论区互动话术库 <span class="tag tag-purple" style="margin-left:8px">按账号身份区分</span></div>';
+  h += '<div style="font-size:13px;color:var(--text2);margin-bottom:14px">区分「专业号 / KOS号 / 员工个人号」三种身份，覆盖首评留人、评论回复、私信承接三大场景，规避敏感词、提供合规引流表达。</div>';
+
+  h += '<div style="margin-bottom:8px;font-size:13px;font-weight:600">选择账号身份：</div>';
+  h += '<div class="tabs" id="commentIdentityTabs">';
+  commentScripts.identities.forEach(function(idn) {
+    h += '<div class="tab' + (idn === commentState.identity ? ' active' : '') + '" onclick="switchCommentIdentity(\'' + idn + '\')">' + idn + '</div>';
+  });
+  h += '</div>';
+
+  h += '<div style="margin:12px 0 8px;font-size:13px;font-weight:600">选择互动场景：</div>';
+  h += '<div class="tabs" id="commentScenarioTabs">';
+  commentScripts.scenarios.forEach(function(sc) {
+    h += '<div class="tab' + (sc === commentState.scenario ? ' active' : '') + '" onclick="switchCommentScenario(\'' + sc + '\')">' + sc + '</div>';
+  });
+  h += '</div>';
+
+  h += '<div id="commentScriptContent" style="margin-top:14px">' + renderCommentScriptItems() + '</div>';
+  h += '</div>';
+
+  /* ===== 合规引流表达对照表 ===== */
+  h += '<div class="card" style="margin-bottom:20px"><div class="card-title">🚫 合规引流表达对照 <span class="tag tag-red" style="margin-left:8px">发布前自查</span></div>';
+  h += '<div style="font-size:13px;color:var(--text2);margin-bottom:12px">以下高风险表达极易触发平台限流或违规，请替换为右侧合规表达。</div>';
+  h += '<div style="display:flex;flex-direction:column;gap:6px">';
+  commentScripts.compliant.forEach(function(c) {
+    h += '<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#F9FAFB;border-radius:6px;font-size:13px">';
+    h += '<span class="tag tag-red" style="flex:0 0 auto">' + c.bad + '</span>';
+    h += '<span style="color:var(--text2)">→</span>';
+    h += '<span class="tag tag-green" style="flex:0 0 auto">' + c.good + '</span>';
+    h += '</div>';
+  });
+  h += '</div></div>';
+
   h += '<div class="toolbar">';
   h += '<button class="btn btn-pri" onclick="exportScriptsExcel()">导出话术库</button>';
   h += '<button class="btn" onclick="addScript()">添加话术</button>';
@@ -6700,6 +6346,32 @@ function renderScripts() {
   h += renderScriptItems(cats[0]);
   h += '</div>';
   return h;
+}
+
+function renderCommentScriptItems() {
+  var items = commentScripts.data[commentState.identity][commentState.scenario];
+  var h = '';
+  items.forEach(function(item, i) {
+    h += '<div class="card" style="display:flex;align-items:center;justify-content:space-between">';
+    h += '<div style="flex:1;font-size:14px;line-height:1.6">' + (i+1) + '. ' + item + '</div>';
+    h += '<button class="copy-btn" data-t="' + String(item).split('"').join('&quot;') + '" onclick="copyText(this.getAttribute(\'data-t\'))">复制</button>';
+    h += '</div>';
+  });
+  return h;
+}
+
+function switchCommentIdentity(idn) {
+  commentState.identity = idn;
+  var tabs = document.querySelectorAll('#commentIdentityTabs .tab');
+  tabs.forEach(function(t) { t.classList.toggle('active', t.textContent === idn); });
+  document.getElementById('commentScriptContent').innerHTML = renderCommentScriptItems();
+}
+
+function switchCommentScenario(sc) {
+  commentState.scenario = sc;
+  var tabs = document.querySelectorAll('#commentScenarioTabs .tab');
+  tabs.forEach(function(t) { t.classList.toggle('active', t.textContent === sc); });
+  document.getElementById('commentScriptContent').innerHTML = renderCommentScriptItems();
 }
 
 function renderScriptItems(cat) {
@@ -6868,6 +6540,27 @@ function renderCreateStep3() {
   h += '<button class="btn" onclick="goCreateStep(2)">\u2190 \u8FD4\u56DE\u7F16\u8F91</button>';
   h += '<button class="btn btn-pri" onclick="nav(\'compliance\')" style="margin-left:auto">\u2192 \u53BB\u654F\u611F\u8BCD\u68C0\u67E5</button>';
   h += '</div></div>';
+
+  /* ===== 配图三件套建议 ===== */
+  h += '<div class="card" style="border-left:4px solid var(--orange)"><div class="card-title">🖼 配图三件套建议 <span class="tag tag-orange" style="margin-left:8px">封面图 / 信息图 / 对比图</span></div>';
+  h += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">';
+  var imgKits = [
+    {icon:'📌', name:'① 封面图（首图）', desc:'竖版3:4，大字标题+高对比配色，1秒抓住眼球，决定点击率', tips:'把核心利益点用最大字号写上去，如「3分钟看懂券商中报」'},
+    {icon:'📊', name:'② 信息图（干货）', desc:'把正文核心数据/步骤做成图表或清单，方便收藏转发', tips:'数据卡片、流程图、步骤清单，一图胜千字'},
+    {icon:'⚖️', name:'③ 对比图（收尾）', desc:'对比/总结图，强化记忆点，引导互动与关注', tips:'如「避坑清单」「正解vs误区」「行动清单」'}
+  ];
+  imgKits.forEach(function(k) {
+    h += '<div style="padding:14px;background:#FFF7ED;border-radius:8px">';
+    h += '<div style="font-size:22px;margin-bottom:8px">' + k.icon + '</div>';
+    h += '<div style="font-weight:700;font-size:14px;margin-bottom:8px">' + k.name + '</div>';
+    h += '<div style="font-size:12px;color:var(--text);line-height:1.7;margin-bottom:8px">' + k.desc + '</div>';
+    h += '<div style="font-size:11px;color:var(--text2);line-height:1.6">💡 ' + k.tips + '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  h += '<div style="margin-top:12px;font-size:12px;color:var(--text2)">当前选题建议配图风格：<span class="tag tag-purple">' + (createState.imgStyle || '通用封面+数据卡片+对比图') + '</span></div>';
+  h += '</div>';
+
   h += '<div class="card"><div class="card-title">\u5185\u5BB9\u7EDF\u8BA1</div>';
   h += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">';
   h += '<div style="text-align:center;padding:12px;background:#F9FAFB;border-radius:8px"><div style="font-size:24px;font-weight:700;color:var(--pri)">' + title.length + '</div><div style="font-size:12px;color:var(--text2)">\u6807\u9898\u5B57\u6570</div></div>';
@@ -6963,7 +6656,7 @@ function renderCompliance() {
   h += '<div class="page-title">敏感词筛查中心</div>';
   h += '<div class="card">';
   h += '<div class="card-title">输入待检测内容</div>';
-  h += '<textarea id="complianceInput" rows="8" placeholder="请粘贴您的小红书文案内容，系统将自动检测违规词、风险词及缺失的合规声明..."></textarea>';
+  h += '<textarea id="complianceInput" rows="8" oninput="liveCompliance()" placeholder="请粘贴您的小红书文案内容，系统将边输入边实时检测违规词、风险词及缺失的合规声明，并给出替换建议..."></textarea>';
   h += '<div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">';
   h += '<button class="btn btn-pri" onclick="checkCompliance()">本地检测 (' + bannedWords.length + '个敏感词)</button>';
   h += '<a href="https://www.lingkechaci.com/" target="_blank" class="btn">零克查词（在线）</a>';
@@ -6997,7 +6690,36 @@ function renderCompliance() {
 
 function renderTasks() {
   var h = renderTopbar();
-  h += '<div class="page-title">任务中心</div>';
+  h += '<div class="page-title">任务中心 · 我的待办</div>';
+
+  /* ===== 今日展业提醒 ===== */
+  h += '<div class="card" style="border-left:4px solid var(--pri)"><div class="card-title">📌 今日展业提醒 <span class="tag tag-red" style="margin-left:8px">打开先看这个</span></div>';
+  h += '<div style="display:flex;gap:16px;flex-wrap:wrap">';
+  h += '<div style="flex:1;min-width:260px"><div style="font-weight:600;font-size:13px;margin-bottom:10px">📝 今天该发什么</div>';
+  var todayPlans = topicPlans.slice(0, 4);
+  todayPlans.forEach(function(p) {
+    h += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:#F9FAFB;border-radius:6px;margin-bottom:6px;font-size:13px">';
+    h += '<span style="color:var(--text2);font-size:12px;flex:0 0 auto">' + p.time + '</span>';
+    h += '<span style="flex:1">' + p.name + '</span>';
+    h += '<span class="tag tag-purple" style="font-size:10px">' + (p.bizLine || '') + '</span>';
+    h += '</div>';
+  });
+  h += '<button class="btn btn-sm" onclick="nav(\'topics\')">查看全部选题 →</button></div>';
+  h += '<div style="flex:1;min-width:260px"><div style="font-weight:600;font-size:13px;margin-bottom:10px">💬 今天该互动什么</div>';
+  var interactTasks = [
+    '回复「方正证券账号」全部新增评论',
+    '承接私信：引导合规走官方渠道',
+    '首评留人：给今日发布笔记置顶评论',
+    '与 3 个对标账号互动（点赞+评论）'
+  ];
+  interactTasks.forEach(function(t) {
+    h += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:#F9FAFB;border-radius:6px;margin-bottom:6px;font-size:13px">';
+    h += '<span style="color:var(--green);flex:0 0 auto">☑</span><span>' + t + '</span>';
+    h += '</div>';
+  });
+  h += '<button class="btn btn-sm" onclick="nav(\'scripts\')">查看互动话术 →</button></div>';
+  h += '</div></div>';
+
   h += '<div style="display:flex;gap:20px;flex-wrap:wrap">';
   var periods = [{key:'today', label:'今日任务'}, {key:'week', label:'本周任务'}, {key:'month', label:'本月任务'}];
   periods.forEach(function(p) {
@@ -7416,13 +7138,14 @@ function useTopicForCreate(idx) {
   createState.step = 2;
   createState.title = t.titles[titleIdx] || '';
   createState.hotspotId = t.relatedHotId || null;
+  createState.imgStyle = t.imgStyle || '';
   toast('已选用选题: ' + t.name + '（标题' + (titleIdx + 1) + '）合规等级: ' + (t.compliance === 'safe' ? '安全' : t.compliance === 'caution' ? '需注意' : '高风险'), 'success');
   nav('create');
 }
 
-function checkCompliance() {
+function checkCompliance(silent) {
   var text = document.getElementById('complianceInput').value;
-  if (!text.trim()) { toast('请输入待检测内容', 'warning'); return; }
+  if (!text.trim()) { if (!silent) toast('请输入待检测内容', 'warning'); return; }
   var dangers = [];
   var warnings = [];
   var missingDecl = [];
@@ -7471,18 +7194,30 @@ function checkCompliance() {
   h += '<div style="font-size:12px;color:var(--text2);margin-top:6px">扣分明细：高危词 -15/个 × ' + dangers.length + ' ｜ 风险词 -5/个 × ' + warnings.length + ' ｜ 缺失声明 -10/项 × ' + missingDecl.length + '</div></div>';
 
   if (dangers.length > 0) {
-    h += '<div class="result-box result-danger"><strong>高危词汇（' + dangers.length + '个）— 请立即删除或替换：</strong><br>';
+    h += '<div class="result-box result-danger"><strong>高危词汇（' + dangers.length + '个）— 请立即删除或替换：</strong>';
     dangers.forEach(function(d) {
-      var cat = wordCategory[d] || '';
-      h += '<span class="tag tag-red" style="margin:4px">' + d + '</span> <span style="font-size:11px;color:var(--text2)">' + cat + '</span> ';
+      var cat = wordCategory[d] || '未分类';
+      var rep = wordReplace[d];
+      h += '<div style="padding:6px 0;border-bottom:1px dashed rgba(0,0,0,0.08)">';
+      h += '<span class="tag tag-red" style="margin-right:8px">' + d + '</span>';
+      h += '<span style="font-size:11px;color:var(--text2);margin-right:8px">[' + cat + ']</span>';
+      if (rep) { h += '<span style="font-size:13px;color:var(--green)">\u2192 \u5EFA\u8BAE\u6539\u4E3A\uFF1A' + rep + '</span>'; }
+      else { h += '<span style="font-size:12px;color:var(--text2)">\u2192 \u8BF7\u5220\u9664\u8BE5\u8868\u8FF0</span>'; }
+      h += '</div>';
     });
     h += '</div>';
   }
   if (warnings.length > 0) {
-    h += '<div class="result-box result-warning"><strong>风险词汇（' + warnings.length + '个）— 建议修改表述：</strong><br>';
+    h += '<div class="result-box result-warning"><strong>风险词汇（' + warnings.length + '个）— 建议修改表述：</strong>';
     warnings.forEach(function(w) {
-      var cat = wordCategory[w] || '';
-      h += '<span class="tag tag-orange" style="margin:4px">' + w + '</span> <span style="font-size:11px;color:var(--text2)">' + cat + '</span> ';
+      var cat = wordCategory[w] || '未分类';
+      var rep = wordReplace[w];
+      h += '<div style="padding:6px 0;border-bottom:1px dashed rgba(0,0,0,0.08)">';
+      h += '<span class="tag tag-orange" style="margin-right:8px">' + w + '</span>';
+      h += '<span style="font-size:11px;color:var(--text2);margin-right:8px">[' + cat + ']</span>';
+      if (rep) { h += '<span style="font-size:13px;color:var(--green)">\u2192 \u5EFA\u8BAE\u6539\u4E3A\uFF1A' + rep + '</span>'; }
+      else { h += '<span style="font-size:12px;color:var(--text2)">\u2192 \u8BF7\u5220\u9664\u8BE5\u8868\u8FF0</span>'; }
+      h += '</div>';
     });
     h += '</div>';
   }
@@ -7499,6 +7234,18 @@ function checkCompliance() {
   h += '<div style="margin-top:8px;padding:16px;background:#F9FAFB;border-radius:8px;font-size:14px;line-height:1.8;white-space:pre-wrap">' + annotated + '</div>';
   h += '</div>';
   document.getElementById('complianceResult').innerHTML = h;
+}
+
+var _complianceTimer = null;
+function liveCompliance() {
+  var inp = document.getElementById('complianceInput');
+  var resultEl = document.getElementById('complianceResult');
+  if (!inp || !resultEl) return;
+  if (_complianceTimer) clearTimeout(_complianceTimer);
+  _complianceTimer = setTimeout(function() {
+    if (!inp.value.trim()) { resultEl.innerHTML = ''; return; }
+    checkCompliance(true);
+  }, 350);
 }
 
 function toggleTask(period, idx) {
