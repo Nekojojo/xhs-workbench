@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小红书工作台 简易版1.3 - 方正证券 - 9月2日</title>
+<title>小红书工作台 简易版1.4 - 方正证券 - 9月2日</title>
 <script src="../history/index.js"></script>
 <style>
 :root {
@@ -50,6 +50,14 @@ tr:hover td { background: #FAFBFC; }
 .tag-blue { background: #DBEAFE; color: #2563EB; }
 .tag-purple { background: #EDE9FE; color: #7C3AED; }
 .tag-green { background: #D1FAE5; color: #059669; }
+.account-card { background: var(--card); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); transition: all 0.2s; }
+.account-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+.account-card .name { font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+.account-card .name a { color: var(--pri); text-decoration: none; }
+.account-card .name a:hover { text-decoration: underline; }
+.account-card .meta { font-size: 12px; color: var(--text2); display: flex; gap: 12px; flex-wrap: wrap; }
+.accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
 .btn { padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 13px; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: var(--text); }
 .btn:hover { border-color: var(--pri); color: var(--pri); }
 .btn-pri { background: var(--pri); color: #fff; border-color: var(--pri); }
@@ -253,12 +261,13 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
     <div class="nav-group-title">功能模块</div>
     <div class="nav-item active" onclick="nav('hotspots')"><span class="icon">&#x1F525;</span><span>每日财经热点</span></div>
     <div class="nav-item" onclick="nav('viral')"><span class="icon">&#x1F4A5;</span><span>平台爆款</span></div>
+    <div class="nav-item" onclick="nav('benchmarks')"><span class="icon">&#x1F3AF;</span><span>对标账号</span></div>
     <div class="nav-item" onclick="nav('topics')"><span class="icon">&#x1F4CB;</span><span>今日选题计划</span></div>
     <div class="nav-item" onclick="nav('weekly')"><span class="icon">&#x1F4C5;</span><span>周历排期</span></div>
     <div class="nav-item" onclick="nav('create')"><span class="icon">&#x270F;&#xFE0F;</span><span>内容创作</span></div>
     <div class="nav-item" onclick="nav('compliance')"><span class="icon">&#x26A0;&#xFE0F;</span><span>敏感词筛查</span></div>
   </div>
-  <div class="sidebar-footer">小红书工作台 简易版1.3<br>方正证券新媒体团队</div>
+  <div class="sidebar-footer">小红书工作台 简易版1.4<br>方正证券新媒体团队</div>
 </div>
 <div class="main" id="main"></div>
 <div id="toast-container"></div>
@@ -1792,10 +1801,536 @@ var contentStyles = [
 
 /* ========== RENDER ========== */
 
+var kosAccounts = [
+  {
+    "name": "A股妍希",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/64a6ae5d000000001001d279",
+    "desc": "女性向A股投教；新手散户入门、盘面通俗复盘、交易心态、避雷科普"
+  },
+  {
+    "name": "学志聊投资",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/68c8d4180000000008032fad",
+    "desc": "价值投资主线，基金+A股赛道科普；侧重资产配置、定投体系"
+  },
+  {
+    "name": "阿弓的投资小灶",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/685e67fb0000000008038889",
+    "desc": "偏基本面赛道分析、行业逻辑拆解、财报简易解读"
+  },
+  {
+    "name": "国泰海通鑫趋势",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/643d43bc000000000d0196f9",
+    "desc": "大势复盘、板块轮动科普、ETF、场内工具投教"
+  },
+  {
+    "name": "国泰海通超人说",
+    "fans": 68000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/65348ebf000000000400952f",
+    "desc": "短视频热点市场解读、行业热点通俗拆解"
+  },
+  {
+    "name": "糖爸投资经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/59a02e9482ec39019e5b75aa",
+    "desc": "家庭理财、基金组合、低波动理财思路"
+  },
+  {
+    "name": "离火财经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/6a0a92400000000001007400",
+    "desc": "宏观周期+板块逻辑，技术面结合资金情绪复盘"
+  },
+  {
+    "name": "东吴小清东吴证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8nDP25XIbv3",
+    "desc": "可转债、ETF、理财基础科普、新手开户合规投教"
+  },
+  {
+    "name": "华泰邹哥观市",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/537bFOO3tAW",
+    "desc": "每日市场复盘、仓位管理、震荡市应对思路"
+  },
+  {
+    "name": "广发证券金牌投顾邱邱",
+    "fans": 92000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/14BfVxvb1i4",
+    "desc": "女性投顾IP；基金科普、资产配置、新手入市避坑"
+  },
+  {
+    "name": "广发证券罐罐",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5uUzRSe1ixD",
+    "desc": "年轻化新人理财IP；场内ETF、可转债基础、交易规则科普"
+  },
+  {
+    "name": "华安证券有料财经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8ADJ0QceWLa",
+    "desc": "市场热点解读、金融基础知识、防非反诈投教"
+  },
+  {
+    "name": "华兴丨理财笔记（证券）",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/6f9oEJ7cses",
+    "desc": "面向年轻上班族；闲钱理财、基金定投、A股入门科普"
+  },
+  {
+    "name": "申万宏源证券乐乐",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/2IbWu0mvseD",
+    "desc": "女性理财IP；基金挑选、持仓心态、定投实操"
+  },
+  {
+    "name": "广发证券金牌投顾邱邱",
+    "fans": 92000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/3m1iclfF4Ls",
+    "desc": "基金理财科普+新手避坑+资产配置思路+券商基础业务科普"
+  },
+  {
+    "name": "国金证券小鱼儿",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/6eu4l9yWkRZ",
+    "desc": "散户向投教；市场术语拆解、投资误区、ETF实操"
+  },
+  {
+    "name": "国金证券爱理财的张张",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7chg2XeBv5v",
+    "desc": "女性向理财账号；家庭资产规划、基金组合、稳健理财思路"
+  },
+  {
+    "name": "金多多国金证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9U2ATRHV5Cr",
+    "desc": "系统化理财科普；基金、固收+、场内工具科普"
+  },
+  {
+    "name": "证券老管家",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4avM2bxTcJp",
+    "desc": "泛市场复盘、资金面解读、散户避坑干货"
+  },
+  {
+    "name": "晓琴说财经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5qaSDukiihh",
+    "desc": "女性理财、基金投资、长期价值思路"
+  },
+  {
+    "name": "券商主力君",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/2Vgz6pCmkMU",
+    "desc": "板块轮动、资金流向、市场情绪解读"
+  },
+  {
+    "name": "广发逻辑哥",
+    "fans": 45000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7AofZwJjSt1",
+    "desc": "产业逻辑+基本面科普；赛道梳理、行业简读"
+  },
+  {
+    "name": "跟着诸葛学交易",
+    "fans": 52000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8NRensDImpM",
+    "desc": "交易体系教学、量价、交易心态、投资认知科普"
+  },
+  {
+    "name": "小汤券商干货铺",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/11rJs1XvOUs",
+    "desc": "交易规则、软件操作、开户避坑、佣金科普"
+  },
+  {
+    "name": "申万宏源贝果投研",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/6uJpla3tP8Z",
+    "desc": "基本面投研向；行业赛道简单拆解、财报入门"
+  },
+  {
+    "name": "天平投研",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9HJvwFBi1J8",
+    "desc": "宏观+行业逻辑复盘；市场周期、板块机会梳理"
+  },
+  {
+    "name": "月月理财笔记",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/3KO8hhut70U",
+    "desc": "基金定投、小额理财、资产分散配置"
+  },
+  {
+    "name": "李享财经",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/bZDPQDuuEj",
+    "desc": "行情复盘、投资认知、散户常见错误总结"
+  },
+  {
+    "name": "老高侃财",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9PPxjhpKOt2",
+    "desc": "热点财经事件解读、宏观通俗分析"
+  },
+  {
+    "name": "小佳说财",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AcqtHrBLSMv",
+    "desc": "理财入门科普、避雷清单、基金基础知识"
+  },
+  {
+    "name": "江海证券小白鲸",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7ZGHohtT4bG",
+    "desc": "年轻化投教IP；ETF、理财基础、新手入市指南"
+  },
+  {
+    "name": "宗明财富论",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8yQtqqPoFXC",
+    "desc": "大类资产配置、长期投资理念，侧重价值投资"
+  },
+  {
+    "name": "财经伊姐",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/Aaajo4LOLUr",
+    "desc": "女性财商、家庭理财、基金组合搭建"
+  },
+  {
+    "name": "财女静静-德邦",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/wgPYOD1TDD",
+    "desc": "女性理财向；基金避坑、稳健理财科普"
+  },
+  {
+    "name": "财女大作手",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7Tw2ZE9JKbN",
+    "desc": "市场趋势复盘、板块机会分析"
+  },
+  {
+    "name": "昕财说",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4DwJwtk1x80",
+    "desc": "金融术语科普、市场热点简评"
+  }
+];
+
+var proAccounts = [
+  {
+    "name": "华泰证券涨乐财富通",
+    "fans": 156000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4e7qPk5hKWB",
+    "desc": "品牌官方账号；涨乐APP功能教学、ETF科普"
+  },
+  {
+    "name": "广发证券开户申请",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://www.xiaohongshu.com/user/profile/654523b50000000030033733",
+    "desc": "功能单一矩阵号；开户避坑、佣金、线上开户流程"
+  },
+  {
+    "name": "国金证券",
+    "fans": 128000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/A43Fa3aHmXc",
+    "desc": "总部官方号；标准化投教、市场观点、品牌活动"
+  },
+  {
+    "name": "A博众证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AeSx0aSHVVm",
+    "desc": "投顾服务科普、市场策略解读"
+  },
+  {
+    "name": "广发证券",
+    "fans": 320000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9mgtAc10iSe",
+    "desc": "总部官方主号；泛理财投教、财经热点、品牌活动"
+  },
+  {
+    "name": "擒股王证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5HSfapKoBOh",
+    "desc": "侧重行情复盘、短线机会解读"
+  },
+  {
+    "name": "九方智投证券策略",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/3NvzGHKSLHD",
+    "desc": "机构策略输出、市场行情解读、投资方法教学"
+  },
+  {
+    "name": "国泰证券极速开户",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/2uBK7Y066EL",
+    "desc": "纯引流工具号，内容聚焦开户流程、佣金福利"
+  },
+  {
+    "name": "国泰海通证券智投宝典",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AGLzxeOJKhO",
+    "desc": "投教干货、ETF、场内工具科普"
+  },
+  {
+    "name": "国泰海通证券开户助手",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/8BdL5otbyzI",
+    "desc": "营销转化号，开户答疑、线上开户指引"
+  },
+  {
+    "name": "银河证券顺德国泰南路营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9KnTL7oelbz",
+    "desc": "区域营业部官方号；本地客户运营、理财科普"
+  },
+  {
+    "name": "国泰海通证券郑州金水东路证券营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/A8PDQsqXOXH",
+    "desc": "区域营业部账号；本地投教、行情解读"
+  },
+  {
+    "name": "中国银河证券德清营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AWSAUTRXc1H",
+    "desc": "下沉区域营业部，理财入门科普"
+  },
+  {
+    "name": "中国银河证券股份有限公司北京知春路证券营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9AJ4XERo8pn",
+    "desc": "一线城市营业部，中产资产配置、开户答疑"
+  },
+  {
+    "name": "中国银河证券北京望京营业部",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/A9YGFxh7bz0",
+    "desc": "一线城市营业部，中产资产配置、开户答疑"
+  },
+  {
+    "name": "中国银河证券北京朝阳门营业",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/A51qkbCIQby",
+    "desc": "侧重财富管理、资产配置、基金、理财业务宣传"
+  },
+  {
+    "name": "申万宏源证券财富管理",
+    "fans": 210000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/AAQTiK8LeuM",
+    "desc": "小红书券商头部官号；女性友好理财科普"
+  },
+  {
+    "name": "江海证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5ppicH2dpPa",
+    "desc": "交易软件实操、场内基金、A股基础科普"
+  },
+  {
+    "name": "东方财富证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4qDz35RkPnz",
+    "desc": "交易软件实操、场内基金、A股基础科普"
+  },
+  {
+    "name": "中金财富证券开户服务",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/7TVoQFyWiNy",
+    "desc": "中产及高净值人群资产配置、养老理财"
+  },
+  {
+    "name": "中信证券财富管家",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/2GI30tOQUpo",
+    "desc": "家庭资产规划、大类资产配置、稳健投资理念"
+  },
+  {
+    "name": "国泰君安期货",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/478b2osRbpF",
+    "desc": "官方投教、市场策略、投资者风险教育"
+  },
+  {
+    "name": "平安证券财富赢家",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/5jCqoMhpfOV",
+    "desc": "理财科普、防非反诈、开户知识、理财产品解读"
+  },
+  {
+    "name": "招商证券财经社牛养成记",
+    "fans": 185000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/9YDDNxmtNPs",
+    "desc": "趣味化财经科普，网感强，年轻人向爆款投教内容标杆"
+  },
+  {
+    "name": "中国银河证券",
+    "fans": 245000,
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/6kClCnvtayC",
+    "desc": "宏观解读、市场投教、投资者保护"
+  },
+  {
+    "name": "国泰海通证券新客开户",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/1sjkOAh5lc4",
+    "desc": "开户科普、线上开户指引，私域导流"
+  },
+  {
+    "name": "申万宏源证券金融",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/3jJQmlxIm1J",
+    "desc": "策略观点、行业研究通俗化输出"
+  },
+  {
+    "name": "中信建投融资融券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/N9bx92vfT5",
+    "desc": "两融业务科普、融资融券规则、风险讲解"
+  },
+  {
+    "name": "中泰证券",
+    "fans": "—",
+    "posts": "—",
+    "likes": "—",
+    "url": "https://xhslink.cn/m/4wtBKAaYyGY",
+    "desc": "上班族理财、低波动资产、市场热点投教"
+  }
+];
+
 function renderTopbar() {
   var now = new Date();
   var t = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 ' + ('0'+now.getHours()).slice(-2) + ':' + ('0'+now.getMinutes()).slice(-2) + ':' + ('0'+now.getSeconds()).slice(-2);
-  return '<div class="topbar"><span class="topbar-clock" id="clock">' + t + '</span><span style="font-size:13px;color:var(--text2)">小红书工作台 简易版1.3</span></span><span id="history-selector-slot"></span></div>';
+  return '<div class="topbar"><span class="topbar-clock" id="clock">' + t + '</span><span style="font-size:13px;color:var(--text2)">小红书工作台 简易版1.4</span><span id="history-selector-slot"></span></div>';
 }
 
 function renderHotspots() {
@@ -2159,8 +2694,8 @@ function renderCompliance() {
 
   h += '<div id="complianceResult"></div>';
 
-  h += '<div class="card" style="margin-top:20px"><div class="card-title">当前敏感词库（' + bannedWords.length + '个 · 9大分类）</div>';
-  var cats = ['投顾业务','开户引流','信用与衍生品','违规炒股','配资','提供答案','规避行为','投诉举报','金融产品销售'];
+  h += '<div class="card" style="margin-top:20px"><div class="card-title">当前敏感词库（' + bannedWords.length + '个 · 14大分类）</div>';
+  var cats = ['投顾业务','开户引流','信用与衍生品','违规炒股','配资','提供答案','规避行为','投诉举报','金融产品销售','不当言论','敏感话题','买卖建议','收益承诺','不当竞争'];
   cats.forEach(function(cat) {
     var catWords = bannedWords.filter(function(w) { return wordCategory[w] === cat; });
     if (catWords.length === 0) return;
@@ -2178,15 +2713,74 @@ function renderCompliance() {
 
 /* ========== INTERACTIONS ========== */
 
+function renderBenchmarks() {
+  var h = renderTopbar();
+  h += '<div class="page-title">对标账号 <span class="badge">' + (kosAccounts.length + proAccounts.length) + '个</span></div>';
+  h += '<div style="padding:10px 14px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;margin-bottom:14px;font-size:12px;color:#1D4ED8">对标账号名单已同步《对标账号追踪模板》（' + (kosAccounts.length + proAccounts.length) + '个：KOS ' + kosAccounts.length + ' + 专业号 ' + proAccounts.length + '）。标注「—」的指标待账号监控任务采集后自动补全，点击账号名称可打开主页。</div>';
+  h += '<div class="toolbar">';
+  h += '<button class="btn btn-pri" onclick="exportBenchmarksCSV()">导出对标账号</button>';
+  h += '</div>';
+  h += '<div class="tabs" id="benchTabs">';
+  h += '<div class="tab active" onclick="filterBench(\'all\')">全部 (' + (kosAccounts.length + proAccounts.length) + ')</div>';
+  h += '<div class="tab" onclick="filterBench(\'kos\')">KOS账号 (' + kosAccounts.length + ')</div>';
+  h += '<div class="tab" onclick="filterBench(\'pro\')">专业号 (' + proAccounts.length + ')</div>';
+  h += '</div>';
+  h += '<div class="search-box"><input type="text" id="benchSearch" placeholder="搜索账号名称..." oninput="filterBenchSearch()"></div>';
+  h += '<div class="accounts-grid" id="benchGrid">';
+  var allAccounts = kosAccounts.map(function(a) { return {name:a.name, fans:a.fans, posts:a.posts, likes:a.likes, url:a.url, desc:a.desc, type:'KOS'}; }).concat(proAccounts.map(function(a) { return {name:a.name, fans:a.fans, posts:a.posts, likes:a.likes, url:a.url, desc:a.desc, type:'专业号'}; }));
+  allAccounts.forEach(function(a) {
+    h += '<div class="account-card" data-type="' + a.type + '" data-name="' + a.name + '">';
+    h += '<div class="name"><a href="' + a.url + '" target="_blank">' + a.name + '</a> <span class="tag ' + (a.type === 'KOS' ? 'tag-blue' : 'tag-green') + '">' + a.type + '</span></div>';
+    h += '<div class="meta"><span>粉丝 ' + a.fans + '</span><span>笔记 ' + a.posts + '</span><span>获赞 ' + a.likes + '</span></div>';
+    if (a.desc) h += '<div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.4">' + a.desc + '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function filterBench(type) {
+  var tabs = document.querySelectorAll('#benchTabs .tab');
+  tabs.forEach(function(t) { t.classList.remove('active'); });
+  event.target.classList.add('active');
+  var cards = document.querySelectorAll('#benchGrid .account-card');
+  cards.forEach(function(c) {
+    if (type === 'all') { c.style.display = ''; }
+    else if (type === 'kos') { c.style.display = c.dataset.type === 'KOS' ? '' : 'none'; }
+    else { c.style.display = c.dataset.type === '专业号' ? '' : 'none'; }
+  });
+}
+
+function filterBenchSearch() {
+  var q = document.getElementById('benchSearch').value.toLowerCase();
+  var cards = document.querySelectorAll('#benchGrid .account-card');
+  cards.forEach(function(c) {
+    c.style.display = c.dataset.name.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+  });
+}
+
+function exportBenchmarksCSV() {
+  var rows = [['类型','账号名称','粉丝','笔记','获赞','简介','主页']];
+  kosAccounts.forEach(function(a){ rows.push(['KOS', a.name, a.fans, a.posts, a.likes, a.desc || '', a.url]); });
+  proAccounts.forEach(function(a){ rows.push(['专业号', a.name, a.fans, a.posts, a.likes, a.desc || '', a.url]); });
+  var csv = '\ufeff' + rows.map(function(r){ return r.map(function(c){ return '"' + String(c).replace(/"/g,'""') + '"'; }).join(','); }).join('\r\n');
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = '对标账号数据.csv';
+  link.click();
+  toast('对标账号CSV已导出', 'success');
+}
+
 function nav(page) {
   closeSidebar();
   currentPage = page;
   var items = document.querySelectorAll('.nav-item');
   items.forEach(function(item) { item.classList.remove('active'); });
-  var pageMap = {hotspots:0, viral:1, topics:2, weekly:3, create:4, compliance:5};
+  var pageMap = {hotspots:0, viral:1, benchmarks:2, topics:3, weekly:4, create:5, compliance:6};
   var idx = pageMap[page];
   if (idx !== undefined) { items[idx].classList.add('active'); }
-  var renderers = {hotspots:renderHotspots, viral:renderViral, topics:renderTopics, weekly:renderWeekly, create:renderCreate, compliance:renderCompliance};
+  var renderers = {hotspots:renderHotspots, viral:renderViral, benchmarks:renderBenchmarks, topics:renderTopics, weekly:renderWeekly, create:renderCreate, compliance:renderCompliance};
   var fn = renderers[page];
   if (fn) { document.getElementById('main').innerHTML = fn(); startClock(); bindCreateEvents(); buildDateSelector(_historyDates); }
 }
@@ -2419,7 +3013,8 @@ function checkCompliance() {
   var h = '';
   h += '<div class="card" style="margin-top:16px"><div class="card-title">检测结果</div>';
   h += '<div style="text-align:center;margin-bottom:16px"><div style="font-size:48px;font-weight:700;color:' + scoreColor + '">' + score + '</div>';
-  h += '<div style="font-size:14px;color:var(--text2)">合规评分 · ' + scoreLabel + ' · 已收录' + bannedWords.length + '个敏感词</div></div>';
+  h += '<div style="font-size:14px;color:var(--text2)">合规评分 · ' + scoreLabel + ' · 已收录' + bannedWords.length + '个敏感词</div>';
+  h += '<div style="font-size:12px;color:var(--text2);margin-top:6px">扣分明细：高危词 -15/个 × ' + dangers.length + ' ｜ 风险词 -5/个 × ' + warnings.length + ' ｜ 缺失声明 -10/项 × ' + missingDecl.length + '</div></div>';
 
   if (dangers.length > 0) {
     h += '<div class="result-box result-danger"><strong>高危词汇（' + dangers.length + '个）— 请立即删除或替换：</strong><br>';
