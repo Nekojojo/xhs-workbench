@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小红书工作台 简易版1.4 - 方正证券 - 9月2日</title>
 <script src="../history/index.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root {
   --pri: #E01E23; --pri-light: #FFF0F0; --pri-dark: #B8161B;
@@ -59,6 +60,15 @@ tr:hover td { background: #FAFBFC; }
 .account-card .name a:hover { text-decoration: underline; }
 .account-card .meta { font-size: 12px; color: var(--text2); display: flex; gap: 12px; flex-wrap: wrap; }
 .accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.account-card.bench-selected { border-color: var(--purple); box-shadow: 0 0 0 2px rgba(139,92,246,0.30); }
+.bench-cmp-toggle { float: right; font-size: 11px; color: var(--text2); cursor: pointer; padding: 2px 8px; border: 1px solid var(--border); border-radius: 4px; user-select: none; transition: all 0.15s; }
+.bench-cmp-toggle.on { color: #fff; background: var(--purple); border-color: var(--purple); }
+.compare-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #F5F3FF; border: 1px solid #DDD6FE; border-radius: 8px; margin-bottom: 12px; font-size: 12px; color: var(--text2); flex-wrap: wrap; }
+.cmp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.cmp-table th, .cmp-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
+.cmp-table thead th { background: #F9FAFB; color: var(--text2); font-weight: 600; }
+.cmp-table tbody td:first-child { background: #F9FAFB; color: var(--text2); font-weight: 600; white-space: nowrap; }
+.chart-container { position: relative; height: 300px; }
 .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
 .btn { padding: 8px 18px; border-radius: 6px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 13px; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: var(--text); }
 .btn:hover { border-color: var(--pri); color: var(--pri); }
@@ -267,6 +277,7 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
     <div class="nav-item active" onclick="nav('hotspots')"><span class="icon">&#x1F525;</span><span>每日财经热点</span></div>
     <div class="nav-item" onclick="nav('viral')"><span class="icon">&#x1F4A5;</span><span>平台爆款</span></div>
     <div class="nav-item" onclick="nav('benchmarks')"><span class="icon">&#x1F3AF;</span><span>对标账号</span></div>
+    <div class="nav-item" onclick="nav('teardown')"><span class="icon">&#x1F50D;</span><span>账号拆解</span></div>
     <div class="nav-item" onclick="nav('topics')"><span class="icon">&#x1F4CB;</span><span>今日选题计划</span></div>
     <div class="nav-item" onclick="nav('weekly')"><span class="icon">&#x1F4C5;</span><span>周历排期</span></div>
     <div class="nav-item" onclick="nav('create')"><span class="icon">&#x270F;&#xFE0F;</span><span>内容创作</span></div>
@@ -1611,7 +1622,7 @@ var kosAccounts = [
   }
 ];
 
-var proAccounts = [{"name": "华泰证券涨乐财富通", "fans": 19000, "posts": 605, "likes": 64000, "url": "https://www.xiaohongshu.com/user/profile/618118f70000000002021896", "desc": "品牌官方账号；涨乐APP功能教学、ETF科普", "analysis": "\"教用户用产品\"本身就是一种内容——如果你的产品有一定使用门槛，与其花大钱投广告拉新，不如先把\"使用教程\"做成体系化内容。这类内容生命周期长、搜索流量稳定，而且天然带有信任感——毕竟\"官方教你用\"比\"第三方教你用\"更让人放心。 小而准的账号策略有时比大而全更有效——不一定每个号都要冲粉丝量，1.7万精准用户的获客效率可能比10万泛粉还高。做工具类产品账号的同事可以重点参考这个思路。"}, {"name": "广发证券开户申请", "fans": 14000, "posts": 479, "likes": 59000, "url": "https://www.xiaohongshu.com/user/profile/654523b50000000030033733", "desc": "功能单一矩阵号；开户避坑、佣金、线上开户流程", "analysis": "如果你的业务有一个非常明确的核心转化动作，可以考虑做一个专门服务于那个动作的矩阵号——不追求粉丝量，只追求在目标用户的搜索路径上做拦截。 内容可以模板化但不等于没创意——同一个主题换不同切入角度，既保证了产出效率，又覆盖了更多搜索关键词。这种\"内容铺设\"的思路在任何行业都适用，本质上是SEO思维在社交媒体上的应用。 矩阵号的ROI往往比主号还高——这种号维护成本低、内容可批量生产，一个人就能维护。"}, {"name": "国金证券", "fans": 44000, "posts": 683, "likes": 193000, "url": "https://www.xiaohongshu.com/user/profile/56a7110a84edcd62bf631293", "desc": "总部官方号；标准化投教、市场观点、品牌活动", "analysis": "总部号的核心使命是\"品牌信任\"而非\"流量爆款\"——它负责让用户觉得你靠谱、专业、有温度，具体的转化动作交给功能号去完成。两者分工不同，评价标准也不同。 \"不出错\"本身就是一种能力——在金融行业的合规约束下，能做到持续、稳定、有质量地输出内容，比偶尔出一篇爆款更有长期价值。品牌号的信任积累是慢功夫，急不来。"}, {"name": "A博众证券", "fans": 79000, "posts": 10, "likes": 275000, "url": "https://www.xiaohongshu.com/user/profile/5ff42beb0000000001009886", "desc": "投顾服务科普、市场策略解读", "analysis": "高客单价产品做小红书，不要追求爆款，要追求\"深度内容+持续输出\"——让每一个进入你主页的用户都能感受到专业度和可信赖感。粉丝量不需要特别大，但每一个粉丝都可能是高价值客户。7.8万精准粉的商业价值远超50万泛粉。 蓝海占位比红海厮杀更有效——投顾服务科普在小红书上竞争远不如股票推荐激烈，但目标用户的付费意愿和付费能力都更强。找到竞争少但需求真实存在的细分赛道，是中小账号突围的最优路径。"}, {"name": "广发证券", "fans": 47000, "posts": 989, "likes": 170000, "url": "https://www.xiaohongshu.com/user/profile/566baf4682718c701f4ce7e7", "desc": "总部官方主号；泛理财投教、财经热点、品牌活动", "analysis": "官方主号的定位一定是\"品牌门面\"而非\"转化利器\"——主号负责让用户觉得你靠谱、专业、有温度，具体的转化动作交给功能号去完成。两者分工明确、互不干扰，但在品牌层面形成合力。 slogan要押韵好记——\"投资有道，广发有料\"比\"专业创造价值\"强十倍。品牌传播的第一要义是让人记住你，而不是让人\"觉得你很厉害但想不起你叫什么\"。好的slogan能省下大量品牌教育成本。"}, {"name": "擒股王证券", "fans": 43000, "posts": 405, "likes": 92000, "url": "https://www.xiaohongshu.com/user/profile/64f1a8ef0000000006030ef4", "desc": "侧重行情复盘、短线机会解读", "analysis": "行情复盘类内容有天然的流量优势——每天都有新话题、用户每天都来看，是少数能做到\"日活\"的财经内容品类。如果你追求的是稳定的日更新和持续的流量，这个方向值得考虑。 标题和封面是复盘内容的核心竞争力——同质化信息太多了，能在标题上抓眼球、在封面上做出差异化的号才能跑出来。内容本身差距不大，差距在包装。"}, {"name": "九方智投证券策略", "fans": 72000, "posts": 210, "likes": 323000, "url": "https://www.xiaohongshu.com/user/profile/637c23b3000000001f01fd75", "desc": "机构策略输出、市场行情解读、投资方法教学", "analysis": "在小红书上卖\"专业知识\"，关键是让用户持续获得价值感——不是一上来就推销，而是先给够干货，让信任自然建立。信任建立了，转化就是水到渠成的事。急于变现反而会吓跑用户。 \"机构视角\"是一种有效的内容差异化——大部分财经内容都是个人投资者视角，机构视角的内容天然稀缺且有权威感。如果你有机构背景，一定要把这个优势在内容中充分展示。"}, {"name": "国泰证券极速开户", "fans": 11000, "posts": 96, "likes": 37000, "url": "https://www.xiaohongshu.com/user/profile/6134a9840000000002019dc1", "desc": "纯引流工具号，内容聚焦开户流程、佣金福利", "analysis": "简介是账号的\"第一句话\"，值得花心思写——国泰海通极速开户的简介在一堆开户号里脱颖而出，靠的就是那段有温度的自我介绍。花十分钟写一段好简介，可能比发一百篇笔记更有价值。 \"工具号\"也可以有人格化温度——纯功能导向不等于冷冰冰，在实用信息之上叠加一层真诚的态度，用户的信任感和好感度都会提升。开户号不代表必须严肃。 \"稳比快重要\"这种反功利表达反而更有转化力——用户不怕你慢，怕你只想着赚他的钱。"}, {"name": "国泰海通证券智投宝典", "fans": 2817, "posts": 144, "likes": 11000, "url": "https://www.xiaohongshu.com/user/profile/647a099e000000001c0295cf", "desc": "投教干货、ETF、场内工具科普", "analysis": "做账号不一定每个都要冲粉丝量——有些号的价值在于填补矩阵中的细分场景空白。ETF科普就是这样一个被低估的方向，用户搜索需求真实存在，但优质内容供给不足。 互动比（获赞收藏/粉丝）比粉丝数更重要——4.1:1的互动比说明内容质量过硬，用户认可度高。评估一个账号的价值不能只看粉丝数，还要看互动质量和用户画像。"}, {"name": "国泰海通证券开户助手", "fans": 3768, "posts": 308, "likes": 22000, "url": "https://www.xiaohongshu.com/user/profile/65e03674000000000500a1f8", "desc": "营销转化号，开户答疑、线上开户指引", "analysis": "矩阵号之间要有清晰的分工——国泰海通\"投教号+转化号+品牌开户号\"的搭配方式值得学习，各司其职、互为补充。投教号负责建立认知和信任，转化号负责临门一脚，品牌号负责扩大声量。 \"问答式内容\"是搜索流量的利器——用户搜什么你就写什么，标题直接对标搜索关键词，自然流量就会找上门来。这是成本最低、效果最稳定的获客方式之一。 简介也可以有辨识度——\"让钱不'离家出走'\"这种表达比\"专业服务\"有趣一百倍。"}, {"name": "银河证券顺德国泰南路营业部", "fans": 16, "posts": 63, "likes": 114, "url": "https://www.xiaohongshu.com/user/profile/685213ac000000001e005315", "desc": "区域营业部官方号；本地客户运营、理财科普", "analysis": "如果你的公司有大量线下门店或分支机构，不妨鼓励几个有内容意识的分支机构先试水小红书——不需要一上来就追求数据，先把\"本地化的官方内容阵地\"建起来，后面再慢慢做增长。 \"本地化\"是金融行业的信任捷径——用户对\"身边的机构\"天然更有信任感，这种信任是总部号很难做到的。区域号的价值不在于粉丝量，而在于它能触达的那些本地高净值客户。"}, {"name": "国泰海通证券郑州金水东路证券营业部", "fans": 223, "posts": 5, "likes": 79, "url": "https://www.xiaohongshu.com/user/profile/680c8ac0000000000e0133e7", "desc": "区域营业部账号；本地投教、行情解读", "analysis": "营业部号核心是「本地化」——大V覆盖不了「郑州金水东路这周六有交流会」这种带地理属性的内容，守住门口用户即可。健康配比约50%投教+30%热点+20%本地化，标题要「说着」不要「端着」。可借鉴：本地化流量+转化导向配比。"}, {"name": "中国银河证券德清营业部", "fans": 6677, "posts": 90, "likes": 14000, "url": "https://www.xiaohongshu.com/user/profile/5fbcdfd90000000001005955", "desc": "下沉区域营业部，理财入门科普", "analysis": "下沉县域的「小池塘里的大鱼」：县域竞争少、用户更信任面对面、关心「10万块怎么放稳」而非估值分析，转化率极高。选题要下沉适配（退休金/教育金），结合当地特色，评论活跃度比粉丝数更重要。可借鉴：下沉适配+本地特色。"}, {"name": "中国银河证券股份有限公司北京知春路证券营业部", "fans": 1109, "posts": 193, "likes": 2894, "url": "https://www.xiaohongshu.com/user/profile/684ec251000000001e001f0e", "desc": "一线城市营业部，中产资产配置、开户答疑", "analysis": "用地理位置做用户画像匹配：知春路紧邻中关村/高校，目标用户高学历高收入，选题应对应「互联网大厂期权/股权激励规划、科技股逻辑、程序员资产配置」而非入门内容。标题要「理性但有温度」，转化可做高净值分层。可借鉴：地理坐标即用户画像。"}, {"name": "中国银河证券北京望京营业部", "fans": 1237, "posts": 357, "likes": 6679, "url": "https://www.xiaohongshu.com/user/profile/640b0893000000002a00b089", "desc": "一线城市营业部，中产资产配置、开户答疑", "analysis": "矩阵号要有不可替代的内容生态位：望京是互联网打工人聚集地，应主打「期权行权配置、RSU避税、年终奖怎么投、35岁资产规划」等专属选题，视觉风格与知春路做差异化。可借鉴：同城矩阵按人群错位+视觉区分。"}, {"name": "中国银河证券北京朝阳门营业", "fans": 1089, "posts": 271, "likes": 5124, "url": "https://www.xiaohongshu.com/user/profile/67442488000000001d02e7d9", "desc": "侧重财富管理、资产配置、基金、理财业务宣传", "analysis": "营业部做小红书的关键不是追求粉丝量，而是追求精准度——100个CBD周边的精准粉丝，比1万个全国各地的泛粉有价值得多。一个高净值客户一年的佣金贡献可能超过100个小额投资者。 区域化内容是一个被严重低估的方向——在小红书上，\"附近\"和\"同城\"流量池是真实存在的，营业部号天然适合吃这波流量。每一篇带地理标签的内容都可能被附近的用户刷到。"}, {"name": "申万宏源证券财富管理", "fans": 7366, "posts": 708, "likes": 31000, "url": "https://www.xiaohongshu.com/user/profile/66b0686c000000001d020d1f", "desc": "小红书券商头部官号；女性友好理财科普", "analysis": "\"大而全\"不如\"小而准\"——与其做一个跟所有券商号都差不多的投教号，不如找到一个特定人群的特定需求，然后把内容做到极致。\"女性友好\"不是一个噱头，而是贯穿在语言、案例、视觉、态度中的系统性定位。 找到平台用户画像和业务定位的交集——小红书七成用户是女性，\"女性友好理财\"恰好就站在这个交集上。做定位时，先搞清楚你的目标用户在哪里聚集，再去那个场景里做最精准的内容。"}, {"name": "江海证券", "fans": 55000, "posts": 632, "likes": 394000, "url": "https://www.xiaohongshu.com/user/profile/5d208cdf000000001203e5cd", "desc": "交易软件实操、场内基金、A股基础科普", "analysis": "中小品牌不要试图在大品类里跟头部抢流量——找到一个大厂不屑于做或没顾上做的细分方向，扎扎实实做内容，反而更容易出圈。江海证券的\"软件实操\"定位，就是一个很好的\"错位竞争\"案例。 \"软件实操\"类内容是一个被严重低估的流量池——搜索量大、竞争少、内容生命周期长、用户信任感强。这些特点让它成为中小券商做小红书的理想切入点。"}, {"name": "东方财富证券", "fans": 25000, "posts": 146, "likes": 60000, "url": "https://www.xiaohongshu.com/user/profile/65b8bec7000000000e02688c", "desc": "交易软件实操、场内基金、A股基础科普", "analysis": "品牌认知度是内容运营的最大杠杆——如果用户已经知道你是谁，你的内容只需要\"接住\"搜索流量就行，不需要从零开始建立信任。东方财富的案例说明，有线下用户基础的品牌做小红书有天然优势，关键是把这个优势用好。 \"搭子\"人设比\"专家\"人设更适合小红书——在小红书的语境里，平等感比权威感更有吸引力。\"财富搭子\"这个定位精准踩中了平台调性，值得其他券商号参考。好的称呼能拉近心理距离。"}, {"name": "中金财富证券开户服务", "fans": 13000, "posts": 280, "likes": 26000, "url": "https://www.xiaohongshu.com/user/profile/678f473e000000000302cfb9", "desc": "中产及高净值人群资产配置、养老理财", "analysis": "开户号不需要\"端着\"做投教——中金证明了，直接亮明身份和目的，反而能吸引到最精准的用户。做内容不一定要讨好所有人，敢于设置门槛本身就是一种筛选机制。 矩阵号的精髓在于各司其职——品牌号做形象，开户号做转化，不需要一个号承担所有使命。如果你家也在做矩阵，这个思路值得参考：让每个号只做一件事，把那一件事做到极致。 ---"}, {"name": "中信证券财富管家", "fans": 39000, "posts": "—", "likes": 48000, "url": "https://www.xiaohongshu.com/user/profile/600d9e490000000001000ae5", "desc": "家庭资产规划、大类资产配置、稳健投资理念", "analysis": "场景化是金融内容的破圈利器——把\"资产配置\"翻译成\"你家的钱怎么安排\"，阅读门槛瞬间降低。金融号不一定要讲专业术语，用生活场景来包装专业知识才是正道。小红书上\"家庭\"\"育儿\"\"养老\"这些话题天然有流量，金融内容只要锚定这些场景，就能借到自然流量。 心智预售比即时转化更值钱——特别是高客单价的金融服务，用户从\"知道你\"到\"选择你\"可能需要半年甚至更久。"}, {"name": "国泰君安期货", "fans": 4543, "posts": "—", "likes": 6449, "url": "https://www.xiaohongshu.com/user/profile/649e6aa7000000001f0060cc", "desc": "官方投教、市场策略、投资者风险教育", "analysis": "小众赛道不等于没价值——期货在小红书上确实受众窄，但每一个精准用户的商业价值极高。不要用泛财经号的粉丝标准来评判垂直号，要看背后的客户终身价值。 \"教你不亏钱\"比\"教你赚钱\"更有信任感——在金融领域，风险教育类内容的信任建设效率远高于收益展示类内容。特别是在\"爆仓血泪帖\"满天飞的环境下，一个认真讲风险的官方号，天然就能获得用户好感。 ---"}, {"name": "平安证券财富赢家", "fans": 1579, "posts": 21, "likes": 6427, "url": "https://www.xiaohongshu.com/user/profile/600ba24c000000000101f426", "desc": "理财科普、防非反诈、开户知识、理财产品解读", "analysis": "差异化定位不一定要从\"我多厉害\"出发——\"我教你防骗\"比\"我帮你赚钱\"更容易建立信任。在金融领域，\"避坑\"类内容的传播力和信任建设效率都远高于\"收益展示\"类内容。 小号也能有大价值——1500粉丝的号，如果防非反诈这个标签打透了，在用户心智中的位置可能比很多万粉大号还牢固。关键不在于粉丝多少，在于你在用户心里代表了什么。 ---"}, {"name": "招商证券财经社牛养成记", "fans": 109000, "posts": "—", "likes": 184000, "url": "https://www.xiaohongshu.com/user/profile/6566fc6c00000000200359e9", "desc": "趣味化财经科普，网感强，年轻人向爆款投教内容标杆", "analysis": "券商投教不一定要\"端着\"——招商证明了，在合规框架内，财经内容完全可以做得有趣好玩。关键是给运营团队足够的创作空间，用用户的语言而不是行业的语言来做内容。 面向年轻人要做\"降维\"而不是\"降格\"——不是把内容做low了，而是把专业内容翻译成年轻人能接受的形式。知识内核不变，表达形式变了。 名字就是最好的品牌资产——\"财经社牛养成记\"这个名字听一次就记住了，比\"XX证券官方投教号\"强一百倍。"}, {"name": "中国银河证券", "fans": 1579, "posts": "—", "likes": 795, "url": "https://www.xiaohongshu.com/user/profile/6260f1be00000000100065d2", "desc": "宏观解读、市场投教、投资者保护", "analysis": "品牌大不等于小红书做得好——线下实力和线上内容是两种完全不同的能力。传统大券商不能躺在品牌认知上吃老本，需要专门为小红书这个平台定制内容策略和表达方式。 官方号的正确定位是\"中台\"而非\"前台\"——一个官方号再怎么做也就一个号，但如果能赋能几百个投顾的个人号，效果是完全不同的。大公司做小红书，一定要想清楚\"中台赋能加前台分发\"的矩阵逻辑。"}, {"name": "国泰海通证券新客开户", "fans": 936, "posts": "—", "likes": 7172, "url": "https://www.xiaohongshu.com/user/profile/65b709de000000001802330c", "desc": "开户科普、线上开户指引，私域导流", "analysis": "别看不起\"工具号\"——很多公司的矩阵号策略里，这种纯功能导向的号反而是ROI最高的。它不需要创意、不需要人设、不需要追热点，只需要把核心转化信息讲清楚就行。维护成本低，一个人就能运营。 粉丝少没关系，精准才是王道——938个\"准备开户\"的用户，比9万个\"随便看看\"的用户有价值得多。做转化号不追求粉丝量，追求的是在目标用户的搜索路径上做精准拦截。 ---"}, {"name": "申万宏源证券金融", "fans": 279, "posts": 16, "likes": 183, "url": "https://www.xiaohongshu.com/user/profile/6721e3f8000000000b0168f6", "desc": "策略观点、行业研究通俗化输出", "analysis": "好内容也需要好包装——研究所的报告再专业，如果不做平台适配，放在小红书上就是\"自嗨\"。同样的信息内核，换一种用户能接受的表达形式，效果可能天差地别。 简介是账号的\"门面中的门面\"——连简介都不写，等于店铺没有招牌。哪怕只写一句话，也比\"还没有简介\"强一百倍。279粉的号加上空白简介，用户会觉得这个号不靠谱。 ---"}, {"name": "中信建投融资融券", "fans": 49000, "posts": "—", "likes": 78000, "url": "https://www.xiaohongshu.com/user/profile/609944e00000000001001e2c", "desc": "两融业务科普、融资融券规则、风险讲解", "analysis": "业务垂类号是券商矩阵的最优解——每个业务线做一个号，精准服务高价值客群。两融号服务50万以上客户，期权号服务专业交易者，基金号服务定投用户，各号各司其职。 粉丝含金量比粉丝数量更重要——4.8万个高净值两融客户的价值，远超48万个泛财经用户。做金融号不要陷入\"唯粉丝论\"，要看粉丝背后的真实商业价值。 ---"}, {"name": "中泰证券", "fans": 649, "posts": 6, "likes": 642, "url": "https://www.xiaohongshu.com/user/profile/63e232ff000000002702aa9a", "desc": "上班族理财、低波动资产、市场热点投教", "analysis": "定位对了只是第一步，执行力才是分水岭——\"上班族理财\"这个方向没问题，但如果内容产量跟不上、视觉标准不够高、没有系列感，再好的定位也白搭。定位是方向，执行是路，两条腿都得迈开。 \"低波动\"在当下是流量关键词——市场波动大的时期，\"稳健\"\"低波动\"\"不亏钱\"这些关键词的搜索量会显著上升。做内容要学会借市场情绪的东风，顺势而为比逆风硬做效率高十倍。 ---"}];
+var proAccounts = [{"name": "华泰证券涨乐财富通", "fans": 19000, "posts": 605, "likes": 64000, "url": "https://www.xiaohongshu.com/user/profile/618118f70000000002021896", "desc": "品牌官方账号；涨乐APP功能教学、ETF科普", "analysis": "\"教用户用产品\"本身就是一种内容——如果你的产品有一定使用门槛，与其花大钱投广告拉新，不如先把\"使用教程\"做成体系化内容。这类内容生命周期长、搜索流量稳定，而且天然带有信任感——毕竟\"官方教你用\"比\"第三方教你用\"更让人放心。 小而准的账号策略有时比大而全更有效——不一定每个号都要冲粉丝量，1.7万精准用户的获客效率可能比10万泛粉还高。做工具类产品账号的同事可以重点参考这个思路。"}, {"name": "广发证券开户申请", "fans": 14000, "posts": 479, "likes": 59000, "url": "https://www.xiaohongshu.com/user/profile/654523b50000000030033733", "desc": "功能单一矩阵号；开户避坑、佣金、线上开户流程", "analysis": "如果你的业务有一个非常明确的核心转化动作，可以考虑做一个专门服务于那个动作的矩阵号——不追求粉丝量，只追求在目标用户的搜索路径上做拦截。 内容可以模板化但不等于没创意——同一个主题换不同切入角度，既保证了产出效率，又覆盖了更多搜索关键词。这种\"内容铺设\"的思路在任何行业都适用，本质上是SEO思维在社交媒体上的应用。 矩阵号的ROI往往比主号还高——这种号维护成本低、内容可批量生产，一个人就能维护。"}, {"name": "国金证券", "fans": 44000, "posts": 683, "likes": 193000, "url": "https://www.xiaohongshu.com/user/profile/56a7110a84edcd62bf631293", "desc": "总部官方号；标准化投教、市场观点、品牌活动", "analysis": "总部号的核心使命是\"品牌信任\"而非\"流量爆款\"——它负责让用户觉得你靠谱、专业、有温度，具体的转化动作交给功能号去完成。两者分工不同，评价标准也不同。 \"不出错\"本身就是一种能力——在金融行业的合规约束下，能做到持续、稳定、有质量地输出内容，比偶尔出一篇爆款更有长期价值。品牌号的信任积累是慢功夫，急不来。"}, {"name": "A博众证券", "fans": 79000, "posts": 10, "likes": 275000, "url": "https://www.xiaohongshu.com/user/profile/5ff42beb0000000001009886", "desc": "投顾服务科普、市场策略解读", "analysis": "高客单价产品做小红书，不要追求爆款，要追求\"深度内容+持续输出\"——让每一个进入你主页的用户都能感受到专业度和可信赖感。粉丝量不需要特别大，但每一个粉丝都可能是高价值客户。7.8万精准粉的商业价值远超50万泛粉。 蓝海占位比红海厮杀更有效——投顾服务科普在小红书上竞争远不如股票推荐激烈，但目标用户的付费意愿和付费能力都更强。找到竞争少但需求真实存在的细分赛道，是中小账号突围的最优路径。"}, {"name": "广发证券", "fans": 47000, "posts": 989, "likes": 170000, "url": "https://www.xiaohongshu.com/user/profile/566baf4682718c701f4ce7e7", "desc": "总部官方主号；泛理财投教、财经热点、品牌活动", "analysis": "官方主号的定位一定是\"品牌门面\"而非\"转化利器\"——主号负责让用户觉得你靠谱、专业、有温度，具体的转化动作交给功能号去完成。两者分工明确、互不干扰，但在品牌层面形成合力。 slogan要押韵好记——\"投资有道，广发有料\"比\"专业创造价值\"强十倍。品牌传播的第一要义是让人记住你，而不是让人\"觉得你很厉害但想不起你叫什么\"。好的slogan能省下大量品牌教育成本。"}, {"name": "擒股王证券", "fans": 43000, "posts": 405, "likes": 92000, "url": "https://www.xiaohongshu.com/user/profile/64f1a8ef0000000006030ef4", "desc": "侧重行情复盘、短线机会解读", "analysis": "行情复盘类内容有天然的流量优势——每天都有新话题、用户每天都来看，是少数能做到\"日活\"的财经内容品类。如果你追求的是稳定的日更新和持续的流量，这个方向值得考虑。 标题和封面是复盘内容的核心竞争力——同质化信息太多了，能在标题上抓眼球、在封面上做出差异化的号才能跑出来。内容本身差距不大，差距在包装。"}, {"name": "九方智投证券策略", "fans": 72000, "posts": 210, "likes": 323000, "url": "https://www.xiaohongshu.com/user/profile/637c23b3000000001f01fd75", "desc": "机构策略输出、市场行情解读、投资方法教学", "analysis": "在小红书上卖\"专业知识\"，关键是让用户持续获得价值感——不是一上来就推销，而是先给够干货，让信任自然建立。信任建立了，转化就是水到渠成的事。急于变现反而会吓跑用户。 \"机构视角\"是一种有效的内容差异化——大部分财经内容都是个人投资者视角，机构视角的内容天然稀缺且有权威感。如果你有机构背景，一定要把这个优势在内容中充分展示。"}, {"name": "国泰证券极速开户", "fans": 11000, "posts": 96, "likes": 37000, "url": "https://www.xiaohongshu.com/user/profile/6134a9840000000002019dc1", "desc": "纯引流工具号，内容聚焦开户流程、佣金福利", "analysis": "简介是账号的\"第一句话\"，值得花心思写——国泰海通极速开户的简介在一堆开户号里脱颖而出，靠的就是那段有温度的自我介绍。花十分钟写一段好简介，可能比发一百篇笔记更有价值。 \"工具号\"也可以有人格化温度——纯功能导向不等于冷冰冰，在实用信息之上叠加一层真诚的态度，用户的信任感和好感度都会提升。开户号不代表必须严肃。 \"稳比快重要\"这种反功利表达反而更有转化力——用户不怕你慢，怕你只想着赚他的钱。"}, {"name": "国泰海通证券智投宝典", "fans": 2817, "posts": 144, "likes": 11000, "url": "https://www.xiaohongshu.com/user/profile/647a099e000000001c0295cf", "desc": "投教干货、ETF、场内工具科普", "analysis": "做账号不一定每个都要冲粉丝量——有些号的价值在于填补矩阵中的细分场景空白。ETF科普就是这样一个被低估的方向，用户搜索需求真实存在，但优质内容供给不足。 互动比（获赞收藏/粉丝）比粉丝数更重要——4.1:1的互动比说明内容质量过硬，用户认可度高。评估一个账号的价值不能只看粉丝数，还要看互动质量和用户画像。"}, {"name": "国泰海通证券开户助手", "fans": 3768, "posts": 308, "likes": 22000, "url": "https://www.xiaohongshu.com/user/profile/65e03674000000000500a1f8", "desc": "营销转化号，开户答疑、线上开户指引", "analysis": "矩阵号之间要有清晰的分工——国泰海通\"投教号+转化号+品牌开户号\"的搭配方式值得学习，各司其职、互为补充。投教号负责建立认知和信任，转化号负责临门一脚，品牌号负责扩大声量。 \"问答式内容\"是搜索流量的利器——用户搜什么你就写什么，标题直接对标搜索关键词，自然流量就会找上门来。这是成本最低、效果最稳定的获客方式之一。 简介也可以有辨识度——\"让钱不'离家出走'\"这种表达比\"专业服务\"有趣一百倍。"}, {"name": "银河证券顺德国泰南路营业部", "fans": 16, "posts": 63, "likes": 114, "url": "https://www.xiaohongshu.com/user/profile/685213ac000000001e005315", "desc": "区域营业部官方号；本地客户运营、理财科普", "analysis": "如果你的公司有大量线下门店或分支机构，不妨鼓励几个有内容意识的分支机构先试水小红书——不需要一上来就追求数据，先把\"本地化的官方内容阵地\"建起来，后面再慢慢做增长。 \"本地化\"是金融行业的信任捷径——用户对\"身边的机构\"天然更有信任感，这种信任是总部号很难做到的。区域号的价值不在于粉丝量，而在于它能触达的那些本地高净值客户。"}, {"name": "国泰海通证券郑州金水东路证券营业部", "fans": 223, "posts": 5, "likes": 79, "url": "https://www.xiaohongshu.com/user/profile/680c8ac0000000000e0133e7", "desc": "区域营业部账号；本地投教、行情解读", "analysis": "营业部号核心是「本地化」——大V覆盖不了「郑州金水东路这周六有交流会」这种带地理属性的内容，守住门口用户即可。健康配比约50%投教+30%热点+20%本地化，标题要「说着」不要「端着」。可借鉴：本地化流量+转化导向配比。"}, {"name": "中国银河证券德清营业部", "fans": 6677, "posts": 90, "likes": 14000, "url": "https://www.xiaohongshu.com/user/profile/5fbcdfd90000000001005955", "desc": "下沉区域营业部，理财入门科普", "analysis": "下沉县域的「小池塘里的大鱼」：县域竞争少、用户更信任面对面、关心「10万块怎么放稳」而非估值分析，转化率极高。选题要下沉适配（退休金/教育金），结合当地特色，评论活跃度比粉丝数更重要。可借鉴：下沉适配+本地特色。"}, {"name": "中国银河证券股份有限公司北京知春路证券营业部", "fans": 1109, "posts": 193, "likes": 2894, "url": "https://www.xiaohongshu.com/user/profile/684ec251000000001e001f0e", "desc": "一线城市营业部，中产资产配置、开户答疑", "analysis": "用地理位置做用户画像匹配：知春路紧邻中关村/高校，目标用户高学历高收入，选题应对应「互联网大厂期权/股权激励规划、科技股逻辑、程序员资产配置」而非入门内容。标题要「理性但有温度」，转化可做高净值分层。可借鉴：地理坐标即用户画像。"}, {"name": "中国银河证券北京望京营业部", "fans": 1237, "posts": 357, "likes": 6679, "url": "https://www.xiaohongshu.com/user/profile/640b0893000000002a00b089", "desc": "一线城市营业部，中产资产配置、开户答疑", "analysis": "矩阵号要有不可替代的内容生态位：望京是互联网打工人聚集地，应主打「期权行权配置、RSU避税、年终奖怎么投、35岁资产规划」等专属选题，视觉风格与知春路做差异化。可借鉴：同城矩阵按人群错位+视觉区分。"}, {"name": "中国银河证券北京朝阳门营业", "fans": 1089, "posts": 271, "likes": 5124, "url": "https://www.xiaohongshu.com/user/profile/67442488000000001d02e7d9", "desc": "侧重财富管理、资产配置、基金、理财业务宣传", "analysis": "营业部做小红书的关键不是追求粉丝量，而是追求精准度——100个CBD周边的精准粉丝，比1万个全国各地的泛粉有价值得多。一个高净值客户一年的佣金贡献可能超过100个小额投资者。 区域化内容是一个被严重低估的方向——在小红书上，\"附近\"和\"同城\"流量池是真实存在的，营业部号天然适合吃这波流量。每一篇带地理标签的内容都可能被附近的用户刷到。"}, {"name": "申万宏源证券财富管理", "fans": 7366, "posts": 708, "likes": 31000, "url": "https://www.xiaohongshu.com/user/profile/66b0686c000000001d020d1f", "desc": "小红书券商头部官号；女性友好理财科普", "analysis": "\"大而全\"不如\"小而准\"——与其做一个跟所有券商号都差不多的投教号，不如找到一个特定人群的特定需求，然后把内容做到极致。\"女性友好\"不是一个噱头，而是贯穿在语言、案例、视觉、态度中的系统性定位。 找到平台用户画像和业务定位的交集——小红书七成用户是女性，\"女性友好理财\"恰好就站在这个交集上。做定位时，先搞清楚你的目标用户在哪里聚集，再去那个场景里做最精准的内容。"}, {"name": "江海证券", "fans": 55000, "posts": 632, "likes": 394000, "url": "https://www.xiaohongshu.com/user/profile/5d208cdf000000001203e5cd", "desc": "交易软件实操、场内基金、A股基础科普", "analysis": "中小品牌不要试图在大品类里跟头部抢流量——找到一个大厂不屑于做或没顾上做的细分方向，扎扎实实做内容，反而更容易出圈。江海证券的\"软件实操\"定位，就是一个很好的\"错位竞争\"案例。 \"软件实操\"类内容是一个被严重低估的流量池——搜索量大、竞争少、内容生命周期长、用户信任感强。这些特点让它成为中小券商做小红书的理想切入点。"}, {"name": "东方财富证券", "fans": 25000, "posts": 146, "likes": 60000, "url": "https://www.xiaohongshu.com/user/profile/65b8bec7000000000e02688c", "desc": "交易软件实操、场内基金、A股基础科普", "analysis": "品牌认知度是内容运营的最大杠杆——如果用户已经知道你是谁，你的内容只需要\"接住\"搜索流量就行，不需要从零开始建立信任。东方财富的案例说明，有线下用户基础的品牌做小红书有天然优势，关键是把这个优势用好。 \"搭子\"人设比\"专家\"人设更适合小红书——在小红书的语境里，平等感比权威感更有吸引力。\"财富搭子\"这个定位精准踩中了平台调性，值得其他券商号参考。好的称呼能拉近心理距离。"}, {"name": "中金财富证券开户服务", "fans": 13000, "posts": 280, "likes": 26000, "url": "https://www.xiaohongshu.com/user/profile/678f473e000000000302cfb9", "desc": "中产及高净值人群资产配置、养老理财", "analysis": "开户号不需要\"端着\"做投教——中金证明了，直接亮明身份和目的，反而能吸引到最精准的用户。做内容不一定要讨好所有人，敢于设置门槛本身就是一种筛选机制。 矩阵号的精髓在于各司其职——品牌号做形象，开户号做转化，不需要一个号承担所有使命。如果你家也在做矩阵，这个思路值得参考：让每个号只做一件事，把那一件事做到极致。 ---"}, {"name": "中信证券财富管家", "fans": 39000, "posts": 255, "likes": 48000, "url": "https://www.xiaohongshu.com/user/profile/600d9e490000000001000ae5", "desc": "家庭资产规划、大类资产配置、稳健投资理念", "analysis": "场景化是金融内容的破圈利器——把\"资产配置\"翻译成\"你家的钱怎么安排\"，阅读门槛瞬间降低。金融号不一定要讲专业术语，用生活场景来包装专业知识才是正道。小红书上\"家庭\"\"育儿\"\"养老\"这些话题天然有流量，金融内容只要锚定这些场景，就能借到自然流量。 心智预售比即时转化更值钱——特别是高客单价的金融服务，用户从\"知道你\"到\"选择你\"可能需要半年甚至更久。"}, {"name": "国泰君安期货", "fans": 4543, "posts": 455, "likes": 6449, "url": "https://www.xiaohongshu.com/user/profile/649e6aa7000000001f0060cc", "desc": "官方投教、市场策略、投资者风险教育", "analysis": "小众赛道不等于没价值——期货在小红书上确实受众窄，但每一个精准用户的商业价值极高。不要用泛财经号的粉丝标准来评判垂直号，要看背后的客户终身价值。 \"教你不亏钱\"比\"教你赚钱\"更有信任感——在金融领域，风险教育类内容的信任建设效率远高于收益展示类内容。特别是在\"爆仓血泪帖\"满天飞的环境下，一个认真讲风险的官方号，天然就能获得用户好感。 ---"}, {"name": "平安证券财富赢家", "fans": 1579, "posts": 21, "likes": 6427, "url": "https://www.xiaohongshu.com/user/profile/600ba24c000000000101f426", "desc": "理财科普、防非反诈、开户知识、理财产品解读", "analysis": "差异化定位不一定要从\"我多厉害\"出发——\"我教你防骗\"比\"我帮你赚钱\"更容易建立信任。在金融领域，\"避坑\"类内容的传播力和信任建设效率都远高于\"收益展示\"类内容。 小号也能有大价值——1500粉丝的号，如果防非反诈这个标签打透了，在用户心智中的位置可能比很多万粉大号还牢固。关键不在于粉丝多少，在于你在用户心里代表了什么。 ---"}, {"name": "招商证券财经社牛养成记", "fans": 109000, "posts": 252, "likes": 184000, "url": "https://www.xiaohongshu.com/user/profile/6566fc6c00000000200359e9", "desc": "趣味化财经科普，网感强，年轻人向爆款投教内容标杆", "analysis": "券商投教不一定要\"端着\"——招商证明了，在合规框架内，财经内容完全可以做得有趣好玩。关键是给运营团队足够的创作空间，用用户的语言而不是行业的语言来做内容。 面向年轻人要做\"降维\"而不是\"降格\"——不是把内容做low了，而是把专业内容翻译成年轻人能接受的形式。知识内核不变，表达形式变了。 名字就是最好的品牌资产——\"财经社牛养成记\"这个名字听一次就记住了，比\"XX证券官方投教号\"强一百倍。"}, {"name": "中国银河证券", "fans": 1579, "posts": 223, "likes": 795, "url": "https://www.xiaohongshu.com/user/profile/6260f1be00000000100065d2", "desc": "宏观解读、市场投教、投资者保护", "analysis": "品牌大不等于小红书做得好——线下实力和线上内容是两种完全不同的能力。传统大券商不能躺在品牌认知上吃老本，需要专门为小红书这个平台定制内容策略和表达方式。 官方号的正确定位是\"中台\"而非\"前台\"——一个官方号再怎么做也就一个号，但如果能赋能几百个投顾的个人号，效果是完全不同的。大公司做小红书，一定要想清楚\"中台赋能加前台分发\"的矩阵逻辑。"}, {"name": "国泰海通证券新客开户", "fans": 936, "posts": 306, "likes": 7172, "url": "https://www.xiaohongshu.com/user/profile/65b709de000000001802330c", "desc": "开户科普、线上开户指引，私域导流", "analysis": "别看不起\"工具号\"——很多公司的矩阵号策略里，这种纯功能导向的号反而是ROI最高的。它不需要创意、不需要人设、不需要追热点，只需要把核心转化信息讲清楚就行。维护成本低，一个人就能运营。 粉丝少没关系，精准才是王道——938个\"准备开户\"的用户，比9万个\"随便看看\"的用户有价值得多。做转化号不追求粉丝量，追求的是在目标用户的搜索路径上做精准拦截。 ---"}, {"name": "申万宏源证券金融", "fans": 279, "posts": 16, "likes": 183, "url": "https://www.xiaohongshu.com/user/profile/6721e3f8000000000b0168f6", "desc": "策略观点、行业研究通俗化输出", "analysis": "好内容也需要好包装——研究所的报告再专业，如果不做平台适配，放在小红书上就是\"自嗨\"。同样的信息内核，换一种用户能接受的表达形式，效果可能天差地别。 简介是账号的\"门面中的门面\"——连简介都不写，等于店铺没有招牌。哪怕只写一句话，也比\"还没有简介\"强一百倍。279粉的号加上空白简介，用户会觉得这个号不靠谱。 ---"}, {"name": "中信建投融资融券", "fans": 49000, "posts": 392, "likes": 78000, "url": "https://www.xiaohongshu.com/user/profile/609944e00000000001001e2c", "desc": "两融业务科普、融资融券规则、风险讲解", "analysis": "业务垂类号是券商矩阵的最优解——每个业务线做一个号，精准服务高价值客群。两融号服务50万以上客户，期权号服务专业交易者，基金号服务定投用户，各号各司其职。 粉丝含金量比粉丝数量更重要——4.8万个高净值两融客户的价值，远超48万个泛财经用户。做金融号不要陷入\"唯粉丝论\"，要看粉丝背后的真实商业价值。 ---"}, {"name": "中泰证券", "fans": 649, "posts": 6, "likes": 642, "url": "https://www.xiaohongshu.com/user/profile/63e232ff000000002702aa9a", "desc": "上班族理财、低波动资产、市场热点投教", "analysis": "定位对了只是第一步，执行力才是分水岭——\"上班族理财\"这个方向没问题，但如果内容产量跟不上、视觉标准不够高、没有系列感，再好的定位也白搭。定位是方向，执行是路，两条腿都得迈开。 \"低波动\"在当下是流量关键词——市场波动大的时期，\"稳健\"\"低波动\"\"不亏钱\"这些关键词的搜索量会显著上升。做内容要学会借市场情绪的东风，顺势而为比逆风硬做效率高十倍。 ---"}];
 
 function renderTopbar() {
   var now = new Date();
@@ -2152,6 +2163,12 @@ function renderBenchmarks() {
   h += '<div class="toolbar">';
   h += '<button class="btn btn-pri" onclick="exportBenchmarksCSV()">导出对标账号</button>';
   h += '</div>';
+  h += '<div class="compare-bar">';
+  h += '<span>📊 账号对标：勾选 2 个账号进行对比（已选 <b id="benchCmpCount" style="color:var(--purple)">' + benchCompare.length + '</b>/2）</span>';
+  h += '<span style="flex:1"></span>';
+  h += '<button class="btn btn-sm" onclick="clearBenchCompare()">清空选择</button>';
+  h += '<button class="btn btn-sm btn-pri" id="benchCmpBtn" onclick="showBenchCompare()"' + (benchCompare.length < 2 ? ' disabled style="opacity:0.5"' : '') + '>开始对标</button>';
+  h += '</div>';
   h += '<div class="tabs" id="benchTabs">';
   h += '<div class="tab active" onclick="filterBench(\'all\')">全部 (' + (kosAccounts.length + proAccounts.length) + ')</div>';
   h += '<div class="tab" onclick="filterBench(\'kos\')">KOS账号 (' + kosAccounts.length + ')</div>';
@@ -2162,8 +2179,10 @@ function renderBenchmarks() {
   var allAccounts = kosAccounts.map(function(a) { return {name:a.name, fans:a.fans, posts:a.posts, likes:a.likes, url:a.url, desc:a.desc, analysis:a.analysis, type:'KOS'}; }).concat(proAccounts.map(function(a) { return {name:a.name, fans:a.fans, posts:a.posts, likes:a.likes, url:a.url, desc:a.desc, analysis:a.analysis, type:'专业号'}; }));
   allAccounts.forEach(function(a) {
     var st = a.posts !== '—' ? '有数据' : '待采集';
-    h += '<div class="account-card" data-type="' + a.type + '" data-name="' + a.name + '" onclick="toggleBenchDetail(this)" style="cursor:pointer">';
-    h += '<div class="name">' + (a.url ? '<a href="' + a.url + '" target="_blank" onclick="event.stopPropagation()">' + a.name + '</a>' : a.name) + ' <span class="tag ' + (a.type === 'KOS' ? 'tag-blue' : 'tag-green') + '">' + a.type + '</span></div>';
+    var sel = benchCompare.indexOf(a.name) >= 0;
+    h += '<div class="account-card' + (sel ? ' bench-selected' : '') + '" data-type="' + a.type + '" data-name="' + a.name + '" onclick="toggleBenchDetail(this)" style="cursor:pointer">';
+    h += '<div class="name">' + (a.url ? '<a href="' + a.url + '" target="_blank" onclick="event.stopPropagation()">' + a.name + '</a>' : a.name) + ' <span class="tag ' + (a.type === 'KOS' ? 'tag-blue' : 'tag-green') + '">' + a.type + '</span>';
+    h += '<span class="bench-cmp-toggle' + (sel ? ' on' : '') + '" onclick="event.stopPropagation();toggleBenchSelect(this)">' + (sel ? '✓ 已选对比' : '＋ 对比') + '</span></div>';
     h += '<div class="meta"><span>粉丝 ' + a.fans + '</span><span>笔记 ' + a.posts + '</span><span>获赞 ' + a.likes + '</span> <span class="tag ' + (st === '有数据' ? 'tag-green' : 'tag-orange') + '" style="font-size:10px">' + st + '</span></div>';
     if (a.desc) h += '<div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.4">' + a.desc + '</div>';
     if (a.analysis) h += '<div class="bench-analysis" style="display:none;margin-top:8px;padding:8px 10px;background:#F5F3FF;border-radius:6px;border-left:3px solid var(--purple);font-size:12px;color:var(--text2);line-height:1.7"><strong style="color:var(--purple)">📌 拆解</strong> ' + a.analysis + '</div>';
@@ -2193,6 +2212,76 @@ function filterBenchSearch() {
   });
 }
 
+/* ===== 对标账号·选号对比 ===== */
+var benchCompare = [];
+
+function toggleBenchSelect(el) {
+  var card = el.closest('.account-card');
+  if (!card) return;
+  var name = card.dataset.name;
+  var idx = benchCompare.indexOf(name);
+  if (idx >= 0) {
+    benchCompare.splice(idx, 1);
+  } else {
+    if (benchCompare.length >= 2) { toast('最多选择 2 个账号进行对标', 'warning'); return; }
+    benchCompare.push(name);
+  }
+  var sel = benchCompare.indexOf(name) >= 0;
+  card.classList.toggle('bench-selected', sel);
+  el.classList.toggle('on', sel);
+  el.textContent = sel ? '✓ 已选对比' : '＋ 对比';
+  refreshBenchCompareBar();
+}
+
+function refreshBenchCompareBar() {
+  var cnt = document.getElementById('benchCmpCount');
+  var btn = document.getElementById('benchCmpBtn');
+  if (cnt) cnt.textContent = benchCompare.length;
+  if (btn) {
+    btn.disabled = benchCompare.length < 2;
+    btn.style.opacity = benchCompare.length < 2 ? '0.5' : '1';
+  }
+}
+
+function clearBenchCompare() {
+  benchCompare = [];
+  document.querySelectorAll('#benchGrid .account-card.bench-selected').forEach(function(c) {
+    c.classList.remove('bench-selected');
+    var t = c.querySelector('.bench-cmp-toggle');
+    if (t) { t.classList.remove('on'); t.textContent = '＋ 对比'; }
+  });
+  refreshBenchCompareBar();
+}
+
+function showBenchCompare() {
+  if (benchCompare.length < 2) { toast('请先勾选 2 个账号进行对标', 'warning'); return; }
+  var pool = kosAccounts.concat(proAccounts);
+  var find = function(n) { for (var i = 0; i < pool.length; i++) if (pool[i].name === n) return pool[i]; return null; };
+  var a = find(benchCompare[0]);
+  var b = find(benchCompare[1]);
+  if (!a || !b) { toast('未找到所选账号', 'warning'); return; }
+  openModal('账号对标 · ' + a.name + ' vs ' + b.name, renderBenchCompare(a, b));
+}
+
+function renderBenchCompare(a, b) {
+  var typeOf = function(x) { return kosAccounts.some(function(k) { return k.name === x.name; }) ? 'KOS' : '专业号'; };
+  var rows = [
+    ['账号类型', typeOf(a), typeOf(b)],
+    ['粉丝', a.fans, b.fans],
+    ['笔记', a.posts, b.posts],
+    ['获赞与收藏', a.likes, b.likes],
+    ['账号定位', a.desc || '—', b.desc || '—'],
+    ['拆解要点', a.analysis || '暂无拆解', b.analysis || '暂无拆解']
+  ];
+  var h = '<table class="cmp-table"><thead><tr><th style="width:90px">指标</th><th>' + a.name + '</th><th>' + b.name + '</th></tr></thead><tbody>';
+  rows.forEach(function(r) {
+    h += '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>';
+  });
+  h += '</tbody></table>';
+  h += '<div style="margin-top:10px;font-size:11px;color:var(--text2)">数据来源：对标账号追踪模板；「—」表示待采集。</div>';
+  return h;
+}
+
 function toggleBenchDetail(card) {
   var el = card.querySelector('.bench-analysis');
   if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
@@ -2211,17 +2300,150 @@ function exportBenchmarksCSV() {
   toast('对标账号CSV已导出', 'success');
 }
 
+/* ===== 账号拆解（同步自 V2.5） ===== */
+var teardownAccounts = [
+  {name:'财经伊姐', fans:'7.8万', notes:185, rate:'4.2%', article:'财经伊姐的成功密码在于精准的内容定位和稳定的输出节奏。她的内容以基金推荐和理财科普为主，善于用生活化的语言解释复杂的金融概念。每条笔记都有清晰的结构：痛点引入、解决方案、具体操作步骤。发布时间固定在晚上8-9点，与目标受众的活跃时间高度吻合。她的互动率高达4.2%，远超行业平均水平。', scores:[92,85,88,78,82,90]},
+  {name:'A股妍希', fans:'12.5万', notes:285, rate:'3.8%', article:'A股妍希以股市分析和投资教育为核心，内容风格专业但不枯燥。她擅长将宏观政策解读与个人投资策略结合，帮助粉丝理解市场走势。她的爆款内容集中在政策发布后的24小时内，时效性强。视觉风格以红色为主调，与证券行业高度契合。', scores:[85,90,76,88,78,82]},
+  {name:'糖爸投资经', fans:'9.1万', notes:210, rate:'4.5%', article:'糖爸投资经的最大特色是人设鲜明——一个为家庭理财的爸爸形象。他的内容围绕家庭理财场景展开，如教育金、养老金、房贷等，高度贴近生活。他的互动率4.5%在同领域排名前列，得益于真实感的分享和评论区的高频互动。', scores:[80,82,92,75,76,85]},
+  {name:'华泰证券涨乐财富通', fans:'52.3万', notes:420, rate:'2.1%', article:'作为官方专业号，华泰证券涨乐财富通的内容策略以品牌形象建设和功能推广为主。内容制作精良，视频质量高，但互动率相对个人号偏低。其爆款内容主要集中在开户优惠、新功能上线等节点。', scores:[88,92,55,70,90,72]},
+  {name:'东方财富证券', fans:'48.5万', notes:405, rate:'2.3%', article:'东方财富证券的专业号运营策略以数据驱动为核心，通过AB测试不断优化内容。他们的内容覆盖面广，从新手入门到进阶策略都有涉及。特色栏目"每日复盘"系列笔记稳定产出，形成了良好的内容节奏。', scores:[82,95,58,72,85,78]}
+];
+var teardownExtra = loadFromLS('teardownExtra', []);
+function teardownAll() { return teardownAccounts.concat(teardownExtra); }
+
+var chartInstances = {};
+function destroyChart(id) { if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; } }
+
+function initTeardownChart(idx) {
+  if (typeof Chart === 'undefined') { toast('图表组件未加载（需联网），图表暂不可用，请检查网络后刷新页面', 'warning'); return; }
+  destroyChart('teardownChart');
+  var ctx = document.getElementById('teardownChart');
+  if (!ctx) return;
+  var datasets = [];
+  var colors = ['#E01E23','#3B82F6','#10B981','#F59E0B','#8B5CF6'];
+  if (idx !== undefined && idx !== null) {
+    var a = teardownAll()[parseInt(idx)];
+    if (!a || !a.scores) { toast('该账号暂无六维评分数据', 'info'); return; }
+    datasets.push({label: a.name, data: a.scores, borderColor: colors[parseInt(idx) % 5], backgroundColor: colors[parseInt(idx) % 5] + '22'});
+  } else {
+    var scored = teardownAll().filter(function(a) { return a.scores; });
+    scored.slice(0,2).forEach(function(a, i) {
+      datasets.push({label: a.name, data: a.scores, borderColor: colors[i], backgroundColor: colors[i] + '22'});
+    });
+  }
+  chartInstances['teardownChart'] = new Chart(ctx, {
+    type: 'radar',
+    data: { labels: ['内容质量','发布频率','互动率','粉丝增长','视觉风格','选题能力'], datasets: datasets },
+    options: {responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom'}}, scales:{r:{min:0,max:100}}}
+  });
+}
+
+function renderTeardown() {
+  var all = teardownAll();
+  var h = renderTopbar();
+  h += '<div class="page-title">账号拆解 <span class="badge">' + all.length + '个账号</span></div>';
+  h += '<div class="card"><div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px"><span>账号能力雷达图</span><span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><select id="teardownSelect" onchange="switchTeardownChart(this.value)" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px"><option value="">对比模式(前2个评分账号)</option>';
+  all.forEach(function(a, i) {
+    if (a.scores) h += '<option value="' + i + '">' + a.name + '</option>';
+  });
+  h += '</select><button class="btn btn-sm btn-pri" onclick="openTeardownPicker()">＋ 选择账号拆解</button></span></div>';
+  h += '<div class="chart-container"><canvas id="teardownChart"></canvas></div>';
+  h += '<div style="font-size:12px;color:var(--text2);margin-top:8px">提示：「拆解案例库」账号含六维评分；从对标账号自选的账号以数据卡展示，拆解文案由总部陆续下发。点击卡片可展开详情。</div></div>';
+  h += '<div class="accounts-grid">';
+  all.forEach(function(a, i) {
+    var isExtra = i >= teardownAccounts.length;
+    var src = a.source || '案例库';
+    var srcCls = src === '方正账号' ? 'tag-red' : (src === '对标账号' ? 'tag-blue' : 'tag-purple');
+    if (!a.url) { kosAccounts.concat(proAccounts).forEach(function(x) { if (x.name === a.name) a.url = x.url; }); }
+    h += '<div class="account-card" onclick="toggleTeardown(' + i + ')">';
+    h += '<div class="name">' + (a.url ? '<a href="' + a.url + '" target="_blank" onclick="event.stopPropagation()">' + a.name + '</a>' : a.name);
+    h += ' <span class="tag ' + srcCls + '" style="font-size:10px">' + src + '</span>';
+    if (isExtra) h += ' <span style="float:right;cursor:pointer;color:var(--text2);padding:0 4px" title="移出拆解列表" onclick="event.stopPropagation();removeTeardownExtra(' + (i - teardownAccounts.length) + ')">✕</span>';
+    h += '</div>';
+    h += '<div class="meta"><span>粉丝 ' + a.fans + '</span><span>笔记 ' + a.notes + '</span><span>' + (a.scores ? '互动率 ' : '') + a.rate + '</span></div>';
+    h += '<div id="teardown-' + i + '" style="display:none;margin-top:12px;font-size:13px;color:var(--text2);line-height:1.8">' + a.article + '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function toggleTeardown(i) {
+  var el = document.getElementById('teardown-' + i);
+  if (el) {
+    var showing = el.style.display === 'none';
+    el.style.display = showing ? 'block' : 'none';
+    var a = teardownAll()[i];
+    if (showing && a && a.scores) { initTeardownChart(i); }
+  }
+}
+
+function switchTeardownChart(val) {
+  if (val === '') { initTeardownChart(); }
+  else { initTeardownChart(parseInt(val)); }
+}
+
+function escAttr(x) { return String(x === undefined || x === null ? '' : x).split('&').join('&amp;').split('"').join('&quot;').split('<').join('&lt;'); }
+
+var _tdPickerTab = 'bench';
+function openTeardownPicker() { _tdPickerTab = 'bench'; showTeardownPickerModal(''); }
+function showTeardownPickerModal(q) {
+  var h = '<input id="tdSearch" type="text" placeholder="搜索对标账号名称..." value="' + escAttr(q) + '" oninput="showTeardownPickerModal(this.value)" style="width:100%;margin-bottom:12px">';
+  var list = [];
+  kosAccounts.forEach(function(a, i) { list.push({name: a.name, fans: a.fans, notes: a.posts, likes: a.likes, url: a.url, desc: a.desc || '', idx: i, kind: 'kos'}); });
+  proAccounts.forEach(function(a, i) { list.push({name: a.name, fans: a.fans, notes: a.posts, likes: a.likes, url: a.url, desc: a.desc || '', idx: i, kind: 'pro'}); });
+  var ql = (q || '').toLowerCase();
+  if (ql) list = list.filter(function(a) { return (a.name + ' ' + a.desc).toLowerCase().indexOf(ql) >= 0; });
+  var show = list.slice(0, 60);
+  h += '<div style="font-size:12px;color:var(--text2);margin-bottom:8px">共 ' + list.length + ' 个账号' + (list.length > 60 ? '，仅显示前60个，请用搜索缩小范围' : '') + '</div>';
+  if (show.length === 0) h += '<div style="text-align:center;padding:20px;color:var(--text2)">没有匹配的账号</div>';
+  show.forEach(function(a) {
+    var added = teardownExtra.some(function(x) { return x.name === a.name; }) || teardownAccounts.some(function(x) { return x.name === a.name; });
+    h += '<div style="display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px">';
+    h += '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + a.name + '</div>';
+    h += '<div style="font-size:11px;color:var(--text2)">粉丝 ' + a.fans + ' · 笔记 ' + a.notes + (a.desc ? ' · ' + a.desc : '') + '</div></div>';
+    if (added) h += '<span class="tag tag-green" style="font-size:11px">已在列表</span>';
+    else h += '<button class="btn btn-sm btn-pri" onclick="addTeardownAccount(\'' + a.kind + '\',' + a.idx + ')">＋ 拆解</button>';
+    h += '</div>';
+  });
+  openModal('选择要拆解的账号', h);
+  var si = document.getElementById('tdSearch');
+  if (si) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
+}
+function addTeardownAccount(kind, idx) {
+  var a = kind === 'kos' ? kosAccounts[idx] : proAccounts[idx];
+  if (!a) return;
+  var entry = { name: a.name, fans: a.fans, notes: a.posts, rate: '赞藏 ' + a.likes, url: a.url, source: '对标账号',
+    article: (a.desc ? '账号定位：' + a.desc + '<br><br>' : '') + '该账号的拆解文案由总部陆续下发。可先参考「拆解案例库」的分析框架：内容定位 → 输出节奏 → 爆款结构 → 互动运营 → 发布时间。' };
+  teardownExtra.push(entry);
+  saveToLS('teardownExtra', teardownExtra);
+  var si = document.getElementById('tdSearch');
+  showTeardownPickerModal(si ? si.value : '');
+  toast('已加入拆解列表：' + a.name, 'success');
+}
+function removeTeardownExtra(i) {
+  if (i < 0 || i >= teardownExtra.length) return;
+  var a = teardownExtra.splice(i, 1)[0];
+  saveToLS('teardownExtra', teardownExtra);
+  toast('已移出拆解列表：' + a.name, 'success');
+  nav('teardown');
+}
+
 function nav(page) {
   closeSidebar();
   currentPage = page;
   var items = document.querySelectorAll('.nav-item');
   items.forEach(function(item) { item.classList.remove('active'); });
-  var pageMap = {hotspots:0, viral:1, benchmarks:2, topics:3, weekly:4, create:5, scripts:6, tasks:7, compliance:8};
+  var pageMap = {hotspots:0, viral:1, benchmarks:2, teardown:3, topics:4, weekly:5, create:6, scripts:7, tasks:8, compliance:9};
   var idx = pageMap[page];
   if (idx !== undefined) { items[idx].classList.add('active'); }
-  var renderers = {hotspots:renderHotspots, viral:renderViral, benchmarks:renderBenchmarks, topics:renderTopics, weekly:renderWeekly, create:renderCreate, scripts:renderScripts, tasks:renderTasks, compliance:renderCompliance};
+  var renderers = {hotspots:renderHotspots, viral:renderViral, benchmarks:renderBenchmarks, teardown:renderTeardown, topics:renderTopics, weekly:renderWeekly, create:renderCreate, scripts:renderScripts, tasks:renderTasks, compliance:renderCompliance};
   var fn = renderers[page];
-  if (fn) { document.getElementById('main').innerHTML = fn(); startClock(); bindCreateEvents(); buildDateSelector(_historyDates); }
+  if (fn) {
+    document.getElementById('main').innerHTML = fn();
+    if (page === 'teardown') { setTimeout(function(){ initTeardownChart(); }, 100); }
+    startClock(); bindCreateEvents(); buildDateSelector(_historyDates);
+  }
 }
 
 function bindCreateEvents() {
