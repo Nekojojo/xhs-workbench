@@ -1249,12 +1249,12 @@ var createState = {
 };
 
 var contentStyles = [
-  {id:'popular', name:'爆款种草风', icon:'\uD83D\uDD25', desc:'热情、感叹号多、互动感强'},
-  {id:'pro', name:'专业科普风', icon:'\uD83D\uDCCA', desc:'数据驱动、逻辑清晰、有深度'},
-  {id:'share', name:'闺蜜分享风', icon:'\uD83D\uDC6B', desc:'亲切自然、口语化、真实感'},
-  {id:'tutorial', name:'教程干货风', icon:'\uD83D\uDCDD', desc:'步骤清晰、实操性强、收藏率高'},
-  {id:'news', name:'新闻速报风', icon:'\uD83D\uDCF0', desc:'简洁高效、重点突出、时效性强'},
-  {id:'story', name:'故事叙事风', icon:'\uD83D\uDCD6', desc:'引人入胜、有代入感、传播性强'}
+  {id:'popular', name:'爆款种草风', icon:'\uD83D\uDD25', desc:'热情、感叹号多、互动感强', formula:'钩子（痛点/惊叹开场，前3行留人）→ 3个干货点（emoji分段+口语化短句）→ 转化结尾（方正钩子+互动提问+风险提示）'},
+  {id:'pro', name:'专业科普风', icon:'\uD83D\uDCCA', desc:'数据驱动、逻辑清晰、有深度', formula:'现象引入（一个数据/一个问题）→ 概念拆解（是什么→为什么→怎么做）→ 方法论总结+方正工具引导+风险提示'},
+  {id:'share', name:'闺蜜分享风', icon:'\uD83D\uDC6B', desc:'亲切自然、口语化、真实感', formula:'亲身经历开场（“我之前也踩过这个坑”）→ 真实过程分享（细节+感受）→ 心得总结+“评论区问我”+方正服务软植入'},
+  {id:'tutorial', name:'教程干货风', icon:'\uD83D\uDCDD', desc:'步骤清晰、实操性强、收藏率高', formula:'成果前置（“3步搞定XX，建议先收藏”）→ 分步教程（每步配注意事项）→ 清单回顾+收藏引导+方正开户/功能承接+风险提示'},
+  {id:'news', name:'新闻速报风', icon:'\uD83D\uDCF0', desc:'简洁高效、重点突出、时效性强', formula:'核心结论先行（一句话说清发生了什么）→ 3点快读（每点一行）→ “对你意味着什么”+关注引导+风险提示'},
+  {id:'story', name:'故事叙事风', icon:'\uD83D\uDCD6', desc:'引人入胜、有代入感、传播性强', formula:'悬念/转折开场（“3年前他还是个月光族”）→ 时间线叙事（起点→踩坑→转折→现状）→ 感悟升华+方法论+方正角色植入+风险提示'}
 ];
 
 /* ========== RENDER ========== */
@@ -2018,6 +2018,11 @@ function renderCreateStep2() {
     h += '</div>';
   });
   h += '</div>';
+  var _selStyle = null;
+  contentStyles.forEach(function(s) { if (s.name === createState.copyStyle) _selStyle = s; });
+  if (_selStyle && _selStyle.formula) {
+    h += '<div style="margin-top:8px;padding:10px;background:#F3E8FF;border-radius:6px;font-size:12px;line-height:1.7"><strong>✍️ ' + _selStyle.name + '骨架：</strong>' + _selStyle.formula + '</div>';
+  }
   h += '<div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">';
   h += '<button class="btn btn-pri" onclick="aiGenerate()">✨ AI生成文案</button>';
   if (createState.copyStyle) {
