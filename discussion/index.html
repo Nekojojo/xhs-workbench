@@ -276,9 +276,9 @@ var PAGE_TITLES = {
 var CREATE_TYPES = [
   { key: 'live', icon: '🎙️', name: '直播脚本创作', desc: '生成直播全流程脚本 + 话术库', tags: ['开场','暖场','讲解','转化','收尾'] },
   { key: 'note', icon: '📕', name: '小红书笔记创作', desc: '图文笔记文案 + 封面文案 + 话题标签', tags: ['标题','正文','话题','封面'] },
-  { key: 'video', icon: '🎬', name: '视频脚本创作', desc: '分镜脚本：口播 / 情景剧 / 快评', tags: ['分镜','口播','情景','快评'] },
-  { key: 'short', icon: '📱', name: '短视频创作', desc: '抖音 / 视频号短视频脚本', tags: ['钩子','完播率','竖屏'] },
-  { key: 'voice', icon: '🎤', name: '口播创作', desc: '口播文案稿，可直接照读', tags: ['口播稿','节奏','语气'] },
+  { key: 'video', icon: '🎬', name: '视频脚本创作', desc: '中长视频分镜脚本（镜头/画面/口播），适合策划拍摄', tags: ['分镜','口播','情景剧','快评'] },
+  { key: 'short', icon: '📱', name: '短视频创作', desc: '竖屏 15-60 秒快节奏成片脚本，强钩子+完播率', tags: ['竖屏','黄金3秒','完播率'] },
+  { key: 'voice', icon: '🎤', name: '口播创作', desc: '单人出镜纯口播稿，无分镜，可直接照读', tags: ['纯口播','照读','节奏语气'] },
   { key: 'morning', icon: '🌅', name: '早盘收评', desc: '隔夜外盘 + 今日关注 + 盘前提示', tags: ['定时','数据驱动','合规'] },
   { key: 'close', icon: '🌇', name: '尾盘收评', desc: '盘面回顾 + 热点板块 + 明日展望', tags: ['定时','数据驱动','合规'] },
   { key: 'news', icon: '📰', name: '财经热点通报', desc: '资讯聚合 + 转发模板 + 点评模板', tags: ['快讯','转发','点评'] }
@@ -433,6 +433,7 @@ function renderCreateTypeSelect() {
   html += '<div class="page-title">✍️ 内容创作 <span class="badge">先选分类</span></div>';
   html += '<div class="page-desc">第一步：选择你要创作的内容类型，进入对应的创作模块。支持多平台（小红书 / 抖音 / 视频号）与多种内容形态。此页为现有「内容创作工具箱」的升级版，原有 8 类内容模板（政策解读/行情分析/理财科普等）已迁移到「模板中心」。</div>';
   html += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>这是「内容创作」模块的入口交互——用户先选分类，再进入对应操作模块。分类可配置、可扩展。当前为 8 个分类（含早盘/尾盘收评、热点通报等新形态）。</span></div>';
+  html += '<div class="spec-note" style="margin-bottom:16px;"><b>分类口径（避免混淆）：</b>「视频脚本创作」= 中长视频的<b>分镜脚本</b>（含镜头/画面/口播，适合拍摄剪辑）；「短视频创作」= <b>竖屏 15-60 秒</b>快节奏成片脚本（侧重黄金3秒钩子+完播率）；「口播创作」= <b>单人出镜纯口播稿</b>（无分镜，可直接照读）。三者按"内容载体"区分，不按平台区分。</div>';
   html += '<div class="type-grid">';
   CREATE_TYPES.forEach(function(t) {
     html += '<div class="type-card" onclick="curType=\'' + t.key + '\';render();">';
@@ -904,7 +905,8 @@ function renderPerformance() {
   html += '<div class="spec-note"><b>客户维度：</b>客户姓名/联系方式/来源平台/来源渠道（笔记/直播/短视频）/归属员工/归属分支/客户状态（新增/意向/已转化/流失）<br>';
   html += '<b>业绩维度：</b>业绩类型（开户/入金/交易/资产配置）/业绩金额/成交时间/产品类型<br>';
   html += '<b>关联维度：</b>关联内容（客户由哪条笔记/直播/短视频转化而来）→ 可反哺内容效果分析</div>';
-  html += '<div class="spec-note"><b>⚠️ 待研发确认：</b>① 对接公司哪个系统？② 数据同步方式（API/定时同步/手动导入）？③ 客户隐私脱敏要求？④ 权限（员工看自己，分支看本分支，总部看全局）？</div></div>';
+  html += '<div class="spec-note"><b>💰 业绩口径（待业务确认）：</b>"业绩金额"需明确折算规则，否则各分支统计口径不一致。建议口径：开户 = 每户固定权重；入金 = 按入金额 × 比例；交易 = 按交易佣金；资产配置 = 按配置规模 × 比例。具体权重/比例由业务部门最终确认。</div>';
+  html += '<div class="spec-note"><b>⚠️ 待研发确认：</b>① 对接公司哪个系统？② 数据同步方式（API/定时同步/手动导入）？③ 客户隐私脱敏要求？④ 权限（员工看自己，分支看本分支，总部看全局）？⑤ 业绩金额折算口径？</div></div>';
   return html;
 }
 
@@ -912,7 +914,7 @@ function renderPerformance() {
 function renderOrg() {
   return '<div class="page-title">👥 组织与权限 <span class="badge">NEW</span></div>' +
     '<div class="page-desc">多用户分级权限（RBAC）+ 数据范围隔离。</div>' +
-    '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>四层角色：系统管理员 / 总部内容中台 / 合规审核员 / 分支内容岗（一线员工）。分支间数据隔离，总部可见全局。建议对接公司 SSO/AD 或自建账号。</span></div>' +
+    '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>五类角色：系统管理员 / 总部内容中台 / 合规审核员 / 分支负责人 / 一线员工。分支间数据隔离，总部可见全局。建议对接公司 SSO/AD 或自建账号。</span></div>' +
     '<div class="card"><div class="card-title">角色权限矩阵</div><table><tr><th>角色</th><th>可做</th><th>不可做</th></tr>' +
     '<tr><td>系统管理员</td><td>账号/组织/权限/词库/模板管理</td><td>—</td></tr>' +
     '<tr><td>总部内容中台</td><td>选题池、爆款库、方法论、运营看板</td><td>替分支发布内容</td></tr>' +
