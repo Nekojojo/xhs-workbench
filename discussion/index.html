@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小红书工具台 · 模型讨论版</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --pri: #E01E23;
+  --pri-light: #FFF0F0;
+  --pri-dark: #B8161B;
+  --bg: #F5F6FA;
+  --card: #FFFFFF;
+  --text: #1A1A2E;
+  --text2: #6B7280;
+  --border: #E5E7EB;
+  --green: #10B981;
+  --orange: #F59E0B;
+  --blue: #3B82F6;
+  --purple: #8B5CF6;
+  --sidebar-w: 250px;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
+a { color: var(--pri); }
+
+/* 侧边栏 */
+.sidebar { width: var(--sidebar-w); background: #fff; border-right: 1px solid var(--border); position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto; z-index: 100; }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 20px 16px; border-bottom: 1px solid var(--border); }
+.sidebar-logo .logo-mark { width: 36px; height: 36px; background: var(--pri); color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+.sidebar-logo .logo-text { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.sidebar-logo .logo-sub { font-size: 11px; color: var(--text2); }
+.nav-group { padding: 12px 0; }
+.nav-group-title { font-size: 11px; color: var(--text2); padding: 4px 20px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; cursor: pointer; font-size: 14px; color: var(--text); transition: all 0.15s; border-left: 3px solid transparent; }
+.nav-item:hover { background: var(--pri-light); color: var(--pri); }
+.nav-item.active { background: var(--pri-light); color: var(--pri); border-left-color: var(--pri); font-weight: 600; }
+.nav-item .icon { width: 20px; text-align: center; font-size: 16px; }
+.nav-item .beta { font-size: 10px; background: var(--orange); color: #fff; padding: 1px 6px; border-radius: 10px; }
+
+/* 顶部栏 */
+.topbar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.topbar-title { font-size: 16px; font-weight: 700; }
+.model-badge { font-size: 11px; font-weight: 700; color: #fff; background: linear-gradient(90deg,#E01E23,#8B5CF6); padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+.compliance-reminder { font-size: 12px; font-weight: 600; color: #B91C1C; background: #FEE2E2; border: 1px solid #FCA5A5; padding: 5px 14px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.compliance-reminder:hover { background: #FECACA; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+/* 主区 */
+.main { margin-left: var(--sidebar-w); flex: 1; padding: 24px; min-height: 100vh; }
+.page-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+.page-desc { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+.page-title .badge { font-size: 12px; background: var(--pri); color: #fff; padding: 2px 10px; border-radius: 20px; font-weight: 400; }
+
+/* 讨论版提示横幅 */
+.discuss-banner { background: linear-gradient(90deg,#FFF7ED,#FEF2F2); border: 1px solid #FDE68A; border-radius: var(--radius); padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #92400E; display: flex; gap: 8px; align-items: flex-start; line-height: 1.6; }
+.discuss-banner b { color: #B45309; }
+
+/* 通用 */
+.card { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 20px; }
+.card-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.card-title .more { font-size: 12px; color: var(--text2); cursor: pointer; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+@media (max-width: 1200px){ .grid-4{grid-template-columns:repeat(2,1fr);} .grid-3{grid-template-columns:1fr;} .grid-2{grid-template-columns:1fr;} }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #F9FAFB; padding: 10px 12px; text-align: left; font-weight: 600; border-bottom: 2px solid var(--border); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+tr:hover td { background: #FAFBFC; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.tag-red { background: #FEE2E2; color: #DC2626; }
+.tag-green { background: #D1FAE5; color: #059669; }
+.tag-blue { background: #DBEAFE; color: #2563EB; }
+.tag-orange { background: #FEF3C7; color: #D97706; }
+.tag-purple { background: #EDE9FE; color: #7C3AED; }
+.tag-gray { background: #F3F4F6; color: #6B7280; }
+.btn { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 13px; transition: all 0.15s; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: var(--text); }
+.btn:hover { border-color: var(--pri); color: var(--pri); }
+.btn-pri { background: var(--pri); color: #fff; border-color: var(--pri); }
+.btn-pri:hover { background: var(--pri-dark); color: #fff; }
+.btn-green { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-green:hover { background: #059669; color: #fff; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-block { width: 100%; justify-content: center; }
+input, select, textarea { padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; width: 100%; }
+input:focus, select:focus, textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,0.1); }
+label { font-size: 13px; font-weight: 600; color: var(--text); display: block; margin-bottom: 6px; }
+.form-group { margin-bottom: 14px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+@media (max-width: 900px){ .form-row,.form-row-3{grid-template-columns:1fr;} }
+
+/* 分类选择卡片 */
+.type-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.type-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 18px; cursor: pointer; transition: all 0.2s; }
+.type-card:hover { border-color: var(--pri); box-shadow: 0 4px 14px rgba(224,30,35,0.12); transform: translateY(-3px); }
+.type-card .t-icon { font-size: 30px; margin-bottom: 12px; }
+.type-card .t-name { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.type-card .t-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.type-card .t-tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* 脚本输出框 */
+.script-box { background: #1A1A2E; color: #E5E7EB; padding: 20px; border-radius: 8px; font-family: "Courier New", monospace; font-size: 13px; line-height: 1.7; white-space: pre-wrap; margin: 10px 0; }
+.hl-red { color: #FCA5A5; font-weight: 600; }
+
+/* 合规审核流 */
+.review-flow { display: flex; align-items: center; gap: 0; margin: 16px 0; flex-wrap: wrap; }
+.flow-step { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: #F9FAFB; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 600; }
+.flow-step.active { background: var(--pri-light); border-color: var(--pri); color: var(--pri); }
+.flow-step.done { background: #D1FAE5; border-color: var(--green); color: #059669; }
+.flow-arrow { color: var(--text2); padding: 0 8px; font-size: 18px; }
+
+/* 空框架占位 */
+.empty-box { border: 2px dashed var(--border); border-radius: var(--radius); padding: 40px 20px; text-align: center; color: var(--text2); background: #FAFBFC; }
+.empty-box .e-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-box .e-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.empty-box .e-desc { font-size: 13px; line-height: 1.6; max-width: 480px; margin: 0 auto; }
+.chart-placeholder { background: repeating-linear-gradient(45deg,#FAFBFC,#FAFBFC 12px,#F1F3F7 12px,#F1F3F7 24px); border: 1px dashed var(--border); border-radius: 8px; height: 220px; display: flex; align-items: center; justify-content: center; color: var(--text2); font-size: 13px; }
+
+/* 统计卡片 */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.stat-card { background: var(--card); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.stat-card .label { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.stat-card .value { font-size: 24px; font-weight: 700; color: var(--text); }
+.stat-card .value.placeholder { color: #D1D5DB; }
+
+/* 弹窗/提示 */
+.toast { position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; animation: slideIn 0.3s; }
+.toast-success { background: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
+.toast-warning { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+.toast-info { background: #DBEAFE; color: #1E40AF; border: 1px solid #93C5FD; }
+@keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* 返回按钮 */
+.back-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.back-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 13px; color: var(--text2); background: #fff; }
+.back-btn:hover { border-color: var(--pri); color: var(--pri); }
+
+/* 需求说明标签 */
+.spec-note { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #1E40AF; line-height: 1.6; margin-bottom: 16px; }
+.spec-note b { color: #1D4ED8; }
+</style>
+</head>
+<body>
+<div class="sidebar" id="sidebar"></div>
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="model-badge">🧪 模型讨论版</span>
+      <span class="topbar-title" id="topbarTitle">内容创作</span>
+    </div>
+    <div class="topbar-right">
+      <span class="compliance-reminder" onclick="toast('合规底线：所有对外内容必须经合规审核', 'warning')">⚠️ 合规红线</span>
+      <span class="btn btn-sm" onclick="toast('当前为演示角色：分支内容岗 · 张小明', 'info')">👤 张小明 · 分支内容岗</span>
+    </div>
+  </div>
+  <div id="app"></div>
+</div>
+
+<script>
+// ============ 导航配置 ============
+var NAV = [
+  { group: '内容生产', items: [
+    { key: 'create', icon: '✍️', name: '内容创作' },
+    { key: 'topics', icon: '🔥', name: '选题中心' },
+    { key: 'benchmark', icon: '🎯', name: '对标账号' },
+    { key: 'teardown', icon: '🔍', name: '账号拆解' }
+  ]},
+  { group: '协作与合规', items: [
+    { key: 'review', icon: '🛡️', name: '合规审核', beta: true },
+    { key: 'banned', icon: '🚫', name: '敏感词库' }
+  ]},
+  { group: '数据洞察', items: [
+    { key: 'performance', icon: '📊', name: '客户业绩', beta: true },
+    { key: 'dashboard', icon: '📈', name: '运营看板' }
+  ]},
+  { group: '系统管理', items: [
+    { key: 'org', icon: '🏢', name: '组织与权限' },
+    { key: 'templates', icon: '📚', name: '模板中心' }
+  ]}
+];
+
+var PAGE_TITLES = {
+  create: '内容创作', topics: '选题中心', benchmark: '对标账号', teardown: '账号拆解',
+  review: '合规审核', banned: '敏感词库', performance: '客户业绩', dashboard: '运营看板',
+  org: '组织与权限', templates: '模板中心'
+};
+
+// ============ 内容创作分类 ============
+var CREATE_TYPES = [
+  { key: 'live', icon: '🎙️', name: '直播脚本创作', desc: '生成直播全流程脚本 + 话术库', tags: ['开场','暖场','讲解','转化','收尾'] },
+  { key: 'note', icon: '📕', name: '小红书笔记创作', desc: '图文笔记文案 + 封面文案 + 话题标签', tags: ['标题','正文','话题','封面'] },
+  { key: 'video', icon: '🎬', name: '视频脚本创作', desc: '分镜脚本：口播 / 情景剧 / 快评', tags: ['分镜','口播','情景','快评'] },
+  { key: 'short', icon: '📱', name: '短视频创作', desc: '抖音 / 视频号短视频脚本', tags: ['钩子','完播率','竖屏'] },
+  { key: 'voice', icon: '🎤', name: '口播创作', desc: '口播文案稿，可直接照读', tags: ['口播稿','节奏','语气'] },
+  { key: 'morning', icon: '🌅', name: '早盘收评', desc: '隔夜外盘 + 今日关注 + 盘前提示', tags: ['定时','数据驱动','合规'] },
+  { key: 'close', icon: '🌇', name: '尾盘收评', desc: '盘面回顾 + 热点板块 + 明日展望', tags: ['定时','数据驱动','合规'] },
+  { key: 'news', icon: '📰', name: '财经热点通报', desc: '资讯聚合 + 转发模板 + 点评模板', tags: ['快讯','转发','点评'] }
+];
+
+// ============ 状态 ============
+var curPage = 'create';
+var curType = null;   // 内容创作当前分类
+var reviewFilter = 'all';
+var reviewItems = [
+  { id: 1, title: '【早盘收评】9月8日 隔夜美股收涨，A股关注科技板块', type: '早盘收评', author: '张小明', branch: '杭州分公司', status: 'pending', time: '08:12' },
+  { id: 2, title: '【直播脚本】《新手如何选基金》完整流程脚本', type: '直播脚本', author: '李小红', branch: '深圳分公司', status: 'approved', time: '昨日' },
+  { id: 3, title: '【小红书笔记】3个理财误区，90%的人都踩过', type: '小红书笔记', author: '王强', branch: '北京分公司', status: 'rejected', time: '昨日', rejectReason: '涉及收益承诺表述，请修改后重新提交' },
+  { id: 4, title: '【短视频脚本】牛市来了？一个视频讲清楚', type: '短视频脚本', author: '赵敏', branch: '上海分公司', status: 'pending', time: '09:40' }
+];
+
+// ============ 渲染侧边栏 ============
+function renderSidebar() {
+  var html = '<div class="sidebar-logo"><div class="logo-mark">工</div><div><div class="logo-text">内容工作台</div><div class="logo-sub">多平台 · 讨论版</div></div></div>';
+  NAV.forEach(function(g) {
+    html += '<div class="nav-group"><div class="nav-group-title">' + g.group + '</div>';
+    g.items.forEach(function(it) {
+      var active = curPage === it.key ? ' active' : '';
+      var beta = it.beta ? ' <span class="beta">NEW</span>' : '';
+      html += '<div class="nav-item' + active + '" onclick="nav(\'' + it.key + '\')"><span class="icon">' + it.icon + '</span><span>' + it.name + '</span>' + beta + '</div>';
+    });
+    html += '</div>';
+  });
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+// ============ 页面切换 ============
+function nav(key) {
+  curPage = key;
+  curType = null;
+  renderSidebar();
+  document.getElementById('topbarTitle').textContent = PAGE_TITLES[key];
+  render();
+  window.scrollTo(0, 0);
+}
+
+// ============ 主渲染 ============
+function render() {
+  var app = document.getElementById('app');
+  var html = '';
+  if (curPage === 'create') html = renderCreate();
+  else if (curPage === 'topics') html = renderTopics();
+  else if (curPage === 'benchmark') html = renderBenchmark();
+  else if (curPage === 'teardown') html = renderTeardown();
+  else if (curPage === 'review') html = renderReview();
+  else if (curPage === 'banned') html = renderBanned();
+  else if (curPage === 'performance') html = renderPerformance();
+  else if (curPage === 'dashboard') html = renderDashboard();
+  else if (curPage === 'org') html = renderOrg();
+  else if (curPage === 'templates') html = renderTemplates();
+  app.innerHTML = html;
+}
+
+// ============ 工具函数 ============
+function toast(msg, type) {
+  var t = document.createElement('div');
+  t.className = 'toast toast-' + (type || 'success');
+  var icon = type === 'warning' ? '⚠️' : (type === 'info' ? 'ℹ️' : '✅');
+  t.innerHTML = icon + ' ' + msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 2600);
+}
+
+// ============ ① 内容创作（两级导航） ============
+function renderCreate() {
+  if (!curType) return renderCreateTypeSelect();
+  var t = getType(curType);
+  var html = '';
+  html += '<div class="back-row"><span class="back-btn" onclick="curType=null;render();">← 返回分类选择</span><span style="font-size:13px;color:var(--text2)">当前分类：</span><b>' + t.icon + ' ' + t.name + '</b></div>';
+  html += '<div class="page-title">' + t.icon + ' ' + t.name + ' <span class="badge">模型演示</span></div>';
+  html += '<div class="page-desc">' + t.desc + '。填写下方信息后点击生成，产出内容需提交合规审核后方可对外发布。</div>';
+  html += '<div class="grid-2" style="align-items:start;">';
+  html += '<div class="card"><div class="card-title">📝 创作信息</div>' + typeForm(t.key) + '</div>';
+  html += '<div class="card"><div class="card-title">📄 生成结果 <span class="more" onclick="generateDemo()">重新生成</span></div><div id="genResult">' + typeResult(t.key) + '</div></div>';
+  html += '</div>';
+  html += '<div class="card"><div class="card-title">🛡️ 提交合规审核</div><div class="spec-note"><b>流程说明：</b>生成的内容默认处于「草稿」状态，需点击下方按钮提交至合规审核。合规审核通过后，系统才会生成「最终可发布版本」并开放复制/下载。此卡点为硬性要求，不可跳过。</div><div style="display:flex;gap:10px;"><button class="btn btn-pri" onclick="submitReview()">提交合规审核</button><button class="btn" onclick="toast(\'已保存为草稿\',\'info\')">保存草稿</button></div></div>';
+  return html;
+}
+
+function renderCreateTypeSelect() {
+  var html = '';
+  html += '<div class="page-title">✍️ 内容创作 <span class="badge">先选分类</span></div>';
+  html += '<div class="page-desc">第一步：选择你要创作的内容类型，进入对应的创作模块。支持多平台（小红书 / 抖音 / 视频号）与多种内容形态。</div>';
+  html += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>这是「内容创作」模块的入口交互——用户先选分类，再进入对应操作模块。分类可配置、可扩展（新增类型只需在后台添加配置项）。当前为 8 个分类，后续可按需增减。</span></div>';
+  html += '<div class="type-grid">';
+  CREATE_TYPES.forEach(function(t) {
+    html += '<div class="type-card" onclick="curType=\'' + t.key + '\';render();">';
+    html += '<div class="t-icon">' + t.icon + '</div>';
+    html += '<div class="t-name">' + t.name + '</div>';
+    html += '<div class="t-desc">' + t.desc + '</div>';
+    html += '<div class="t-tags">' + t.tags.map(function(x){ return '<span class="tag tag-gray">' + x + '</span>'; }).join('') + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function getType(key) {
+  for (var i = 0; i < CREATE_TYPES.length; i++) if (CREATE_TYPES[i].key === key) return CREATE_TYPES[i];
+  return CREATE_TYPES[0];
+}
+
+// 各分类的表单
+function typeForm(key) {
+  if (key === 'live') return formLive();
+  if (key === 'note') return formNote();
+  if (key === 'video') return formVideo();
+  if (key === 'short') return formShort();
+  if (key === 'voice') return formVoice();
+  if (key === 'morning') return formMorning();
+  if (key === 'close') return formClose();
+  if (key === 'news') return formNews();
+  return '';
+}
+
+function formLive() {
+  return '<div class="form-group"><label>直播主题</label><input id="f_title" placeholder="如：新手如何选基金" value="新手如何选基金"></div>' +
+    '<div class="form-row"><div class="form-group"><label>预计时长</label><select id="f_dur"><option>30 分钟</option><option>60 分钟</option><option>90 分钟</option></select></div><div class="form-group"><label>目标人群</label><input id="f_aud" placeholder="如：理财新手" value="理财新手"></div></div>' +
+    '<div class="form-group"><label>转化目标</label><select id="f_goal"><option>引导关注账号</option><option>引导加入私域</option><option>引导预约开户</option><option>品牌曝光</option></select></div>' +
+    '<div class="spec-note"><b>合规要点：</b>投顾类直播需提前报备、持牌执业、留存直播记录。系统将自动在脚本中嵌入免责声明与执业编号。</div>' +
+    '<button class="btn btn-pri btn-block" onclick="generateDemo()">🎙️ 生成直播脚本</button>';
+}
+function formNote() {
+  return '<div class="form-group"><label>笔记主题</label><input id="f_title" placeholder="如：3个理财误区" value="3个理财误区"></div>' +
+    '<div class="form-row"><div class="form-group"><label>笔记类型</label><select id="f_type"><option>干货科普</option><option>清单体</option><option>种草推荐</option><option>避坑指南</option></select></div><div class="form-group"><label>文案风格</label><select id="f_style"><option>爆款种草风</option><option>专业科普风</option><option>轻松口语风</option><option>悬念反差风</option></select></div></div>' +
+    '<div class="form-group"><label>目标平台</label><select id="f_plat"><option>小红书</option></select></div>' +
+    '<button class="btn btn-pri btn-block" onclick="generateDemo()">📕 生成笔记文案</button>';
+}
+function formVideo() {
+  return '<div class="form-group"><label>视频主题</label><input id="f_title" placeholder="如：牛市来了？" value="牛市来了？"></div>' +
+    '<div class="form-row"><div class="form-group"><label>脚本类型</label><select id="f_type"><option>口播</option><option>情景剧</option><option>快评</option><option>混剪+旁白</option></select></div><div class="form-group"><label>目标平台</label><select id="f_plat"><option>抖音</option><option>视频号</option></select></div></div>' +
+    '<div class="form-group"><label>预计时长</label><select id="f_dur"><option>30 秒</option><option>60 秒</option><option>3 分钟</option></select></div>' +
+    '<button class="btn btn-pri btn-block" onclick="generateDemo()">🎬 生成分镜脚本</button>';
+}
+function formShort() {
+  return '<div class="form-group"><label>短视频主题</label><input id="f_title" placeholder="如：一个视频讲清楚基金定投" value="一个视频讲清楚基金定投"></div>' +
+    '<div class="form-row"><div class="form-group"><label>目标平台</label><select id="f_plat"><option>抖音</option><option>视频号</option></select></div><div class="form-group"><label>视频时长</label><select id="f_dur"><option>15 秒</option><option>30 秒</option><option>60 秒</option></select></div></div>' +
+    '<div class="form-group"><label>视频风格</label><select id="f_style"><option>快节奏干货</option><option>情景演绎</option><option>数据盘点</option></select></div>' +
+    '<div class="spec-note"><b>平台差异：</b>抖音侧重黄金3秒钩子+完播率，视频号侧重熟人社交+专业深度，脚本结构会随平台自动调整。</div>' +
+    '<button class="btn btn-pri btn-block" onclick="generateDemo()">📱 生成短视频脚本</button>';
+}
+function formVoice() {
+  return '<div class="form-group"><label>口播主题</label><input id="f_title" placeholder="如：理财入门第一课" value="理财入门第一课"></div>' +
+    '<div class="form-row"><div class="form-group"><label>口播时长</label><select id="f_dur"><option>30 秒</option><option>60 秒</option><option>90 秒</option></select></div><div class="form-group"><label>语气风格</label><select id="f_style"><option>专业沉稳</option><option>亲切自然</option><option>活泼轻快</option></select></div></div>' +
+    '<button class="btn btn-pri btn-block" onclick="generateDemo()">🎤 生成口播稿</button>';
+}
+function formMorning() {
+  return '<div class="form-group"><label>收评日期</label><input id="f_date" value="9月8日"></div>' +
+    '<div class="form-group"><label>隔夜外盘情况</label><textarea id="f_oversea" rows="2" placeholder="如：美股三大指数集体收涨，纳指涨1.2%">美股三大指数集体收涨，纳指涨 1.2%，标普 500 涨 0.8%</textarea></div>' +
+    '<div class="form-group"><label>今日关注</label><textarea id="f_focus" rows="2" placeholder="如：关注科技板块、北向资金动向">关注科技板块、北向资金动向</textarea></div>' +
+    '<div class="spec-note"><b>数据驱动设计：</b>外盘指数、板块涨跌等数据段可对接行情数据接口自动填充；观点/提示段需人工撰写并走合规审核。此为「半自动」内容。</div>' +
+    '<button class="btn btn-pri btn-block" onclick="generateDemo()">🌅 生成早盘收评</button>';
+}
+function formClose() {
+  return '<div class="form-group"><label>收评日期</label><input id="f_date" value="9月8日"></div>' +
+    '<div class="form-group"><label>今日盘面回顾</label><textarea id="f_review" rows="2" placeholder="如：沪指收涨0.5%，两市成交额1.1万亿">沪指收涨 0.5%，创业板涨 1.1%，两市成交额 1.1 万亿</textarea></div>' +
+    '<div class="form-group"><label>热点板块</label><input id="f_sector" placeholder="如：半导体、AI 概念" value="半导体、AI 概念"></div>' +
+    '<button class="btn btn-pri btn-block" onclick="generateDemo()">🌇 生成尾盘收评</button>';
+}
+function formNews() {
+  return '<div class="form-group"><label>资讯主题</label><input id="f_title" placeholder="如：央行发布最新LPR报价" value="央行发布最新LPR报价"></div>' +
+    '<div class="form-group"><label>是否加点评</label><select id="f_comment"><option>纯资讯转发（快审）</option><option>加一句话点评（需完整审核）</option></select></div>' +
+    '<div class="spec-note"><b>红线提醒：</b>纯资讯转发可走快速审核；一旦加入观点/荐股，必须进入完整合规审核流。</div>' +
+    '<button class="btn btn-pri btn-block" onclick="generateDemo()">📰 生成通报文案</button>';
+}
+
+// 各分类的结果展示
+function typeResult(key) {
+  if (key === 'live') return resultLive();
+  if (key === 'note') return resultNote();
+  if (key === 'video') return resultVideo();
+  if (key === 'short') return resultShort();
+  if (key === 'voice') return resultVoice();
+  if (key === 'morning') return resultMorning();
+  if (key === 'close') return resultClose();
+  if (key === 'news') return resultNews();
+  return '<div class="empty-box"><div class="e-title">点击左侧「生成」按钮查看结果</div></div>';
+}
+
+function resultLive() {
+  return `<div class="script-box">【直播脚本】新手如何选基金（60分钟）
+━━━━━━━━━━━━━━━━━━
+■ 开场（3分钟）
+  · 自我介绍 + 执业编号展示
+  · 直播主题预告 + 规则说明
+
+■ 暖场（5分钟）
+  · 互动提问：大家买基金最关心什么？
+  · 抽奖/答疑预热
+
+■ 主题讲解（40分钟）
+  · 模块1：基金是什么（10min）
+  · 模块2：如何选基金（15min）
+  · 模块3：定投策略（15min）
+  · 每模块配 1 个互动点
+
+■ 转化引导（10分钟）
+  · 引导关注 + 预约私域
+
+■ 收尾（5分钟）
+  · 总结 + 下期预告
+  · <span class="hl-red">免责声明：本内容不构成投资建议…</span></div>` +
+  '<div class="spec-note"><b>配套话术库（点击展开）：</b>开场话术 / 转化话术 / 应对质疑话术 / 合规提示话术</div>';
+}
+function resultNote() {
+  return `<div class="script-box">【标题】3个理财误区，90%的人都踩过，最后一个最致命！
+
+【正文】
+你有没有想过，为什么自己越理财越焦虑？
+今天聊3个最常见的误区👇
+
+① 只看收益不看风险
+② 追涨杀跌，频繁操作
+③ 盲目跟风买爆款
+
+<span class="hl-red">提示：投资有风险，入市需谨慎</span>
+
+【话题标签】
+#理财 #基金入门 #避坑指南 #干货分享</div>`;
+}
+function resultVideo() {
+  return `<div class="script-box">【分镜脚本】牛市来了？（60秒 口播）
+━━━━━━━━━━━━━━━━━━
+[镜头1] 0-3s 黄金3秒
+  画面：大字「牛市真的来了吗？」
+  口播："牛市来了？先别急着冲！"
+
+[镜头2] 3-30s 正文
+  画面：数据图表
+  口播：3个数据告诉你现在该不该入场…
+
+[镜头3] 30-55s 转折
+  画面：主持人出镜
+  口播：但记住这1点，比什么都重要…
+
+[镜头4] 55-60s 结尾
+  引导关注 + <span class="hl-red">风险提示</span></div>`;
+}
+function resultShort() {
+  return `<div class="script-box">【短视频脚本】一个视频讲清楚基金定投（30秒）
+━━━━━━━━━━━━━━━━━━
+0-3s  钩子："月薪5000也能攒下第一桶金"
+3-20s 干货：定投3步法
+20-27s 转折：设问引导评论
+27-30s 结尾：关注 + 风险提示</div>`;
+}
+function resultVoice() {
+  return `<div class="script-box">【口播稿】理财入门第一课（60秒）
+各位朋友大家好，今天用一分钟…
+（正文，可直接照读）
+<span class="hl-red">温馨提示：市场有风险，投资需谨慎</span></div>`;
+}
+function resultMorning() {
+  return `<div class="script-box">【早盘收评】9月8日
+① 隔夜外盘：美股三大指数集体收涨，纳指涨1.2%
+② 今日关注：科技板块、北向资金动向
+③ 盘前提示：<span class="hl-red">本内容不构成投资建议，据此操作风险自担</span></div>` +
+  '<div class="spec-note"><b>半自动说明：</b>①②数据段由行情接口自动填充，③观点段人工撰写。</div>';
+}
+function resultClose() {
+  return `<div class="script-box">【尾盘收评】9月8日
+① 盘面回顾：沪指收涨0.5%，创业板涨1.1%
+② 热点板块：半导体、AI概念
+③ 明日展望：<span class="hl-red">本内容不构成投资建议</span></div>`;
+}
+function resultNews() {
+  return `<div class="script-box">【财经热点通报】
+📌 央行发布最新LPR报价
+【正文】央行今日公布最新贷款市场报价利率…
+【转发提示】点击复制，转发至各平台
+<span class="hl-red">本资讯仅为信息传递，不构成投资建议</span></div>`;
+}
+
+// 生成（刷新结果）
+function generateDemo() {
+  var r = document.getElementById('genResult');
+  if (r) { r.innerHTML = typeResult(curType); toast('已生成示例内容', 'success'); }
+}
+function submitReview() {
+  var name = document.getElementById('f_title') ? document.getElementById('f_title').value : '';
+  reviewItems.unshift({ id: Date.now(), title: '【' + getType(curType).name + '】' + (name || '未命名内容'), type: getType(curType).name, author: '张小明', branch: '杭州分公司', status: 'pending', time: '刚刚' });
+  toast('已提交合规审核，待审核通过后方可发布', 'success');
+  nav('review');
+}
+
+// ============ ② 选题中心 ============
+function renderTopics() {
+  return '<div class="page-title">🔥 选题中心 <span class="badge">多平台</span></div>' +
+    '<div class="page-desc">多平台热点聚合 + 选题池 + 选题计划。原小红书工作台的选题方法论已泛化到多平台。</div>' +
+    '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有工作台的选题方法论（热点聚合 + 券商导向筛选 + 周计划），从「小红书专属」泛化为「小红书/抖音/视频号」多平台热点。</span></div>' +
+    '<div class="grid-2"><div class="card"><div class="card-title">🔥 今日热点</div><table><tr><th>#</th><th>热点</th><th>平台</th><th>热度</th></tr>' +
+    '<tr><td>1</td><td>央行降息预期升温</td><td><span class="tag tag-blue">多平台</span></td><td class="tag tag-orange">🔥 9.8万</td></tr>' +
+    '<tr><td>2</td><td>半导体板块异动</td><td><span class="tag tag-gray">抖音</span></td><td>6.2万</td></tr>' +
+    '<tr><td>3</td><td>基金定投攻略</td><td><span class="tag tag-gray">小红书</span></td><td>5.1万</td></tr>' +
+    '<tr><td>4</td><td>新能源车销量榜</td><td><span class="tag tag-gray">视频号</span></td><td>4.3万</td></tr></table></div>' +
+    '<div class="card"><div class="card-title">📋 选题计划</div><div class="empty-box"><div class="e-icon">📅</div><div class="e-title">本周选题计划（占位）</div><div class="e-desc">总部策划选题池，分支认领选题。此处展示选题计划列表、认领状态、排期。</div></div></div></div>';
+}
+
+// ============ ③ 对标账号 ============
+function renderBenchmark() {
+  return '<div class="page-title">🎯 对标账号 <span class="badge">多平台</span></div>' +
+    '<div class="page-desc">对标账号库 + 选号对比。现有 69 个对标账号可直接迁移，扩展抖音/视频号对标账号。</div>' +
+    '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有 69 个对标账号（KOS 40 + 专业号 29）、选号对比、拆解分析数据，新增「平台」维度，支持按小红书/抖音/视频号筛选对标账号。</span></div>' +
+    '<div class="stats-grid">' +
+    '<div class="stat-card"><div class="label">对标账号总数</div><div class="value">69</div></div>' +
+    '<div class="stat-card"><div class="label">小红书</div><div class="value">69</div></div>' +
+    '<div class="stat-card"><div class="label">抖音（待扩展）</div><div class="value placeholder">0</div></div>' +
+    '<div class="stat-card"><div class="label">视频号（待扩展）</div><div class="value placeholder">0</div></div>' +
+    '</div>' +
+    '<div class="empty-box"><div class="e-icon">🎯</div><div class="e-title">对标账号列表（占位）</div><div class="e-desc">此处复用现有对标账号卡片 + 选号对比功能，增加平台筛选标签。</div></div>';
+}
+
+// ============ ④ 账号拆解 ============
+function renderTeardown() {
+  return '<div class="page-title">🔍 账号拆解 <span class="badge">多平台</span></div>' +
+    '<div class="page-desc">账号拆解：六维雷达图 + 案例库 + 自选拆解。现有功能直接复用。</div>' +
+    '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有「账号拆解」页（雷达图 + 5 案例库 + 自选拆解），扩展支持抖音/视频号账号拆解。</span></div>' +
+    '<div class="grid-2"><div class="card"><div class="card-title">📊 六维评分雷达图</div><div class="chart-placeholder">雷达图占位（复用 Chart.js）</div></div>' +
+    '<div class="card"><div class="card-title">📚 案例库</div><div class="empty-box"><div class="e-title">5 个拆解案例（占位）</div></div></div></div>';
+}
+
+// ============ ⑤ 合规审核 ============
+function renderReview() {
+  var html = '<div class="page-title">🛡️ 合规审核 <span class="badge">核心</span></div>';
+  html += '<div class="page-desc">券商合规红线模块：所有对外内容必经审核，全程留痕。</div>';
+  html += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>这是系统最高优先级模块。核心机制：<b>发布前强制审核卡点 + 敏感词自动扫描 + 全程留痕</b>，满足监管备查要求。审核流支持单审或初审+复审（待确认）。</span></div>';
+
+  html += '<div class="review-flow"><span class="flow-step active">草稿</span><span class="flow-arrow">→</span><span class="flow-step active">待审核</span><span class="flow-arrow">→</span><span class="flow-step">合规审核</span><span class="flow-arrow">→</span><span class="flow-step">通过/驳回</span><span class="flow-arrow">→</span><span class="flow-step">可发布</span></div>';
+
+  html += '<div class="card"><div class="card-title">待审核内容 <span class="more">共 ' + reviewItems.filter(function(x){return x.status==='pending';}).length + ' 条待审</span></div>';
+  html += '<table><tr><th>内容标题</th><th>类型</th><th>作者</th><th>分支</th><th>状态</th><th>时间</th></tr>';
+  reviewItems.forEach(function(it) {
+    var st = it.status === 'pending' ? '<span class="tag tag-orange">待审核</span>' : (it.status === 'approved' ? '<span class="tag tag-green">已通过</span>' : '<span class="tag tag-red">已驳回</span>');
+    html += '<tr><td>' + it.title + (it.rejectReason ? '<br><span class="tag tag-red">驳回原因：' + it.rejectReason + '</span>' : '') + '</td><td>' + it.type + '</td><td>' + it.author + '</td><td>' + it.branch + '</td><td>' + st + '</td><td>' + it.time + '</td></tr>';
+  });
+  html += '</table></div>';
+  html += '<div class="spec-note"><b>审核规则引擎（升级方向）：</b>现有敏感词库升级为「关键词 + 正则 + 语境规则」，分级：违禁词（硬拦截）/ 风险词（提醒+必看）。合规审核员在线维护，无需改代码。</div>';
+  return html;
+}
+
+// ============ ⑥ 敏感词库 ============
+function renderBanned() {
+  return '<div class="page-title">🚫 敏感词库 <span class="badge">复用+升级</span></div>' +
+    '<div class="page-desc">现有合规词库（bannedWords / dangerWords / wordCategory / wordReplace）服务化迁移。</div>' +
+    '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有 4 类词库，升级为在线可维护的规则引擎，合规审核员可在后台增删改，无需改代码。</span></div>' +
+    '<div class="grid-2"><div class="card"><div class="card-title">违禁词（硬拦截）</div><div class="empty-box"><div class="e-title">bannedWords（占位）</div><div class="e-desc">如：保证收益、稳赚不赔、翻倍等</div></div></div>' +
+    '<div class="card"><div class="card-title">风险词（提醒+必看）</div><div class="empty-box"><div class="e-title">dangerWords（占位）</div><div class="e-desc">如：荐股、收益、涨停等</div></div></div></div>';
+}
+
+// ============ ⑦ 客户业绩（空框架） ============
+function renderPerformance() {
+  var html = '<div class="page-title">📊 客户业绩 <span class="badge">NEW · 空框架</span></div>';
+  html += '<div class="page-desc">本地化部署后，接入公司系统，查看所有员工在各新媒体平台展业后每个客户的业绩情况。</div>';
+
+  html += '<div class="discuss-banner">💡 <span><b>给研发的核心需求说明（具象化）：</b>本模块通过<b>本地化部署后对接公司内部系统（CRM/客户管理系统）</b>，汇总展示每一位员工在<b>小红书 / 抖音 / 视频号等新媒体平台展业</b>后，<b>每个客户</b>的业绩情况。当前为<b>空白框架 + 功能占位</b>，无真实数据，数据字段与接口由研发与公司系统对接时确定。</span></div>';
+
+  // 筛选器
+  html += '<div class="card"><div class="card-title">🔍 筛选条件</div>';
+  html += '<div class="form-row-3">';
+  html += '<div class="form-group"><label>时间范围</label><select><option>本月</option><option>本季度</option><option>今年</option><option>自定义</option></select></div>';
+  html += '<div class="form-group"><label>员工 / 分支</label><select><option>全部员工</option><option>张小明 · 杭州分公司</option><option>李小红 · 深圳分公司</option></select></div>';
+  html += '<div class="form-group"><label>展业平台</label><select><option>全部平台</option><option>小红书</option><option>抖音</option><option>视频号</option></select></div>';
+  html += '</div>';
+  html += '<div class="form-row-3">';
+  html += '<div class="form-group"><label>客户状态</label><select><option>全部</option><option>新增客户</option><option>意向客户</option><option>已转化客户</option><option>流失客户</option></select></div>';
+  html += '<div class="form-group"><label>业绩类型</label><select><option>全部业绩</option><option>开户</option><option>入金</option><option>交易</option><option>资产配置</option></select></div>';
+  html += '<div class="form-group" style="display:flex;align-items:flex-end;"><button class="btn btn-pri btn-block" onclick="toast(\'接入公司系统后可用\',\'info\')">查询</button></div>';
+  html += '</div></div>';
+
+  // 统计卡片（空）
+  html += '<div class="stats-grid">';
+  html += '<div class="stat-card"><div class="label">客户总数</div><div class="value placeholder">—</div></div>';
+  html += '<div class="stat-card"><div class="label">本月新增客户</div><div class="value placeholder">—</div></div>';
+  html += '<div class="stat-card"><div class="label">意向客户</div><div class="value placeholder">—</div></div>';
+  html += '<div class="stat-card"><div class="label">已转化客户</div><div class="value placeholder">—</div></div>';
+  html += '<div class="stat-card"><div class="label">累计业绩（元）</div><div class="value placeholder">—</div></div>';
+  html += '</div>';
+
+  // 图表占位
+  html += '<div class="grid-2"><div class="card"><div class="card-title">📈 客户增长趋势</div><div class="chart-placeholder">图表占位（接入数据后渲染）</div></div>';
+  html += '<div class="card"><div class="card-title">🥧 各平台客户来源分布</div><div class="chart-placeholder">图表占位（接入数据后渲染）</div></div></div>';
+  html += '<div class="card"><div class="card-title">🏆 员工业绩排行</div><div class="chart-placeholder">柱状图占位（接入数据后渲染）</div></div>';
+
+  // 客户列表（空表头）
+  html += '<div class="card"><div class="card-title">📋 客户业绩明细 <span class="more">数据接入后自动填充</span></div>';
+  html += '<table><tr><th>客户姓名</th><th>来源平台</th><th>归属员工</th><th>分支</th><th>客户状态</th><th>业绩类型</th><th>业绩金额</th><th>跟进时间</th></tr>';
+  html += '<tr><td colspan="8"><div class="empty-box" style="border:none;padding:30px;"><div class="e-icon">📭</div><div class="e-title">暂无数据</div><div class="e-desc">本地化部署并接入公司系统后，此处自动展示每位员工在各新媒体平台展业后每个客户的业绩明细。</div></div></td></tr>';
+  html += '</table></div>';
+
+  // 需求字段说明
+  html += '<div class="card"><div class="card-title">📋 建议数据字段（供研发对接参考）</div>';
+  html += '<div class="spec-note"><b>客户维度：</b>客户姓名/联系方式/来源平台/来源渠道（笔记/直播/短视频）/归属员工/归属分支/客户状态（新增/意向/已转化/流失）<br>';
+  html += '<b>业绩维度：</b>业绩类型（开户/入金/交易/资产配置）/业绩金额/成交时间/产品类型<br>';
+  html += '<b>关联维度：</b>关联内容（客户由哪条笔记/直播/短视频转化而来）→ 可反哺内容效果分析</div>';
+  html += '<div class="spec-note"><b>⚠️ 待研发确认：</b>① 对接公司哪个系统？② 数据同步方式（API/定时同步/手动导入）？③ 客户隐私脱敏要求？④ 权限（员工看自己，分支看本分支，总部看全局）？</div></div>';
+
+  return html;
+}
+
+// ============ ⑧ 运营看板 ============
+function renderDashboard() {
+  return '<div class="page-title">📈 运营看板 <span class="badge">P1</span></div>' +
+    '<div class="page-desc">总部看全局，分支看自己。数据回填 + 效果排行。</div>' +
+    '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>半自动发布模式下，员工手动回填各平台数据（阅读/点赞/收藏/评论/涨粉），系统做效果复盘。数据可回填也可后续对接各平台数据接口。</span></div>' +
+    '<div class="stats-grid"><div class="stat-card"><div class="label">本月发布内容</div><div class="value placeholder">—</div></div><div class="stat-card"><div class="label">总曝光</div><div class="value placeholder">—</div></div><div class="stat-card"><div class="label">总互动</div><div class="value placeholder">—</div></div><div class="stat-card"><div class="label">新增粉丝</div><div class="value placeholder">—</div></div></div>' +
+    '<div class="grid-2"><div class="card"><div class="card-title">📊 各平台内容效果排行</div><div class="chart-placeholder">图表占位</div></div><div class="card"><div class="card-title">🏆 员工内容排行</div><div class="chart-placeholder">图表占位</div></div></div>';
+}
+
+// ============ ⑨ 组织与权限 ============
+function renderOrg() {
+  return '<div class="page-title">🏢 组织与权限 <span class="badge">P0</span></div>' +
+    '<div class="page-desc">多用户分级权限（RBAC）+ 数据范围隔离。</div>' +
+    '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>四层角色：系统管理员 / 总部内容中台 / 合规审核员 / 分支内容岗（一线员工）。分支间数据隔离，总部可见全局。建议对接公司 SSO/AD 或自建账号。</span></div>' +
+    '<div class="card"><div class="card-title">角色权限矩阵</div><table><tr><th>角色</th><th>可做</th><th>不可做</th></tr>' +
+    '<tr><td>系统管理员</td><td>账号/组织/权限/词库/模板管理</td><td>—</td></tr>' +
+    '<tr><td>总部内容中台</td><td>选题池、爆款库、方法论、运营看板</td><td>替分支发布内容</td></tr>' +
+    '<tr><td>合规审核员</td><td>审核/驳回/留痕、词库更新</td><td>创作内容</td></tr>' +
+    '<tr><td>分支负责人</td><td>本分支任务分配、本分支看板、初审</td><td>跳过合规直接发布</td></tr>' +
+    '<tr><td>一线员工</td><td>认领选题、创作、提交审核、手动发布、回填数据</td><td>修改词库、看全量数据</td></tr></table></div>';
+}
+
+// ============ ⑩ 模板中心 ============
+function renderTemplates() {
+  return '<div class="page-title">📚 模板中心 <span class="badge">P1</span></div>' +
+    '<div class="page-desc">总部统一维护脚本/文案/收评模板，下发给分支使用。</div>' +
+    '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>内容创作模块的 8 类分类，其底层模板均可在此统一管理维护。总部可新增/编辑/停用模板，分支按模板创作，保证内容规范性。</span></div>' +
+    '<div class="grid-3">' +
+    '<div class="card"><div class="card-title">📝 图文文案模板</div><div class="empty-box"><div class="e-title">占位</div><div class="e-desc">6 种文案风格 + 爆款公式骨架</div></div></div>' +
+    '<div class="card"><div class="card-title">🎬 脚本模板</div><div class="empty-box"><div class="e-title">占位</div><div class="e-desc">直播/短视频/口播/分镜脚本模板</div></div></div>' +
+    '<div class="card"><div class="card-title">🌅 收评模板</div><div class="empty-box"><div class="e-title">占位</div><div class="e-desc">早盘/尾盘收评、热点通报模板</div></div></div>' +
+    '</div>';
+}
+
+// ============ 初始化 ============
+renderSidebar();
+render();
+</script>
+</body>
+</html>
