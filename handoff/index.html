@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>多平台内容工作台 · 轻流落地交接台</title>
+<!-- 本工作台为「多平台内容工作台」轻流落地的交接说明页，单文件、全内联、零外部依赖 -->
+<style>
+:root{
+  --red:#C8102E; --red-dark:#9c0c24; --red-soft:#fbe9ec;
+  --orange:#f59e0b; --orange-soft:#fef3e2;
+  --green:#16a34a; --green-soft:#e7f6ec;
+  --blue:#2563eb; --blue-soft:#e8effd;
+  --bg:#f5f6f8; --card:#ffffff; --text:#1f2329; --sub:#6b7280;
+  --border:#e5e7eb; --line:#eceef1;
+  --shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+  color:var(--text);background:var(--bg);font-size:15px;line-height:1.65;
+}
+a{color:var(--red);text-decoration:none}
+
+/* ===== 布局 ===== */
+.layout{display:flex;min-height:100vh}
+
+/* 侧边栏 */
+.sidebar{
+  width:250px;background:#fff;border-right:1px solid var(--border);
+  position:fixed;top:0;left:0;bottom:0;z-index:50;
+  display:flex;flex-direction:column;transition:transform .25s ease;
+}
+.brand{padding:20px 18px 16px;border-bottom:1px solid var(--line)}
+.brand .logo{
+  display:flex;align-items:center;gap:10px;
+}
+.brand .logo-badge{
+  width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--red),var(--red-dark));
+  display:flex;align-items:center;justify-content:center;flex:0 0 36px;
+}
+.brand .logo-badge svg{width:20px;height:20px;stroke:#fff}
+.brand h1{font-size:16px;font-weight:700;line-height:1.3}
+.brand .sub{font-size:12px;color:var(--sub);margin-top:2px}
+.brand .ver{margin-top:10px;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--sub)}
+.brand .ver .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);display:inline-block}
+
+.nav{flex:1;overflow-y:auto;padding:10px 10px 20px}
+.nav-item{
+  display:flex;align-items:center;gap:11px;width:100%;
+  padding:10px 12px;border:none;background:none;cursor:pointer;
+  border-radius:9px;font-size:14px;color:#3a4149;text-align:left;
+  transition:background .15s,color .15s;font-family:inherit;
+}
+.nav-item svg{width:19px;height:19px;stroke:currentColor;flex:0 0 19px}
+.nav-item:hover{background:#f3f4f6}
+.nav-item.active{background:var(--red-soft);color:var(--red);font-weight:600}
+.nav-item .tag{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:20px;background:var(--orange-soft);color:#b45309;font-weight:600}
+
+.sidebar-foot{padding:12px 18px;border-top:1px solid var(--line);font-size:12px;color:var(--sub)}
+
+/* 主区 */
+.main{flex:1;margin-left:250px;display:flex;flex-direction:column;min-width:0}
+.topbar{
+  position:sticky;top:0;z-index:40;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px;
+}
+.menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px}
+.menu-btn svg{width:22px;height:22px;stroke:#333;display:block}
+.topbar .crumb{font-size:14px;color:var(--sub)}
+.topbar .crumb b{color:var(--text)}
+.topbar .status{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--sub)}
+.topbar .status .pill{background:var(--orange-soft);color:#b45309;padding:3px 10px;border-radius:20px;font-weight:600}
+
+.content{flex:1;padding:28px;max-width:1080px;width:100%}
+
+/* 章节 */
+.section{display:none;animation:fade .25s ease}
+.section.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.sec-head{margin-bottom:20px}
+.sec-head h2{font-size:22px;font-weight:700;display:flex;align-items:center;gap:10px}
+.sec-head h2 .kicker{font-size:12px;font-weight:700;color:var(--red);background:var(--red-soft);padding:2px 8px;border-radius:6px;letter-spacing:.5px}
+.sec-head .desc{color:var(--sub);margin-top:6px;font-size:14px}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+.card h3{font-size:16px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.card h3 .no{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:6px;background:var(--red-soft);color:var(--red);font-size:12px;font-weight:700}
+.card .hint{font-size:13px;color:var(--sub);margin-bottom:12px}
+.card p{margin-bottom:10px}
+
+/* 表格 */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:9px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#fafbfc;font-weight:600;color:#3a4149;white-space:nowrap;font-size:13px}
+tr:last-child td{border-bottom:none}
+td .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;color:#475569;background:#f6f7f9;padding:1px 6px;border-radius:5px}
+.required{color:var(--red);font-weight:700}
+.yes{color:var(--green);font-weight:700}
+.no{color:#cbd5e1}
+.pill{display:inline-block;font-size:11.5px;padding:1px 8px;border-radius:20px;font-weight:600}
+.pill.red{background:var(--red-soft);color:var(--red)}
+.pill.orange{background:var(--orange-soft);color:#b45309}
+.pill.green{background:var(--green-soft);color:var(--green)}
+.pill.blue{background:var(--blue-soft);color:var(--blue)}
+
+/* 提示条 */
+.callout{display:flex;gap:10px;padding:12px 14px;border-radius:9px;font-size:13.5px;margin-bottom:14px}
+.callout.warn{background:var(--orange-soft);color:#92400e}
+.callout.danger{background:var(--red-soft);color:#7f1d1d}
+.callout.info{background:var(--blue-soft);color:#1e3a8a}
+.callout svg{width:18px;height:18px;flex:0 0 18px;margin-top:2px;stroke:currentColor}
+
+/* 概览卡片 */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+.stat .n{font-size:26px;font-weight:800;color:var(--red);line-height:1.2}
+.stat .l{font-size:13px;color:var(--sub);margin-top:3px}
+
+/* SVG 图容器 */
+.diagram{width:100%;overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px}
+.diagram svg{display:block;width:100%;height:auto;min-width:520px}
+
+/* 复选框列表 */
+.checklist{list-style:none}
+.checklist li{display:flex;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line);font-size:14px;align-items:flex-start}
+.checklist li:last-child{border-bottom:none}
+.checklist .ck{width:20px;height:20px;flex:0 0 20px;margin-top:1px}
+.checklist .ck svg{width:20px;height:20px}
+.checklist .ck.pending svg{stroke:#cbd5e1}
+.checklist .ck.ok svg{stroke:var(--green)}
+.checklist .item b{color:var(--red)}
+
+/* 依赖图 SVG 文本 */
+.node-rect{fill:#fff;stroke:#cbd5e1;stroke-width:1.2}
+.node-rect.core{stroke:var(--red);fill:var(--red-soft)}
+.node-rect.prereq{stroke:var(--orange);fill:var(--orange-soft)}
+.node-text{font-size:12px;fill:#1f2329;font-weight:600}
+.node-sub{font-size:10px;fill:#6b7280}
+.link{stroke:#94a3b8;stroke-width:1.4;fill:none}
+.link.red{stroke:var(--red)}
+.arrow{fill:#94a3b8}
+
+/* 移动端 */
+@media (max-width:820px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:0 0 0 100vw rgba(0,0,0,.3)}
+  .main{margin-left:0}
+  .menu-btn{display:block}
+  .content{padding:18px 14px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+  .topbar{padding:12px 14px}
+  .sec-head h2{font-size:19px}
+  table{font-size:12.5px}
+  th,td{padding:8px 9px}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- 侧边栏 -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">
+        <span class="logo-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </span>
+        <div>
+          <h1>轻流落地交接台</h1>
+          <div class="sub">多平台内容工作台</div>
+        </div>
+      </div>
+      <div class="ver"><span class="dot"></span> v0.1 草案 · 待业务确认</div>
+    </div>
+    <nav class="nav" id="nav">
+      <button class="nav-item active" data-sec="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        概览
+      </button>
+      <button class="nav-item" data-sec="apps">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        应用结构
+      </button>
+      <button class="nav-item" data-sec="forms">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        表单字段
+        <span class="tag">10表</span>
+      </button>
+      <button class="nav-item" data-sec="flow">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+        审核流程
+      </button>
+      <button class="nav-item" data-sec="rbac">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        角色权限
+      </button>
+      <button class="nav-item" data-sec="dod">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        验收标准
+        <span class="tag">DoD</span>
+      </button>
+      <button class="nav-item" data-sec="nfr">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        NFR &amp; 依赖
+      </button>
+      <button class="nav-item" data-sec="pending">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        待确认
+        <span class="tag">6项</span>
+      </button>
+    </nav>
+    <div class="sidebar-foot">供研发/集成方照抄搭建 · 配套《轻流落地交接包.md》</div>
+  </aside>
+
+  <!-- 主区 -->
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="菜单">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="crumb">多平台内容工作台 / <b id="crumbTitle">概览</b></div>
+      <div class="status"><span class="pill">本地交付 · 未接入轻流</span></div>
+    </header>
+
+    <main class="content">
+
+      <!-- 概览 -->
+      <section class="section active" id="sec-overview">
+        <div class="sec-head">
+          <h2><span class="kicker">OVERVIEW</span>概览</h2>
+          <p class="desc">把需求基线落成轻流可执行的应用结构、表单字段、流程节点与角色权限。目标系统：轻流低代码平台（本地/内网部署）。</p>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat"><div class="n">3</div><div class="l">业务应用</div></div>
+          <div class="stat"><div class="n">10</div><div class="l">核心表单</div></div>
+          <div class="stat"><div class="n">5</div><div class="l">角色</div></div>
+          <div class="stat"><div class="n">6</div><div class="l">待确认问题</div></div>
+          <div class="stat"><div class="n">8</div><div class="l">内容类型</div></div>
+          <div class="stat"><div class="n">3</div><div class="l">平台</div></div>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">目标</span>一句话目标</h3>
+          <p>把现有「小红书单人工作台」升级为「面向分支机构的多平台内容生产中枢」：员工在 <b>小红书 / 抖音 / 视频号</b> 多平台创作，经 <b>合规审核</b> 后 <b>半自动发布</b>，总部统一管理内容、账号、合规与 <b>客户业绩</b>。</p>
+          <div class="hint">发布方式：半自动（系统管创作 + 审核 + 存档 + 数据回流，员工手动发到各平台）。</div>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">优先级</span>MVP 边界</h3>
+          <div class="tbl-wrap" style="margin-top:10px">
+            <table>
+              <thead><tr><th style="width:80px">级别</th><th>模块</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><span class="pill red">P0</span></td><td>合规审核 · 组织权限 · 内容创作</td><td>「能用 + 合规」底线，上线前提</td></tr>
+                <tr><td><span class="pill orange">P1</span></td><td>热点/选题/爆款/对标/拆解 · 任务中心 · 数据分析</td><td>复用现有资产，快速见效</td></tr>
+                <tr><td><span class="pill blue">P2</span></td><td>客户业绩 · 模板中心增强 · 报表中心</td><td>可延后 / 单独立项（客户业绩依赖公司系统）</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">交付</span>范围与前提</h3>
+          <div class="tbl-wrap" style="margin-top:10px">
+            <table>
+              <thead><tr><th style="width:140px">项</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td>目标系统</td><td>轻流（QingFlow）低代码平台，本地/内网部署</td></tr>
+                <tr><td>落地方式</td><td>半自动发布</td></tr>
+                <tr><td>涉及平台</td><td>小红书 / 抖音 / 视频号</td></tr>
+                <tr><td>数据资产</td><td>69 对标账号、177 账号矩阵、33 热点等真实数据<b>零丢失迁移</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 应用结构 -->
+      <section class="section" id="sec-apps">
+        <div class="sec-head">
+          <h2><span class="kicker">APPS</span>应用结构</h2>
+          <p class="desc">轻流一个「应用」= 一个业务域。建议 3 个业务应用 + 1 个平台级 RBAC 配置（先于应用完成）。</p>
+        </div>
+
+        <div class="callout warn">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span><b>前置顺序</b>：组织与权限（RBAC）是合规审核流的前置依赖，必须先配置完成，再搭建 App-01/02/03。</span>
+        </div>
+
+        <div class="diagram">
+          <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg">
+            <!-- 平台级 RBAC -->
+            <rect class="node-rect prereq" x="230" y="14" width="300" height="54" rx="10"/>
+            <text class="node-text" x="380" y="36" text-anchor="middle">平台级 · 组织与权限（RBAC）</text>
+            <text class="node-sub" x="380" y="54" text-anchor="middle">角色 / 成员 / 分支（部门）· 数据隔离</text>
+            <!-- 三条连接 -->
+            <line class="link red" x1="320" y1="68" x2="180" y2="118"/>
+            <line class="link red" x1="380" y1="68" x2="380" y2="118"/>
+            <line class="link red" x1="440" y1="68" x2="580" y2="118"/>
+            <!-- App-01 -->
+            <rect class="node-rect core" x="40" y="118" width="220" height="86" rx="10"/>
+            <text class="node-text" x="150" y="142" text-anchor="middle" fill="#C8102E">App-01 · 内容生产中心</text>
+            <text class="node-sub" x="150" y="160" text-anchor="middle">内容创作单 / 模板库 / 账号矩阵</text>
+            <text class="node-sub" x="150" y="175" text-anchor="middle">对标账号 / 选题库 / 热点库</text>
+            <!-- App-02 -->
+            <rect class="node-rect core" x="300" y="118" width="220" height="86" rx="10"/>
+            <text class="node-text" x="410" y="142" text-anchor="middle" fill="#C8102E">App-02 · 合规审核</text>
+            <text class="node-sub" x="410" y="160" text-anchor="middle">内容审核流（流程）</text>
+            <text class="node-sub" x="410" y="175" text-anchor="middle">审核记录 / 敏感词库</text>
+            <!-- App-03 -->
+            <rect class="node-rect core" x="560" y="118" width="180" height="86" rx="10"/>
+            <text class="node-text" x="650" y="142" text-anchor="middle" fill="#C8102E">App-03 · 客户业绩</text>
+            <text class="node-sub" x="650" y="160" text-anchor="middle">客户业绩表</text>
+            <text class="node-sub" x="650" y="175" text-anchor="middle">业绩口径配置</text>
+            <!-- 依赖标注 -->
+            <text class="node-sub" x="380" y="240" text-anchor="middle" fill="#C8102E">▲ App-03 额外依赖公司 CRM 系统对接</text>
+            <!-- App-01 -> App-02 -->
+            <path class="link" d="M260 160 C280 160 280 160 300 160" marker-end="url(#arr1)"/>
+            <defs>
+              <marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" class="arrow"/></marker>
+              <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" class="arrow"/></marker>
+            </defs>
+            <path class="link" d="M300 160 C290 200 440 200 440 160" marker-end="url(#arr2)"/>
+            <text class="node-sub" x="360" y="222" text-anchor="middle">创作 → 提交审核</text>
+          </svg>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <h3><span class="no">表</span>应用清单</h3>
+          <div class="tbl-wrap" style="margin-top:10px">
+            <table>
+              <thead><tr><th>应用编号</th><th>应用名称</th><th>业务域</th><th>内含表单 / 流程</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">App-01</span></td><td>内容生产中心</td><td>内容创作、模板、选题、账号</td><td>内容创作单、模板库、账号矩阵、对标账号、选题库、热点库</td></tr>
+                <tr><td><span class="mono">App-02</span></td><td>合规审核</td><td>发布前审核卡点</td><td>内容审核流（流程）、审核记录、敏感词库</td></tr>
+                <tr><td><span class="mono">App-03</span></td><td>客户业绩</td><td>展业业绩看板（依赖公司系统）</td><td>客户业绩表、业绩口径配置</td></tr>
+                <tr><td><span class="mono">平台级</span></td><td>组织与权限</td><td>RBAC / 成员 / 分支</td><td>轻流平台级角色权限、成员管理、分支（部门）结构</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 表单字段 -->
+      <section class="section" id="sec-forms">
+        <div class="sec-head">
+          <h2><span class="kicker">FORMS</span>表单字段表</h2>
+          <p class="desc">字段类型以轻流为准。「自动」= 系统生成、员工不可编辑；「关联」= 关联其他表单；<span class="required">是</span> = 必填。</p>
+        </div>
+
+        <div class="callout info">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span>共 10 个核心表单，按应用分组。所有「所属分支」字段均为<b>数据隔离键</b>，按员工自动带出，实现「一线看自己、分支看本分支、总部看全局」。</span>
+        </div>
+
+        <!-- 内容创作单 -->
+        <div class="card">
+          <h3><span class="no">1</span>内容创作单 <span class="pill red">App-01</span> <span class="pill orange">核心</span></h3>
+          <p class="hint">8 类内容的统一载体，贯穿「草稿 → 待审核 → 可发布 → 已发布」全生命周期。</p>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>类型</th><th style="width:50px">必填</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">内容ID</span></td><td>自动编号</td><td>—</td><td>主键，如 CT-20260910-0001</td></tr>
+                <tr><td><span class="mono">员工</span></td><td>成员</td><td class="required">是</td><td>创建人，自动带出</td></tr>
+                <tr><td><span class="mono">所属分支</span></td><td>关联(部门)</td><td class="required">是</td><td><b>数据隔离键</b></td></tr>
+                <tr><td><span class="mono">平台</span></td><td>单选</td><td class="required">是</td><td>小红书 / 抖音 / 视频号</td></tr>
+                <tr><td><span class="mono">内容类型</span></td><td>单选</td><td class="required">是</td><td>直播 / 小红书笔记 / 视频脚本 / 短视频 / 口播 / 早盘收评 / 尾盘收评 / 热点通报</td></tr>
+                <tr><td><span class="mono">标题</span></td><td>文本</td><td class="required">是</td><td>单行</td></tr>
+                <tr><td><span class="mono">正文/脚本</span></td><td>富文本</td><td class="required">是</td><td>生成结果写入</td></tr>
+                <tr><td><span class="mono">模板引用</span></td><td>关联(模板库)</td><td>—</td><td>创作时选用模板，留痕</td></tr>
+                <tr><td><span class="mono">免责声明+执业编号</span></td><td>系统生成</td><td class="required">是</td><td>自动嵌入、<b>不可删除</b></td></tr>
+                <tr><td><span class="mono">状态</span></td><td>状态字段</td><td class="required">是</td><td>草稿 → 待审核 → 审核中 → 通过(可发布) → 已发布；驳回回「待修改」</td></tr>
+                <tr><td><span class="mono">发布链接</span></td><td>链接</td><td>—</td><td>发布回填时填写</td></tr>
+                <tr><td><span class="mono">发布时间</span></td><td>时间</td><td>—</td><td>发布回填时填写</td></tr>
+                <tr><td><span class="mono">回填人</span></td><td>成员</td><td>—</td><td>发布回填人</td></tr>
+                <tr><td><span class="mono">创建时间</span></td><td>时间</td><td class="required">是</td><td>自动</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 模板库 -->
+        <div class="card">
+          <h3><span class="no">2</span>模板库 <span class="pill red">App-01</span></h3>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>类型</th><th style="width:50px">必填</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">模板ID</span></td><td>自动编号</td><td>—</td><td>主键</td></tr>
+                <tr><td><span class="mono">模板名称</span></td><td>文本</td><td class="required">是</td><td></td></tr>
+                <tr><td><span class="mono">内容类型</span></td><td>单选</td><td class="required">是</td><td>对应 8 类内容</td></tr>
+                <tr><td><span class="mono">文案风格</span></td><td>单选</td><td class="required">是</td><td>6 种风格之一</td></tr>
+                <tr><td><span class="mono">模板正文</span></td><td>富文本</td><td class="required">是</td><td></td></tr>
+                <tr><td><span class="mono">版本号</span></td><td>数字</td><td class="required">是</td><td>每次修改 +1，留痕</td></tr>
+                <tr><td><span class="mono">状态</span></td><td>单选</td><td class="required">是</td><td>启用 / 停用</td></tr>
+                <tr><td><span class="mono">维护人</span></td><td>成员</td><td class="required">是</td><td>仅总部内容中台可改</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 账号矩阵 -->
+        <div class="card">
+          <h3><span class="no">3</span>账号矩阵 <span class="pill red">App-01</span> / <span class="no">4</span>对标账号 <span class="pill red">App-01</span></h3>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>类型</th><th style="width:50px">必填</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">账号ID</span></td><td>自动编号</td><td>—</td><td>主键</td></tr>
+                <tr><td><span class="mono">平台</span></td><td>单选</td><td class="required">是</td><td>小红书 / 抖音 / 视频号</td></tr>
+                <tr><td><span class="mono">账号名称</span></td><td>文本</td><td class="required">是</td><td></td></tr>
+                <tr><td><span class="mono">主页链接</span></td><td>链接</td><td>—</td><td></td></tr>
+                <tr><td><span class="mono">粉丝数 / 获赞数 / 笔记数</span></td><td>数字</td><td>—</td><td>现有真实数据迁入（账号矩阵 177 / 对标 69）</td></tr>
+                <tr><td><span class="mono">六维评分</span></td><td>数字×6</td><td>—</td><td>内容力/粉丝力/互动力/商业力/成长力/专业力（对标账号）</td></tr>
+                <tr><td><span class="mono">所属分支</span></td><td>关联(部门)</td><td class="required">是</td><td><b>数据隔离键</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 选题/热点 -->
+        <div class="card">
+          <h3><span class="no">5</span>选题库 / <span class="no">6</span>热点库 <span class="pill red">App-01</span></h3>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>类型</th><th style="width:50px">必填</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">选题/热点ID</span></td><td>自动编号</td><td>—</td><td>主键</td></tr>
+                <tr><td><span class="mono">平台</span></td><td>单选</td><td class="required">是</td><td>多平台维度筛选</td></tr>
+                <tr><td><span class="mono">标题</span></td><td>文本</td><td class="required">是</td><td></td></tr>
+                <tr><td><span class="mono">分类/标签</span></td><td>多选</td><td>—</td><td></td></tr>
+                <tr><td><span class="mono">状态</span></td><td>单选</td><td class="required">是</td><td>灵感 / 已排期 / 已发布</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 审核记录 -->
+        <div class="card">
+          <h3><span class="no">7</span>审核记录 <span class="pill red">App-02</span> <span class="pill orange">核心</span></h3>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>类型</th><th style="width:50px">必填</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">审核ID</span></td><td>自动编号</td><td>—</td><td>主键</td></tr>
+                <tr><td><span class="mono">内容ID</span></td><td>关联(内容创作单)</td><td class="required">是</td><td>关联被审内容</td></tr>
+                <tr><td><span class="mono">版本号</span></td><td>数字</td><td class="required">是</td><td>第几次提交，<b>原版本留痕可查</b></td></tr>
+                <tr><td><span class="mono">审核人</span></td><td>成员</td><td class="required">是</td><td>合规审核员</td></tr>
+                <tr><td><span class="mono">审核结果</span></td><td>单选</td><td class="required">是</td><td>通过 / 驳回</td></tr>
+                <tr><td><span class="mono">驳回原因</span></td><td>文本</td><td>—</td><td>驳回时必填</td></tr>
+                <tr><td><span class="mono">敏感词命中</span></td><td>多行文本</td><td>—</td><td>记录命中的词及级别</td></tr>
+                <tr><td><span class="mono">审核时间</span></td><td>时间</td><td class="required">是</td><td>自动</td></tr>
+                <tr><td><span class="mono">留痕期限</span></td><td>—</td><td>—</td><td>留存 ≥ 3 年（待合规确认）</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 敏感词库 -->
+        <div class="card">
+          <h3><span class="no">8</span>敏感词库 <span class="pill red">App-02</span></h3>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>类型</th><th style="width:50px">必填</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">词ID</span></td><td>自动编号</td><td>—</td><td>主键</td></tr>
+                <tr><td><span class="mono">词条</span></td><td>文本</td><td class="required">是</td><td></td></tr>
+                <tr><td><span class="mono">级别</span></td><td>单选</td><td class="required">是</td><td>违禁词(硬拦截) / 风险词(提醒)</td></tr>
+                <tr><td><span class="mono">状态</span></td><td>单选</td><td class="required">是</td><td>启用 / 停用</td></tr>
+                <tr><td><span class="mono">备注</span></td><td>文本</td><td>—</td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 客户业绩 -->
+        <div class="card">
+          <h3><span class="no">9</span>客户业绩表 <span class="pill blue">App-03</span> <span class="pill orange">待确认</span></h3>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>类型</th><th style="width:50px">必填</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">记录ID</span></td><td>自动编号</td><td>—</td><td>主键</td></tr>
+                <tr><td><span class="mono">员工</span></td><td>成员</td><td class="required">是</td><td>一线员工</td></tr>
+                <tr><td><span class="mono">客户</span></td><td>关联(公司CRM)</td><td class="required">是</td><td><b>依赖公司系统对接</b></td></tr>
+                <tr><td><span class="mono">平台</span></td><td>单选</td><td class="required">是</td><td>展业平台</td></tr>
+                <tr><td><span class="mono">业绩类型</span></td><td>单选</td><td class="required">是</td><td>开户 / 入金 / 交易 / 资产配置</td></tr>
+                <tr><td><span class="mono">业绩金额</span></td><td>数字</td><td class="required">是</td><td>按口径折算</td></tr>
+                <tr><td><span class="mono">统计日期</span></td><td>日期</td><td class="required">是</td><td>数据 T+1 更新（待确认）</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 业绩口径 -->
+        <div class="card">
+          <h3><span class="no">10</span>业绩口径配置 <span class="pill blue">App-03</span></h3>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>字段</th><th>类型</th><th style="width:50px">必填</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">规则ID</span></td><td>自动编号</td><td>—</td><td>主键</td></tr>
+                <tr><td><span class="mono">业绩类型</span></td><td>单选</td><td class="required">是</td><td>开户 / 入金 / 交易 / 资产配置</td></tr>
+                <tr><td><span class="mono">折算方式</span></td><td>单选</td><td class="required">是</td><td>固定权重 / 按比例</td></tr>
+                <tr><td><span class="mono">折算系数</span></td><td>数字</td><td class="required">是</td><td>待业务确认</td></tr>
+                <tr><td><span class="mono">生效时间</span></td><td>日期</td><td class="required">是</td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 审核流程 -->
+      <section class="section" id="sec-flow">
+        <div class="sec-head">
+          <h2><span class="kicker">FLOW</span>审核流程</h2>
+          <p class="desc">内容合规审核流的状态机与轻流流程节点。</p>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">状态机</span>内容全生命周期</h3>
+          <div class="diagram" style="margin-top:10px">
+            <svg viewBox="0 0 760 180" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="fa" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#94a3b8"/></marker>
+                <marker id="fa2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#C8102E"/></marker>
+              </defs>
+              <!-- 主链 -->
+              <rect class="node-rect" x="30" y="50" width="92" height="44" rx="9"/>
+              <text class="node-text" x="76" y="76" text-anchor="middle">草稿</text>
+              <line class="link" x1="122" y1="72" x2="160" y2="72" marker-end="url(#fa)"/>
+
+              <rect class="node-rect" x="162" y="50" width="100" height="44" rx="9"/>
+              <text class="node-text" x="212" y="76" text-anchor="middle">待审核</text>
+              <line class="link" x1="262" y1="72" x2="300" y2="72" marker-end="url(#fa)"/>
+
+              <rect class="node-rect" x="302" y="50" width="100" height="44" rx="9"/>
+              <text class="node-text" x="352" y="76" text-anchor="middle">审核中</text>
+              <line class="link" x1="402" y1="72" x2="440" y2="72" marker-end="url(#fa)"/>
+
+              <rect class="node-rect core" x="442" y="50" width="110" height="44" rx="9"/>
+              <text class="node-text" x="497" y="76" text-anchor="middle" fill="#C8102E">可发布</text>
+              <line class="link" x1="552" y1="72" x2="590" y2="72" marker-end="url(#fa)"/>
+
+              <rect class="node-rect core" x="592" y="50" width="120" height="44" rx="9"/>
+              <text class="node-text" x="652" y="76" text-anchor="middle" fill="#C8102E">已发布(回填)</text>
+
+              <!-- 驳回回退 -->
+              <rect class="node-rect" x="332" y="128" width="100" height="40" rx="9"/>
+              <text class="node-text" x="382" y="153" text-anchor="middle">待修改</text>
+              <line class="link red" x1="352" y1="94" x2="382" y2="128" marker-end="url(#fa2)"/>
+              <text class="node-sub" x="330" y="110" text-anchor="middle" fill="#C8102E">驳回</text>
+              <path class="link red" d="M332 148 C250 148 250 72 212 72" marker-end="url(#fa2)"/>
+              <text class="node-sub" x="290" y="168" text-anchor="middle" fill="#C8102E">重新提交（版本号 +1）</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">流程</span>轻流流程节点（内容审核流）</h3>
+          <div class="tbl-wrap" style="margin-top:10px">
+            <table>
+              <thead><tr><th style="width:40px">#</th><th>节点</th><th>类型</th><th>负责人</th><th>动作</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>发起</td><td>填写节点</td><td>一线员工</td><td>填写内容创作单 → 提交</td></tr>
+                <tr><td>2</td><td>合规初审</td><td>审批节点</td><td>合规审核员</td><td>通过 / 驳回（填原因）</td></tr>
+                <tr><td>3</td><td>合规复审</td><td>审批节点（可选）</td><td>合规审核员(上级)</td><td>仅「初审+复审」模式启用</td></tr>
+                <tr><td>4</td><td>抄送</td><td>抄送节点</td><td>分支负责人 + 总部内容中台</td><td>知会，不审批</td></tr>
+                <tr><td>5</td><td>结束</td><td>结束节点</td><td>—</td><td>通过后内容状态置「可发布」</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout danger" style="margin-top:14px;margin-bottom:0">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span><b>硬卡点</b>：内容不经人工审核无法进入「可发布」，无绕过入口；驳回后修改重提、原版本留痕。</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 角色权限 -->
+      <section class="section" id="sec-rbac">
+        <div class="sec-head">
+          <h2><span class="kicker">RBAC</span>角色权限映射</h2>
+          <p class="desc">五类角色，遵循「一线看自己、分支看本分支、总部看全局」的数据隔离原则。</p>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">矩阵</span>角色 × 能力</h3>
+          <div class="tbl-wrap" style="margin-top:10px">
+            <table>
+              <thead><tr><th>能力</th><th>系统管理员</th><th>总部内容中台</th><th>合规审核员</th><th>分支负责人</th><th>一线员工</th></tr></thead>
+              <tbody>
+                <tr><td>管理角色/成员/分支</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+                <tr><td>维护模板（增/改/停）</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+                <tr><td>维护敏感词库</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="no">—</td><td class="no">—</td></tr>
+                <tr><td>审核内容</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="no">—</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="no">—</td><td class="no">—</td></tr>
+                <tr><td>创作内容</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="no">—</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td></tr>
+                <tr><td>查看全局数据</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="no">—</td><td class="no">—</td></tr>
+                <tr><td>查看本分支数据</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="no">—</td></tr>
+                <tr><td>查看本人数据</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:-3px"><polyline points="20 6 9 17 4 12"/></svg></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">规则</span>隔离与安全</h3>
+          <ul class="checklist">
+            <li><span class="ck ok"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>越权访问返回 <b>403</b>（无数据泄露）。</span></li>
+            <li><span class="ck ok"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>分支间数据<b>完全隔离</b>。</span></li>
+            <li><span class="ck ok"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>离职员工账号<b>即时停用</b>，历史数据保留。</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 验收标准 -->
+      <section class="section" id="sec-dod">
+        <div class="sec-head">
+          <h2><span class="kicker">DoD</span>验收标准</h2>
+          <p class="desc">验收口径：可验证，研发以「测试能通过」为准。未定项标注「待业务确认」。</p>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">1</span>内容创作 <span class="pill red">NEW</span></h3>
+          <ul class="checklist">
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>8 类内容均能生成结构完整脚本。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>生成结果自动嵌入免责声明 + 执业编号（不可手动删除）。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>提交后内容「草稿 → 待审核」，进入审核队列。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>审核通过后可发布；发布后回填（平台/链接/时间），数据回流数据分析。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>早盘/尾盘收评数据段对接行情接口自动填充，观点段人工撰写。</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">2</span>合规审核 <span class="pill red">NEW · 核心</span></h3>
+          <ul class="checklist">
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>内容不经人工审核无法进入「可发布」（硬卡点）。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>敏感词自动扫描：违禁词硬拦截、风险词提醒。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>驳回可修改重提，原版本留痕。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>审核记录可导出，留存 ≥ 3 年（待合规确认）。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>支持单审 或 初审+复审（待确认）。</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">3</span>组织与权限 <span class="pill red">NEW</span></h3>
+          <ul class="checklist">
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>五类角色：系统管理员 / 总部内容中台 / 合规审核员 / 分支负责人 / 一线员工。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>越权访问返回 403。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>分支间数据完全隔离。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>离职员工即时停用、历史数据保留。</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">4</span>客户业绩 <span class="pill blue">NEW · 空框架</span></h3>
+          <ul class="checklist">
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>支持「员工 × 平台 × 客户」三维查询。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>数据刷新频率 ≤ T+1（待确认）。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>权限：一线看自己、分支看本分支、总部看全局。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>业绩口径（开户/入金/交易/资产配置折算）固化（待业务确认）。</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">5</span>模板中心 <span class="pill red">NEW</span></h3>
+          <ul class="checklist">
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>总部可在线增/改/停模板。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>分支只能使用、不能改总部模板。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>模板变更保留版本记录。</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">6</span>多平台泛化 <span class="pill green">8 个保留模块通用</span></h3>
+          <ul class="checklist">
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>热点/选题/爆款/对标/拆解/账号矩阵等数据支持「平台」维度筛选。</span></li>
+            <li><span class="ck pending"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></span><span>69 对标、177 账号矩阵、33 热点等真实数据无丢失迁移。</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- NFR & 依赖 -->
+      <section class="section" id="sec-nfr">
+        <div class="sec-head">
+          <h2><span class="kicker">NFR</span>非功能需求</h2>
+          <p class="desc">券商场景红线，缺一不可。带「待确认」项需业务/合规最终拍板。</p>
+        </div>
+
+        <div class="card">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th style="width:110px">类别</th><th>要求</th><th style="width:130px">状态</th></tr></thead>
+              <tbody>
+                <tr><td>并发/规模</td><td>支持 N 分支 × M 员工同时在线</td><td><span class="pill orange">待确认</span></td></tr>
+                <tr><td>安全</td><td>TLS 传输 + 存储加密；权限隔离；等保级别</td><td><span class="pill orange">待确认（二级/三级）</span></td></tr>
+                <tr><td>审计留痕</td><td>审核/发布/敏感词命中记录，留存 ≥ 3 年</td><td><span class="pill orange">待合规确认</span></td></tr>
+                <tr><td>可用性</td><td>SLA（如 99.5%）；每日备份 + 容灾</td><td><span class="pill orange">待确认</span></td></tr>
+                <tr><td>兼容</td><td>Chrome / Edge；移动端适配</td><td><span class="pill blue">建议</span></td></tr>
+                <tr><td>认证</td><td>统一登录（SSO/AD 或自建）</td><td><span class="pill orange">待确认</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="sec-head" style="margin-top:26px">
+          <h2><span class="kicker">DEPS</span>模块依赖图</h2>
+        </div>
+
+        <div class="card">
+          <div class="diagram">
+            <svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="da" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#94a3b8"/></marker>
+              </defs>
+              <rect class="node-rect prereq" x="230" y="16" width="300" height="50" rx="10"/>
+              <text class="node-text" x="380" y="38" text-anchor="middle">组织与权限（RBAC）</text>
+              <text class="node-sub" x="380" y="54" text-anchor="middle">一切的前置</text>
+              <line class="link" x1="340" y1="66" x2="200" y2="116" marker-end="url(#da)"/>
+              <line class="link" x1="380" y1="66" x2="380" y2="116" marker-end="url(#da)"/>
+              <line class="link" x1="420" y1="66" x2="560" y2="116" marker-end="url(#da)"/>
+
+              <rect class="node-rect" x="40" y="116" width="200" height="62" rx="10"/>
+              <text class="node-text" x="140" y="142" text-anchor="middle">内容创作（含发布回填）</text>
+              <text class="node-sub" x="140" y="160" text-anchor="middle">8 类内容 + 数据闭环起点</text>
+
+              <rect class="node-rect" x="280" y="116" width="200" height="62" rx="10"/>
+              <text class="node-text" x="380" y="142" text-anchor="middle">合规审核</text>
+              <text class="node-sub" x="380" y="160" text-anchor="middle">审核员角色</text>
+
+              <rect class="node-rect" x="520" y="116" width="200" height="62" rx="10"/>
+              <text class="node-text" x="620" y="142" text-anchor="middle">模板中心</text>
+              <text class="node-sub" x="620" y="160" text-anchor="middle">创作时选模板</text>
+
+              <path class="link" d="M240 147 L280 147" marker-end="url(#da)"/>
+              <path class="link" d="M480 147 L520 147" marker-end="url(#da)"/>
+
+              <rect class="node-rect core" x="230" y="248" width="300" height="62" rx="10"/>
+              <text class="node-text" x="380" y="274" text-anchor="middle" fill="#C8102E">数据分析 / 客户业绩（数据下游）</text>
+              <text class="node-sub" x="380" y="292" text-anchor="middle">客户业绩另依赖公司系统对接</text>
+
+              <path class="link" d="M180 178 C180 220 340 220 340 248" marker-end="url(#da)"/>
+              <text class="node-sub" x="200" y="218" text-anchor="middle">发布回填数据</text>
+              <path class="link" d="M430 178 C460 220 430 220 410 248" marker-end="url(#da)"/>
+              <text class="node-sub" x="460" y="218" text-anchor="middle">审核通过后可发布</text>
+            </svg>
+          </div>
+          <div class="hint" style="margin-top:12px">
+            <b>关键依赖链</b>：① 合规审核 ← 组织权限（需「审核员」角色）② 模板中心 ← 内容创作（创作时调用模板）③ 数据分析/客户业绩 ← 发布回填数据 ④ 客户业绩 ← 额外依赖公司内部系统（CRM）对接。
+          </div>
+        </div>
+      </section>
+
+      <!-- 待确认 -->
+      <section class="section" id="sec-pending">
+        <div class="sec-head">
+          <h2><span class="kicker">PENDING</span>待确认问题清单</h2>
+          <p class="desc">需业务 + 研发 + 合规共同拍板，确认后回填此表即可进入开发排期。</p>
+        </div>
+
+        <div class="card">
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th style="width:40px">#</th><th style="width:300px">问题</th><th>影响</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>合规审核：单审 or 初审+复审？审核 SLA？</td><td>审核流状态机设计</td></tr>
+                <tr><td>2</td><td>业绩口径：开户/入金/交易/资产配置如何折算「业绩金额」？</td><td>客户业绩数据模型</td></tr>
+                <tr><td>3</td><td>客户业绩：对接公司哪个系统？同步方式？脱敏要求？</td><td>客户业绩立项范围</td></tr>
+                <tr><td>4</td><td>组织权限：SSO/AD or 自建账号？分支是否含「分支负责人」层？</td><td>认证与 RBAC 设计</td></tr>
+                <tr><td>5</td><td>发布回填：强制 or 可选？数据由谁录？</td><td>数据闭环完整性</td></tr>
+                <tr><td>6</td><td>并发规模、等保级别、审计留存时长</td><td>NFR 基线</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><span class="no">变更记录</span></h3>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>版本</th><th style="width:120px">日期</th><th>变更内容</th></tr></thead>
+              <tbody>
+                <tr><td><span class="mono">v0.1</span></td><td>2026-09-10</td><td>初稿：应用结构 / 表单字段 / 审核流程 / RBAC / DoD / NFR / 依赖图 / 待确认清单</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SECTIONS = {
+    overview:"概览", apps:"应用结构", forms:"表单字段", flow:"审核流程",
+    rbac:"角色权限", dod:"验收标准", nfr:"NFR & 依赖", pending:"待确认"
+  };
+
+  var navItems = Array.prototype.slice.call(document.querySelectorAll(".nav-item"));
+  var sections = {};
+  Object.keys(SECTIONS).forEach(function(k){
+    sections[k] = document.getElementById("sec-" + k);
+  });
+  var crumbTitle = document.getElementById("crumbTitle");
+  var sidebar = document.getElementById("sidebar");
+  var menuBtn = document.getElementById("menuBtn");
+
+  // 单一刷新入口：按 key 切换当前 section，各渲染单元互不调用
+  function showSection(key){
+    if(!sections[key]) return;
+    Object.keys(sections).forEach(function(k){
+      sections[k].classList.toggle("active", k === key);
+    });
+    navItems.forEach(function(n){
+      n.classList.toggle("active", n.getAttribute("data-sec") === key);
+    });
+    crumbTitle.textContent = SECTIONS[key];
+    // 切换后回顶
+    window.scrollTo(0, 0);
+    closeSidebar();
+  }
+
+  function closeSidebar(){
+    sidebar.classList.remove("open");
+  }
+
+  // 事件绑定：导航点击 → showSection
+  navItems.forEach(function(n){
+    n.addEventListener("click", function(){
+      showSection(n.getAttribute("data-sec"));
+    });
+  });
+
+  // 移动端菜单按钮
+  menuBtn.addEventListener("click", function(){
+    sidebar.classList.toggle("open");
+  });
+
+  // 点遮罩（点击主区）关闭侧栏
+  document.addEventListener("click", function(e){
+    if(window.innerWidth <= 820 && sidebar.classList.contains("open")){
+      if(!sidebar.contains(e.target) && e.target !== menuBtn && !menuBtn.contains(e.target)){
+        closeSidebar();
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
