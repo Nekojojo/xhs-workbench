@@ -176,6 +176,45 @@ label { font-size: 13px; font-weight: 600; color: var(--text); display: block; m
 .poster-card.light { color: var(--text); border: 1px solid var(--border); }
 .poster-card .p-name { font-weight: 700; font-size: 16px; }
 .poster-card .p-desc { font-size: 12px; opacity: 0.9; }
+
+/* 通用 Tab */
+.tab-bar { display: flex; gap: 6px; border-bottom: 1px solid var(--border); margin-bottom: 16px; flex-wrap: wrap; }
+.tab-item { padding: 8px 16px; font-size: 13px; cursor: pointer; color: var(--text2); border-bottom: 2px solid transparent; font-weight: 500; }
+.tab-item:hover { color: var(--pri); }
+.tab-item.active { color: var(--pri); border-bottom-color: var(--pri); font-weight: 600; }
+
+/* 可展开行（热点/选题/爆款） */
+.expand-row { cursor: pointer; transition: background 0.12s; }
+.expand-row:hover td { background: var(--pri-light); }
+.expand-panel { background: #FBFCFE; border-left: 3px solid var(--pri); padding: 14px 16px; }
+.expand-panel .ep-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.expand-panel .ep-title-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.expand-panel .ep-title-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); }
+.expand-panel .ep-title-item .num { width: 20px; height: 20px; border-radius: 50%; background: var(--pri-light); color: var(--pri); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.expand-panel .ep-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.expand-panel .ep-dir { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 8px; }
+
+/* 复制按钮 */
+.copy-btn { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border); background: #fff; color: var(--pri); cursor: pointer; flex-shrink: 0; }
+.copy-btn:hover { background: var(--pri-light); border-color: var(--pri); }
+
+/* AI 提示词框 */
+.prompt-box { background: #1A1A2E; color: #C7D2FE; padding: 16px; border-radius: 8px; font-size: 12px; line-height: 1.7; white-space: pre-wrap; margin: 10px 0; font-family: "Courier New", monospace; }
+
+/* 快捷入口（文件管理/驾驶舱） */
+.quick-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.quick-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow); }
+.quick-card:hover { border-color: var(--pri); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(224,30,35,0.1); }
+.quick-card .q-icon { font-size: 26px; margin-bottom: 8px; }
+.quick-card .q-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.quick-card .q-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+/* 任务清单项 */
+.task-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 8px; background: #F9FAFB; border-radius: 6px; font-size: 13px; }
+.task-item .t-del { margin-left: auto; border: none; background: transparent; color: #DC2626; cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; }
+.task-item .t-del:hover { background: #FEE2E2; }
+.link-btn { color: var(--pri); text-decoration: none; font-size: 12px; cursor: pointer; }
+.link-btn:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -296,6 +335,16 @@ var reviewItems = [
   { id: 4, title: '【短视频脚本】牛市来了？一个视频讲清楚', type: '短视频脚本', author: '赵敏', branch: '上海分公司', status: 'pending', time: '09:40' }
 ];
 
+// ============ 交互状态（升级新增） ============
+var prefillTitle = '';          // 从热点/选题/爆款「去创作」带入的标题
+var curTaskPeriod = 'today';    // 任务中心：今日/本周/本月
+var curWeeklyPlat = '小红书';    // 周历排期：当前平台
+var taskData = {
+  today: (typeof interactTasks !== 'undefined' ? interactTasks.slice() : []),
+  week: ['复盘本周各平台发布数据，输出周报', '整理本周对标账号爆款内容要点', '准备下周选题计划初稿'],
+  month: ['月度账号运营数据复盘', '月度合规审核情况汇总', '制定下月内容排期与发布目标']
+};
+
 // ============ 渲染侧边栏 ============
 function renderSidebar() {
   var html = '<div class="sidebar-logo"><div class="logo-mark">工</div><div><div class="logo-text">内容工作台</div><div class="logo-sub">多平台 · 讨论版</div></div></div>';
@@ -319,7 +368,8 @@ function nav(key) {
   document.getElementById('topbarTitle').textContent = PAGE_TITLES[key];
   render();
   window.scrollTo(0, 0);
-  if (key === 'teardown') setTimeout(function(){ initTeardownChart(); }, 100);
+  if (key === 'teardown') setTimeout(function(){ compareTeardown(); }, 100);
+  if (key === 'analytics') setTimeout(function(){ drawAnalyticsCharts(); }, 100);
 }
 
 // ============ 主渲染 ============
@@ -348,6 +398,61 @@ function render() {
   else if (curPage === 'reports') html = renderReports();
   else if (curPage === 'files') html = renderFiles();
   app.innerHTML = html;
+  // 去创作带入标题：渲染完成后回填到标题输入框
+  if (curPage === 'create' && prefillTitle && document.getElementById('f_title')) {
+    document.getElementById('f_title').value = prefillTitle;
+  }
+}
+
+// ============ 跨模块公共交互 ============
+// 去创作：从热点/选题/爆款/模板跳转到内容创作，带入标题
+function gotoCreate(type, title) {
+  prefillTitle = title || '';
+  curPage = 'create';
+  curType = type || 'note';
+  renderSidebar();
+  document.getElementById('topbarTitle').textContent = PAGE_TITLES['create'];
+  render();
+  window.scrollTo(0, 0);
+  toast('已带入选题到「' + getType(curType).name + '」，可继续填写生成', 'info');
+}
+// 一键复制
+function copyText(text, btn) {
+  function done() { toast('已复制到剪贴板', 'success'); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, function() {
+      var ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { toast('复制失败，请手动复制', 'warning'); }
+      ta.remove();
+    });
+  } else {
+    var ta2 = document.createElement('textarea');
+    ta2.value = text; document.body.appendChild(ta2); ta2.select();
+    try { document.execCommand('copy'); done(); } catch (e) { toast('复制失败，请手动复制', 'warning'); }
+    ta2.remove();
+  }
+}
+// 展开/收起通用
+function toggleExpand(id) {
+  var el = document.getElementById(id);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+// 文案方向建议（根据热点 biz + framework 生成）
+function hotspotDirection(h) {
+  var biz = h.biz || '财经资讯';
+  var fw = h.framework || '科普一图流';
+  var map = {
+    '新股打新': '可做「打新日历/申购攻略/中签缴款规则」类笔记，主打新手刚需与收藏',
+    '券商业务': '可做「券商合并/账户影响/业务科普」类内容，主打一图看懂',
+    '规则解读': '可做「新规解读/对投资者影响」类内容，主打清单式科普',
+    '避坑防诈': '可做「防骗指南/避坑清单」类内容，主打转发与收藏',
+    'ETF基金': '可做「基金科普/新基盘点/定投教程」类内容，主打新手入门',
+    '投教科普': '可做「投资者教育/金融科普」类内容，主打官方权威',
+    '券商案例': '可做「券商爆款拆解/账号运营方法论」类内容，主打可抄作业',
+    '数据排行': '可做「数据盘点/资金流向解读」类内容，主打数据卡片'
+  };
+  return '<b>可做方向：</b>' + (map[biz] || '可围绕「' + biz + '」做' + fw + '类内容，建议先给结论再讲方法');
 }
 
 // ============ 工具函数 ============
@@ -374,31 +479,65 @@ function fmtWan(n) {
 
 // ============ ① 运营驾驶舱 ============
 function renderHome() {
-  var h = '<div class="page-title">🏠 运营驾驶舱 <span class="badge">今日概览</span></div>';
-  h += '<div class="page-desc">现有工作台的首页总览，汇聚各模块核心数据。升级后增加多平台维度。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>此页为现有「运营驾驶舱」的保留项，数据来自现有工作台各模块（账号/热点/选题/爆款/对标/拆解），已真实注入。升级多平台后，此页的统计卡片将增加「平台」筛选维度。</span></div>';
+  var h = '<div class="page-title">🏠 运营驾驶舱 <span class="badge">首页总览</span></div>';
+  h += '<div class="page-desc">工作台首页总览：一屏掌握账号情况、每日更新、数据汇总、内容汇总与每日待办。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档重构为「总览 + 汇总」首页：账号情况 / 每日更新 / 每日数据 / 内容汇总 / 每日待办五大块。数据来自现有工作台各模块（已真实注入），升级后增加「平台」筛选维度。</span></div>';
+
+  // 内容汇总统计（创作/审核/发布）
+  var pending = reviewItems.filter(function(x){ return x.status === 'pending'; }).length;
+  var approved = reviewItems.filter(function(x){ return x.status === 'approved'; }).length;
+  var rejected = reviewItems.filter(function(x){ return x.status === 'rejected'; }).length;
+
+  // ① 账号情况 + 每日数据 汇总
+  h += '<div class="card"><div class="card-title">📊 账号情况 · 每日数据汇总</div>';
   h += '<div class="stats-grid">';
   h += '<div class="stat-card"><div class="label">方正证券账号</div><div class="value">' + (typeof fzAccounts !== 'undefined' ? fzAccounts.length : 0) + '</div></div>';
+  h += '<div class="stat-card"><div class="label">对标账号</div><div class="value">' + ((typeof kosAccounts !== 'undefined' ? kosAccounts.length : 0) + (typeof proAccounts !== 'undefined' ? proAccounts.length : 0)) + '</div></div>';
   h += '<div class="stat-card"><div class="label">今日财经热点</div><div class="value">' + (typeof hotspots !== 'undefined' ? hotspots.length : 0) + '</div></div>';
   h += '<div class="stat-card"><div class="label">选题计划</div><div class="value">' + (typeof topicPlans !== 'undefined' ? topicPlans.length : 0) + '</div></div>';
   h += '<div class="stat-card"><div class="label">平台爆款</div><div class="value">' + (typeof viralContent !== 'undefined' ? viralContent.length : 0) + '</div></div>';
-  h += '<div class="stat-card"><div class="label">对标账号</div><div class="value">' + ((typeof kosAccounts !== 'undefined' ? kosAccounts.length : 0) + (typeof proAccounts !== 'undefined' ? proAccounts.length : 0)) + '</div></div>';
   h += '<div class="stat-card"><div class="label">拆解案例</div><div class="value">' + (typeof teardownAccounts !== 'undefined' ? teardownAccounts.length : 0) + '</div></div>';
+  h += '</div></div>';
+
+  // ② 内容汇总
+  h += '<div class="card"><div class="card-title">📝 内容汇总（今日创作流转）</div>';
+  h += '<div class="stats-grid">';
+  h += '<div class="stat-card"><div class="label">审核中</div><div class="value" style="color:var(--orange)">' + pending + '</div></div>';
+  h += '<div class="stat-card"><div class="label">已通过</div><div class="value" style="color:var(--green)">' + approved + '</div></div>';
+  h += '<div class="stat-card"><div class="label">已驳回</div><div class="value" style="color:var(--pri)">' + rejected + '</div></div>';
+  h += '<div class="stat-card"><div class="label">今日待办</div><div class="value">' + taskData.today.length + '</div></div>';
   h += '</div>';
+  h += '<div class="spec-note" style="margin-bottom:0;"><b>说明：</b>审核中/已通过/已驳回为「合规审核」模块的真实流转状态；内容发布后由系统自动统计到「数据分析」模块。点击下方待办或右上导航可直达对应模块。</div>';
+  h += '</div>';
+
+  // ③ 每日待办
+  h += '<div class="card"><div class="card-title">✅ 每日待办 <span class="more" onclick="nav(\'tasks\')">去任务中心 →</span></div>';
+  if (taskData.today.length) {
+    taskData.today.forEach(function(t) {
+      h += '<div class="task-item"><span class="tag tag-orange">待办</span><span>' + esc(t) + '</span></div>';
+    });
+  } else {
+    h += '<div class="empty-box" style="padding:24px;"><div class="e-title">今日暂无待办</div></div>';
+  }
+  h += '</div>';
+
+  // ④ 热点 + 选题
   h += '<div class="grid-2">';
-  h += '<div class="card"><div class="card-title">🔥 今日热点 Top 5</div><table><tr><th>#</th><th>热点</th><th>热度</th><th>等级</th></tr>';
+  h += '<div class="card"><div class="card-title">🔥 今日热点 Top 5 <span class="more" onclick="nav(\'hotspots\')">全部 →</span></div><table><tr><th>#</th><th>热点</th><th>热度</th><th>等级</th></tr>';
   (hotspots || []).slice(0, 5).forEach(function(x, i) {
     h += '<tr><td>' + (i + 1) + '</td><td>' + esc(x.title) + '</td><td class="tag tag-orange">' + (x.heat || '—') + '</td><td>' + esc(x.tier || '—') + '</td></tr>';
   });
   h += '</table></div>';
-  h += '<div class="card"><div class="card-title">📋 本周选题（按爆款潜力）</div><table><tr><th>选题</th><th>★</th><th>爆款分</th><th>类型</th></tr>';
+  h += '<div class="card"><div class="card-title">📋 本周选题（按爆款潜力）<span class="more" onclick="nav(\'topics\')">全部 →</span></div><table><tr><th>选题</th><th>★</th><th>爆款分</th><th>类型</th></tr>';
   (topicPlans || []).slice(0, 5).forEach(function(x) {
     h += '<tr><td>' + esc(x.name) + '</td><td>' + (x.stars || '—') + '</td><td class="tag tag-red">' + (x.viral || '—') + '</td><td>' + esc(x.type || '—') + '</td></tr>';
   });
   h += '</table></div>';
   h += '</div>';
+
+  // ⑤ 爆款 + 对标分布
   h += '<div class="grid-2">';
-  h += '<div class="card"><div class="card-title">💥 爆款内容（多平台）</div><table><tr><th>标题</th><th>平台</th><th>爆款分</th></tr>';
+  h += '<div class="card"><div class="card-title">💥 爆款内容（多平台）<span class="more" onclick="nav(\'viralContent\')">全部 →</span></div><table><tr><th>标题</th><th>平台</th><th>爆款分</th></tr>';
   (viralContent || []).slice(0, 5).forEach(function(x) {
     h += '<tr><td>' + esc(x.title) + '</td><td>' + esc(x.platform) + '</td><td class="tag tag-orange">' + (x.viralScore || '—') + '</td></tr>';
   });
@@ -419,10 +558,10 @@ function renderCreate() {
   var html = '';
   html += '<div class="back-row"><span class="back-btn" onclick="curType=null;render();">← 返回分类选择</span><span style="font-size:13px;color:var(--text2)">当前分类：</span><b>' + t.icon + ' ' + t.name + '</b></div>';
   html += '<div class="page-title">' + t.icon + ' ' + t.name + ' <span class="badge">模型演示</span></div>';
-  html += '<div class="page-desc">' + t.desc + '。填写下方信息后点击生成，产出内容需提交合规审核后方可对外发布。</div>';
+  html += '<div class="page-desc">' + t.desc + '。选择风格、题材、标题、文章内容、话题、语言等要素后，系统据此生成 <b>AI 提示词</b>并产出内容；产出需提交合规审核后方可对外发布。</div>';
   html += '<div class="grid-2" style="align-items:start;">';
   html += '<div class="card"><div class="card-title">📝 创作信息</div>' + typeForm(t.key) + '</div>';
-  html += '<div class="card"><div class="card-title">📄 生成结果 <span class="more" onclick="generateDemo()">重新生成</span></div><div id="genResult">' + typeResult(t.key) + '</div></div>';
+  html += '<div class="card"><div class="card-title">📄 生成结果 <span style="display:inline-flex;gap:8px;"><button class="btn btn-sm" onclick="copyPrompt()">📋 复制 AI 提示词</button><span class="more" onclick="generateDemo()">重新生成</span></span></div><div id="genResult">' + typeResult(t.key) + '</div></div>';
   html += '</div>';
   html += '<div class="card"><div class="card-title">🛡️ 提交合规审核</div><div class="spec-note"><b>流程说明：</b>生成的内容默认处于「草稿」状态，需点击下方按钮提交至合规审核。合规审核通过后，系统才会生成「最终可发布版本」并开放复制/下载。此卡点为硬性要求，不可跳过。</div><div style="display:flex;gap:10px;"><button class="btn btn-pri" onclick="submitReview()">提交合规审核</button><button class="btn" onclick="toast(\'已保存为草稿\',\'info\')">保存草稿</button></div></div>';
   return html;
@@ -559,6 +698,26 @@ function generateDemo() {
   var r = document.getElementById('genResult');
   if (r) { r.innerHTML = typeResult(curType); toast('已生成示例内容', 'success'); }
 }
+function buildPrompt() {
+  var t = getType(curType);
+  var gv = function(id) { var el = document.getElementById(id); return el ? el.value : ''; };
+  var title = gv('f_title') || '';
+  var style = gv('f_style') || '';
+  var type = gv('f_type') || '';
+  var plat = gv('f_plat') || '';
+  var dur = gv('f_dur') || '';
+  var parts = [];
+  if (type) parts.push('内容类型：' + type);
+  if (plat) parts.push('目标平台：' + plat);
+  if (dur) parts.push('时长：' + dur);
+  if (style) parts.push('文案风格：' + style);
+  return '【' + t.name + '】请围绕主题「' + (title || '未命名') + '」生成内容。\n'
+    + (parts.length ? parts.join('；') + '\n' : '')
+    + '要求：\n1. 输出含标题、正文、话题标签；\n2. 附风险提示与合规免责声明；\n3. 语言通俗、适合新媒体传播；\n4. 不出现收益承诺与荐股表述。';
+}
+function copyPrompt() {
+  copyText(buildPrompt());
+}
 function submitReview() {
   var name = document.getElementById('f_title') ? document.getElementById('f_title').value : '';
   reviewItems.unshift({ id: Date.now(), title: '【' + getType(curType).name + '】' + (name || '未命名内容'), type: getType(curType).name, author: '张小明', branch: '杭州分公司', status: 'pending', time: '刚刚' });
@@ -569,74 +728,189 @@ function submitReview() {
 // ============ ③ 每日财经热点 ============
 function renderHotspots() {
   var h = '<div class="page-title">🔥 每日财经热点 <span class="badge">' + (hotspots ? hotspots.length : 0) + '条</span></div>';
-  h += '<div class="page-desc">现有「每日财经热点」模块，券商导向的热点筛选（含盘面播报/观点转述排除清单）。数据已真实注入。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有热点方法论（热点聚合 + 券商导向筛选 + 排除清单），从「小红书」泛化为「小红书/抖音/视频号」多平台热点。每条热点含标题库、标签、爆款框架，可直接用于选题。</span></div>';
-  h += '<div class="card"><table><tr><th>#</th><th>热点标题</th><th>来源</th><th>热度</th><th>等级</th><th>业务线</th><th>框架</th></tr>';
+  h += '<div class="page-desc">每日自动抓取约 30 条财经热点。点击任意行展开「可做方向 + 5 个备选标题 + 话题标签」，可跳原文或一键去创作。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 每日抓取约 30 条；② 点击标题/整行下拉展开，给分支机构「若拿到新媒体平台可做的方向」+ 约 5 个备选标题；③ 阅读原文跳原链接；④ 去创作一键跳转内容创作并带入标题。</span></div>';
+  h += '<div class="card"><table><tr><th>#</th><th>热点标题（点击展开）</th><th>来源</th><th>热度</th><th>等级</th><th>业务线</th><th>操作</th></tr>';
   (hotspots || []).forEach(function(x, i) {
-    h += '<tr><td>' + (i + 1) + '</td><td>' + esc(x.title) + '</td><td>' + esc(x.source || '—') + '</td><td class="tag tag-orange">' + (x.heat || '—') + '</td><td>' + esc(x.tier || '—') + '</td><td>' + esc(x.biz || '—') + '</td><td><span class="tag tag-purple">' + esc(x.framework || '—') + '</span></td></tr>';
+    var hid = 'hp-' + i;
+    h += '<tr class="expand-row" onclick="toggleExpand(\'' + hid + '\')">';
+    h += '<td>' + (i + 1) + '</td><td>' + esc(x.title) + '</td><td>' + esc(x.source || '—') + '</td><td class="tag tag-orange">' + (x.heat || '—') + '</td><td>' + esc(x.tier || '—') + '</td><td>' + esc(x.biz || '—') + '</td>';
+    h += '<td><span class="link-btn" onclick="event.stopPropagation();toggleExpand(\'' + hid + '\')">展开 ▼</span></td></tr>';
+    h += '<tr id="' + hid + '" style="display:none;"><td colspan="7"><div class="expand-panel">';
+    h += '<div class="ep-title">💡 ' + hotspotDirection(x) + '</div>';
+    h += '<div class="ep-title-list">';
+    (x.titles || []).forEach(function(t, ti) {
+      h += '<div class="ep-title-item"><span class="num">' + (ti + 1) + '</span><span style="flex:1">' + esc(t) + '</span><span class="copy-btn" onclick="event.stopPropagation();copyHotspotTitle(' + i + ',' + ti + ')">复制</span><span class="link-btn" onclick="event.stopPropagation();gotoCreateFromHotspot(' + i + ',' + ti + ')">去创作</span></div>';
+    });
+    h += '</div>';
+    h += '<div style="margin-bottom:8px;">' + (x.tags || []).map(function(tg){ return '<span class="tag tag-blue">#' + esc(tg) + '</span>'; }).join(' ') + '</div>';
+    h += '<div class="ep-actions">';
+    h += '<button class="btn btn-sm" onclick="gotoCreateFromHotspot(' + i + ',0)">✍️ 去创作（带入首标题）</button>';
+    if (x.link) h += '<a class="btn btn-sm" href="' + esc(x.link) + '" target="_blank" rel="noopener">🔗 阅读原文</a>';
+    h += '<span style="font-size:12px;color:var(--text2)">框架：' + esc(x.framework || '—') + '</span>';
+    h += '</div></div></td></tr>';
   });
   h += '</table></div>';
-  h += '<div class="spec-note"><b>字段说明：</b>每条热点含 title（热点标题）、source（来源）、heat（热度）、tier（等级）、biz（业务线）、titles[]（可选标题库）、tags[]（话题标签）、framework（爆款框架）。</div>';
+  h += '<div class="spec-note"><b>字段说明：</b>每条热点含 title/source/heat/tier/biz/framework + link（原文链接）+ titles[]（5 个备选标题）+ tags[]（话题标签）。「去创作」带入首标题到内容创作模块。</div>';
   return h;
+}
+function copyHotspotTitle(hpIdx, titleIdx) {
+  var x = hotspots[hpIdx];
+  var t = x && x.titles && x.titles[titleIdx] ? x.titles[titleIdx] : '';
+  if (t) copyText(t); else toast('未找到标题', 'warning');
+}
+function gotoCreateFromHotspot(hpIdx, titleIdx) {
+  var x = hotspots[hpIdx];
+  var t = x && x.titles && x.titles[titleIdx] ? x.titles[titleIdx] : (x ? x.title : '');
+  gotoCreate('note', t);
 }
 
 // ============ ④ 选题计划 ============
+var topicFilterType = '全部';
+var topicFilterCat = '全部';
 function renderTopics() {
   var h = '<div class="page-title">📋 选题计划 <span class="badge">' + (topicPlans ? topicPlans.length : 0) + '个投教选题</span></div>';
-  h += '<div class="page-desc">现有「今日选题计划」模块，总部策划选题池，分支认领选题。数据已真实注入。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有选题计划，每个选题含爆款标题、投教主题、人设、内容形态、标题库、配图风格、文案风格、爆款框架、合规要点。升级后增加「平台」「认领人」「排期」维度。</span></div>';
-  h += '<div class="card"><table><tr><th>选题</th><th>★</th><th>爆款分</th><th>投教主题</th><th>人设</th><th>形态</th><th>框架</th><th>排期</th></tr>';
-  (topicPlans || []).forEach(function(x) {
-    h += '<tr><td><b>' + esc(x.name) + '</b><br><span style="color:var(--text2);font-size:12px">' + esc(x.hotTitle || '') + '</span></td><td>' + (x.stars || '—') + '</td><td class="tag tag-red">' + (x.viral || '—') + '</td><td>' + esc(x.eduTopic || '—') + '</td><td>' + esc(x.persona || '—') + '</td><td>' + esc(x.type || '—') + '</td><td><span class="tag tag-purple">' + esc(x.framework || '—') + '</span></td><td>' + esc(x.time || '—') + '</td></tr>';
+  h += '<div class="page-desc">综合「每日财经热点」与「每日平台爆款」挑选约 10 个适合今日发布的选题。支持筛选 + 展开 + 去创作。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 从热点+爆款中精选约 10 个今日选题；② 增加「筛选」能力（按形态/投教方向）；③ 展开/去创作交互与每日财经热点一致。</span></div>';
+  // 筛选栏
+  var typeOpts = ['全部', '图文', '视频', '直播'].map(function(t){ return '<option' + (topicFilterType === t ? ' selected' : '') + '>' + t + '</option>'; }).join('');
+  var catOpts = ['全部', '基础知识', '风险教育', '实操技能', '工具教学', '券商案例', '心态管理'].map(function(t){ return '<option' + (topicFilterCat === t ? ' selected' : '') + '>' + t + '</option>'; }).join('');
+  h += '<div class="card"><div class="card-title">🔍 筛选</div><div class="form-row"><div class="form-group"><label>内容形态</label><select onchange="topicFilterType=this.value;render();">' + typeOpts + '</select></div><div class="form-group"><label>投教方向</label><select onchange="topicFilterCat=this.value;render();">' + catOpts + '</select></div></div></div>';
+  var list = (topicPlans || []).filter(function(x) {
+    if (topicFilterType !== '全部' && x.type !== topicFilterType) return false;
+    if (topicFilterCat !== '全部' && x.eduCategory !== topicFilterCat) return false;
+    return true;
+  });
+  h += '<div class="card"><table><tr><th>选题</th><th>★</th><th>爆款分</th><th>投教主题</th><th>方向</th><th>形态</th><th>框架</th><th>操作</th></tr>';
+  list.forEach(function(x, i) {
+    var tid = 'tp-' + i;
+    h += '<tr class="expand-row" onclick="toggleExpand(\'' + tid + '\')">';
+    h += '<td><b>' + esc(x.name) + '</b><br><span style="color:var(--text2);font-size:12px">' + esc(x.hotTitle || '') + '</span></td>';
+    h += '<td>' + (x.stars || '—') + '</td><td class="tag tag-red">' + (x.viral || '—') + '</td><td>' + esc(x.eduTopic || '—') + '</td>';
+    h += '<td>' + esc(x.eduCategory || '—') + '</td><td>' + esc(x.type || '—') + '</td><td><span class="tag tag-purple">' + esc(x.framework || '—') + '</span></td>';
+    h += '<td><span class="link-btn" onclick="event.stopPropagation();toggleExpand(\'' + tid + '\')">展开 ▼</span></td></tr>';
+    h += '<tr id="' + tid + '" style="display:none;"><td colspan="8"><div class="expand-panel">';
+    h += '<div class="ep-dir"><b>创作方向：</b>' + esc(x.direction || '—') + '</div>';
+    h += '<div class="ep-title">📌 备选标题</div><div class="ep-title-list">';
+    (x.titles || []).forEach(function(t, ti) {
+      h += '<div class="ep-title-item"><span class="num">' + (ti + 1) + '</span><span style="flex:1">' + esc(t) + '</span><span class="copy-btn" onclick="event.stopPropagation();copyText(\'' + esc(t) + '\')">复制</span><span class="link-btn" onclick="event.stopPropagation();gotoCreate(\'note\',\'' + esc(t) + '\')">去创作</span></div>';
+    });
+    h += '</div>';
+    h += '<div class="spec-note" style="margin-bottom:8px;"><b>合规要点：</b>' + esc(x.compliance || '—') + '；<b>禁用表述：</b>' + esc(x.complianceNote || '—') + '</div>';
+    h += '<div class="ep-actions"><button class="btn btn-sm btn-pri" onclick="gotoCreate(\'note\',\'' + esc(x.hotTitle || x.name) + '\')">✍️ 去创作</button><span style="font-size:12px;color:var(--text2)">排期：' + esc(x.time || '—') + '</span></div>';
+    h += '</div></td></tr>';
   });
   h += '</table></div>';
-  h += '<div class="spec-note"><b>合规字段：</b>每个选题含 compliance（合规提示，如「不承诺中签收益，提示新股破发风险」）和 complianceNote（禁用表述，如「避免使用必赚、稳赚表述」），创作时自动带入。</div>';
+  h += '<div class="spec-note"><b>字段说明：</b>每个选题含 direction（创作方向）、titles[]（备选标题）、compliance（合规提示）、complianceNote（禁用表述）、framework（爆款框架）。去创作带入爆款标题。</div>';
   return h;
 }
 
 // ============ ⑤ 平台爆款 ============
 function renderViralContent() {
   var h = '<div class="page-title">💥 平台爆款 <span class="badge">' + (viralContent ? viralContent.length : 0) + '条</span></div>';
-  h += '<div class="page-desc">现有「平台爆款」模块，各平台爆款内容库。数据已真实注入。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有爆款库（标题/平台/作者/爆款分/点赞/收藏/类目/标签/拆解），从「小红书」扩展为「小红书/抖音/视频号」多平台爆款库，供一线员工模仿创作。</span></div>';
-  h += '<div class="card"><table><tr><th>标题</th><th>平台</th><th>爆款分</th><th>点赞</th><th>收藏</th><th>类目</th><th>拆解</th></tr>';
-  (viralContent || []).forEach(function(x) {
-    h += '<tr><td>' + esc(x.title) + '</td><td><span class="tag tag-blue">' + esc(x.platform || '—') + '</span></td><td class="tag tag-orange">' + (x.viralScore || '—') + '</td><td>' + (x.likes || '—') + '</td><td>' + (x.collects || '—') + '</td><td>' + esc(x.category || '—') + '</td><td style="color:var(--text2);font-size:12px">' + esc(x.analysis || '—') + '</td></tr>';
+  h += '<div class="page-desc">通过数据接口每日爬取抖音/小红书/B站等平台优质爆款笔记，供分支机构选择性复用与二次创作。点击行展开拆解。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 爬取抖音/小红书/B站爆款笔记；② 集中推送供分支选择；③ 支持「去创作」复用与「阅读原文」跳转，并可自由选择财经热点或爆款作为创作素材。</span></div>';
+  h += '<div class="card"><table><tr><th>标题（点击展开）</th><th>平台</th><th>爆款分</th><th>点赞</th><th>收藏</th><th>类目</th><th>操作</th></tr>';
+  (viralContent || []).forEach(function(x, i) {
+    var vid = 'vc-' + i;
+    h += '<tr class="expand-row" onclick="toggleExpand(\'' + vid + '\')">';
+    h += '<td>' + esc(x.title) + '</td><td><span class="tag tag-blue">' + esc(x.platform || '—') + '</span></td><td class="tag tag-orange">' + (x.viralScore || '—') + '</td><td>' + (x.likes || '—') + '</td><td>' + (x.collects || '—') + '</td><td>' + esc(x.category || '—') + '</td>';
+    h += '<td><span class="link-btn" onclick="event.stopPropagation();toggleExpand(\'' + vid + '\')">拆解 ▼</span></td></tr>';
+    h += '<tr id="' + vid + '" style="display:none;"><td colspan="7"><div class="expand-panel">';
+    h += '<div class="ep-dir"><b>为什么火：</b>' + esc(x.analysis || '—') + '</div>';
+    h += '<div class="ep-dir"><b>可复用模板：</b>' + esc(x.template || '—') + '</div>';
+    h += '<div style="margin-bottom:8px;">' + (x.tags || []).map(function(tg){ return '<span class="tag tag-gray">#' + esc(tg) + '</span>'; }).join(' ') + '</div>';
+    h += '<div class="ep-actions">';
+    h += '<button class="btn btn-sm btn-pri" onclick="gotoCreateFromViral(' + i + ')">✍️ 去创作</button>';
+    if (x.link) h += '<a class="btn btn-sm" href="' + esc(x.link) + '" target="_blank" rel="noopener">🔗 阅读原文</a>';
+    h += '<span style="font-size:12px;color:var(--text2)">作者：' + esc(x.author || '—') + '</span>';
+    h += '</div></div></td></tr>';
   });
   h += '</table></div>';
   return h;
+}
+function gotoCreateFromViral(idx) {
+  var x = viralContent[idx];
+  var t = x ? x.title : '';
+  gotoCreate('note', t);
 }
 
 // ============ ⑥ 话术库 ============
 function renderScripts() {
   var h = '<div class="page-title">💬 话术库 <span class="badge">保留</span></div>';
-  h += '<div class="page-desc">现有「话术库」模块，评论区互动话术 + 私信/企微/异议/跟进话术。数据已真实注入。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有话术库（按账号身份 + 场景分类），升级后增加「平台」维度（小红书/抖音/视频号的评论区、私信话术不同），并支持合规审核员在线维护。</span></div>';
+  h += '<div class="page-desc">覆盖「私信后台 / 评论区 / 加企微 / 特殊场景 / 未开户跟进」五大场景，点击即可一键复制复用。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 针对不同 APP 私信后台、评论区、加企微后、特殊场景、未开户跟进五大场景搭建话术库；② 每条话术「一键复制」直接复用；③ 升级后增加平台维度（小红书/抖音/视频号），支持合规审核员在线维护。</span></div>';
   var cats = scriptCategories || {};
+  var sceneMap = {
+    '评论区截留': 'APP 评论区互动引流',
+    '私信回复': 'APP 私信后台承接',
+    '企微建联': '加企微后破冰话术',
+    '异议处理': '特殊场景 · 异议应对',
+    '跟进话术': '已加企微未开户 · 跟进'
+  };
+  var keys = Object.keys(cats);
   h += '<div class="grid-2">';
-  Object.keys(cats).forEach(function(cat) {
+  keys.forEach(function(cat, ci) {
     h += '<div class="card"><div class="card-title">' + esc(cat) + ' <span class="tag tag-gray">' + cats[cat].length + ' 条</span></div>';
-    cats[cat].forEach(function(s) {
-      h += '<div style="padding:8px 12px;margin-bottom:8px;background:#F9FAFB;border-radius:6px;font-size:13px;">' + esc(s) + '</div>';
+    h += '<div class="spec-note" style="padding:6px 10px;margin-bottom:10px;font-size:11px;">场景：' + esc(sceneMap[cat] || cat) + '</div>';
+    cats[cat].forEach(function(s, si) {
+      h += '<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 12px;margin-bottom:8px;background:#F9FAFB;border-radius:6px;font-size:13px;line-height:1.6;"><span style="flex:1">' + esc(s) + '</span><span class="copy-btn" onclick="copyScript(' + ci + ',' + si + ')">复制</span></div>';
     });
     h += '</div>';
   });
   h += '</div>';
   return h;
 }
+function copyScript(ci, si) {
+  var keys = Object.keys(scriptCategories || {});
+  var cat = keys[ci];
+  var arr = cat ? scriptCategories[cat] : [];
+  var s = arr[si];
+  if (s) copyText(s); else toast('未找到话术', 'warning');
+}
 
 // ============ ⑦ 海报设计 ============
+var lastPosterPrompt = '';
 function renderPosters() {
   var h = '<div class="page-title">🖼️ 海报设计 <span class="badge">1080×1440 · 3:4</span></div>';
-  h += '<div class="page-desc">现有「海报设计」模块，5 种海报模板。数据已真实注入。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有海报模板（大字报/清单干货/数据卡片/对比解读/金句投教），适配小红书 3:4 封面；升级后扩展抖音/视频号竖版封面尺寸。</span></div>';
-  h += '<div class="grid-3">';
+  h += '<div class="page-desc">按场景生成海报设计提示词，可直接用于自有 AI 工具制作封面/内容海报；下方为现有 5 种海报模板。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：接入 AI 能力后，针对不同场景生成海报提示词，员工在本模块或自有 AI 工具制作封面/内容海报。当前为「场景化提示词生成」演示，AI 出图接口待公司接入。</span></div>';
+  // 场景化提示词生成
+  var sceneOpts = ['早盘速递', '收盘复盘', '打新提醒', '理财科普', '产品推荐', '节日营销', '风险提示', '投教活动'].map(function(s){ return '<option>' + s + '</option>'; }).join('');
+  var tplOpts = (posterTemplates || []).map(function(p){ return '<option value="' + esc(p.id) + '">' + esc(p.name) + '</option>'; }).join('');
+  h += '<div class="card"><div class="card-title">🤖 AI 场景提示词生成</div>';
+  h += '<div class="form-row"><div class="form-group"><label>海报场景</label><select id="posterScene">' + sceneOpts + '</select></div><div class="form-group"><label>海报模板</label><select id="posterTpl">' + tplOpts + '</select></div></div>';
+  h += '<div class="form-group"><label>核心文案（可选）</label><input id="posterText" placeholder="如：打新日历｜今日1只申购"></div>';
+  h += '<button class="btn btn-pri" onclick="generatePosterPrompt()">✨ 生成提示词</button>';
+  h += '<div id="posterPromptResult" style="margin-top:14px;"></div></div>';
+  // 模板展示
+  h += '<div class="card"><div class="card-title">🎨 海报模板（' + (posterTemplates ? posterTemplates.length : 0) + ' 种）</div><div class="grid-3">';
   (posterTemplates || []).forEach(function(p) {
     var light = p.light ? ' light' : '';
     h += '<div class="poster-card' + light + '" style="background:' + p.bg + (p.light ? '' : '') + ';" onclick="toast(\'模板：' + esc(p.name) + '（演示）\',\'info\')"><div class="p-name">' + p.icon + ' ' + esc(p.name) + '</div><div class="p-desc">' + esc(p.desc) + '</div><div style="font-size:11px;margin-top:8px">主题色 ' + esc(p.accent) + '</div></div>';
   });
-  h += '</div>';
+  h += '</div></div>';
   return h;
+}
+function generatePosterPrompt() {
+  var scene = document.getElementById('posterScene').value;
+  var tplId = document.getElementById('posterTpl').value;
+  var text = document.getElementById('posterText').value || '';
+  var tpl = null;
+  (posterTemplates || []).forEach(function(p){ if (p.id === tplId) tpl = p; });
+  var tplName = tpl ? tpl.name : '通用';
+  var prompt = '请为金融/证券场景设计一张竖版海报（3:4，1080×1440），用于「' + scene + '」。\n\n'
+    + '设计风格：' + tplName + '（' + (tpl ? tpl.desc : '简洁专业') + '）\n'
+    + '主色调：' + (tpl ? tpl.accent : '#E01E23') + '，配合方正证券品牌红 #E01E23\n'
+    + (text ? '核心文案：' + text + '\n' : '')
+    + '设计要点：\n'
+    + '1. 主标题突出、字号够大，3 米外可读；\n'
+    + '2. 信息层级清晰，关键数字/结论加粗放大；\n'
+    + '3. 底部预留合规声明区（投资有风险，入市需谨慎）；\n'
+    + '4. 留出机构名称与执业信息位置；\n'
+    + '5. 避免过度承诺性、收益性表述。';
+  lastPosterPrompt = prompt;
+  document.getElementById('posterPromptResult').innerHTML = '<div class="prompt-box">' + esc(prompt) + '</div><div style="display:flex;gap:10px;align-items:center;"><button class="btn btn-sm" onclick="copyText(lastPosterPrompt)">📋 复制提示词</button><span style="font-size:12px;color:var(--text2)">复制后可直接粘贴到你的 AI 设计工具使用</span></div>';
 }
 
 // ============ ⑧ 素材知识库 ============
@@ -655,11 +929,11 @@ function renderLibrary() {
 // ============ ⑨ 模板中心 ============
 function renderTemplates() {
   var h = '<div class="page-title">🗂️ 模板中心 <span class="badge">NEW</span></div>';
-  h += '<div class="page-desc">总部统一维护内容创作模板，下发给分支使用。整合现有 8 类内容模板 + 6 种文案风格。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>此页整合了现有工作台的「内容模板」资产（8 类：政策解读/行情分析/理财科普/产品推荐/避坑指南/数据盘点/人物故事/对比测评）和「文案风格」资产（6 种，含爆款公式骨架）。升级后总部可在线新增/编辑/停用模板，分支按模板创作，保证内容规范性。</span></div>';
+  h += '<div class="page-desc">沉淀小红书/抖音/B站文字笔记、视频、直播脚本的创作公式，分支同事可参考学习，学习后一键「去创作」。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 将多平台文字笔记/视频/直播脚本总结为可复用公式；② 分支参考学习；③ 学习后点击「去创作」跳回内容创作。整合现有 8 类内容模板 + 6 种文案风格。</span></div>';
   h += '<div class="card"><div class="card-title">📝 内容模板（' + (contentTemplates ? contentTemplates.length : 0) + ' 类）</div><div class="grid-2">';
-  (contentTemplates || []).forEach(function(t) {
-    h += '<div class="tpl-card"><div class="tpl-head">' + t.icon + ' ' + esc(t.name) + '</div><div class="tpl-line">' + esc(t.desc || '') + '</div><div class="tpl-line"><b>爆款框架：</b>' + esc(t.framework || '—') + '</div><div class="tpl-line"><b>标题公式：</b>' + esc(t.titleFormula || '—') + '</div><div class="tpl-line"><b>转化钩子：</b>' + esc(t.hookTip || '—') + '</div></div>';
+  (contentTemplates || []).forEach(function(t, i) {
+    h += '<div class="tpl-card"><div class="tpl-head">' + t.icon + ' ' + esc(t.name) + '</div><div class="tpl-line">' + esc(t.desc || '') + '</div><div class="tpl-line"><b>爆款框架：</b>' + esc(t.framework || '—') + '</div><div class="tpl-line"><b>标题公式：</b>' + esc(t.titleFormula || '—') + '</div><div class="tpl-line"><b>转化钩子：</b>' + esc(t.hookTip || '—') + '</div><div style="margin-top:10px;"><button class="btn btn-sm btn-pri" onclick="gotoCreateFromTpl(' + i + ')">✍️ 去创作</button></div></div>';
   });
   h += '</div></div>';
   h += '<div class="card"><div class="card-title">🎨 文案风格（' + (contentStyles ? contentStyles.length : 0) + ' 种）</div><div class="grid-2">';
@@ -668,6 +942,10 @@ function renderTemplates() {
   });
   h += '</div></div>';
   return h;
+}
+function gotoCreateFromTpl(idx) {
+  var t = contentTemplates[idx];
+  gotoCreate('note', t ? t.name : '');
 }
 
 // ============ ⑩ 账号矩阵 ============
@@ -702,6 +980,7 @@ function renderBenchmarks() {
     h += '<div style="display:flex;gap:16px;font-size:12px;color:var(--text2);"><span>粉丝 <b style="color:var(--text)">' + fmtWan(a.fans) + '</b></span><span>笔记 <b style="color:var(--text)">' + (a.posts || '—') + '</b></span><span>获赞 <b style="color:var(--text)">' + fmtWan(a.likes) + '</b></span></div>';
     h += '<div class="card-title" style="font-size:12px;margin-top:10px;padding-top:8px;border-top:1px dashed var(--border);color:var(--text2)">拆解要点（点击展开）</div>';
     h += '<div class="bench-detail" style="display:none;font-size:12px;color:var(--text2);line-height:1.6;">' + esc(a.analysis || '暂无拆解') + '</div>';
+    if (a.url) h += '<div style="margin-top:8px;"><a class="link-btn" href="' + esc(a.url) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">查看账号主页 ↗</a></div>';
     h += '</div>';
   });
   h += '</div>';
@@ -760,8 +1039,15 @@ function teardownAll() {
 function renderTeardown() {
   var all = teardownAll();
   var h = '<div class="page-title">🔍 账号拆解 <span class="badge">' + all.length + '个案例</span></div>';
-  h += '<div class="page-desc">现有「账号拆解」模块：六维评分雷达图 + 案例库 + 自选拆解。数据已真实注入。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有「账号拆解」页（六维雷达图 + 案例库 + 自选拆解），扩展支持抖音/视频号账号拆解。六维：内容质量/发布频率/互动率/粉丝增长/视觉风格/选题能力。</span></div>';
+  h += '<div class="page-desc">在账号矩阵与对标账号基础上做对比分析：选择两个账号（如我方 vs 优质），通过雷达图直观看出优点与缺点。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：选两个账号（我方账号 vs 优质对标账号）雷达图对比优劣势。六维：内容质量/发布频率/互动率/粉丝增长/视觉风格/选题能力。升级后支持从账号矩阵/对标账号任意选号对比。</span></div>';
+  // 双账号对比选择器
+  var opts = '';
+  (teardownAccounts || []).forEach(function(a, i) { opts += '<option value="' + i + '">' + esc(a.name) + '</option>'; });
+  h += '<div class="card"><div class="card-title">⚖️ 双账号对比</div><div class="form-row">';
+  h += '<div class="form-group"><label>账号 A</label><select id="tdCmpA" onchange="compareTeardown()">' + opts + '</select></div>';
+  h += '<div class="form-group"><label>账号 B</label><select id="tdCmpB" onchange="compareTeardown()">' + opts.replace('<option value="0">', '<option value="0" >').replace('<option value="1"', '<option value="1" selected') + '</select></div>';
+  h += '</div></div>';
   h += '<div class="grid-2">';
   h += '<div class="card"><div class="card-title">📊 六维评分雷达图</div><div class="chart-container"><canvas id="teardownChart"></canvas></div></div>';
   h += '<div class="card"><div class="card-title">📚 案例库 <span class="more">' + all.length + ' 个案例</span></div><div id="tdCaseList">';
@@ -772,6 +1058,31 @@ function renderTeardown() {
   h += '</div>';
   h += '<div class="card"><div class="card-title">📄 案例拆解详情</div><div id="tdArticle">点击上方案例查看拆解详情</div></div>';
   return h;
+}
+function compareTeardown() {
+  var a = parseInt(document.getElementById('tdCmpA').value, 10);
+  var b = parseInt(document.getElementById('tdCmpB').value, 10);
+  if (isNaN(a) || isNaN(b)) return;
+  drawTeardownCompare(a, b);
+}
+function drawTeardownCompare(aIdx, bIdx) {
+  if (typeof Chart === 'undefined') return;
+  var ctx = document.getElementById('teardownChart');
+  if (!ctx) return;
+  if (chartInstances['teardownChart']) chartInstances['teardownChart'].destroy();
+  var arr = teardownAccounts || [];
+  var colors = ['#E01E23', '#3B82F6'];
+  var datasets = [];
+  [aIdx, bIdx].forEach(function(idx, i) {
+    var a = arr[idx];
+    if (a && a.scores) datasets.push({ label: a.name, data: a.scores, borderColor: colors[i], backgroundColor: colors[i] + '22' });
+  });
+  if (!datasets.length) return;
+  chartInstances['teardownChart'] = new Chart(ctx, {
+    type: 'radar',
+    data: { labels: ['内容质量','发布频率','互动率','粉丝增长','视觉风格','选题能力'], datasets: datasets },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { r: { min: 0, max: 100 } } }
+  });
 }
 function switchTeardownChart(idx) {
   initTeardownChart(idx);
@@ -804,9 +1115,18 @@ function initTeardownChart(idx) {
 // ============ ⑬ 合规审核 ============
 function renderReview() {
   var html = '<div class="page-title">🛡️ 合规审核 <span class="badge">核心</span></div>';
-  html += '<div class="page-desc">券商合规红线模块：所有对外内容必经审核，全程留痕。</div>';
-  html += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>这是系统最高优先级模块。核心机制：<b>发布前强制审核卡点 + 敏感词自动扫描 + 全程留痕</b>，满足监管备查要求。审核流支持单审或初审+复审（待确认）。</span></div>';
-  html += '<div class="review-flow"><span class="flow-step active">草稿</span><span class="flow-arrow">→</span><span class="flow-step active">待审核</span><span class="flow-arrow">→</span><span class="flow-step">合规审核</span><span class="flow-arrow">→</span><span class="flow-step">通过/驳回</span><span class="flow-arrow">→</span><span class="flow-step">可发布</span></div>';
+  html += '<div class="page-desc">券商合规红线模块：所有对外内容必经审核，全程留痕。审核链路明确公示给每一位员工。</div>';
+  html += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 醒目公示完整审核链路（系统内审核 → 分支机构合规审核 → OA 流程 → 审核通过发布）；② 预留 AI 质检接口；③ 接入敏感词筛查；④ 草稿箱未筛查文案主动提醒。发布前强制卡点 + 全程留痕，满足监管备查。</span></div>';
+  // 审核链路（四步）
+  html += '<div class="card"><div class="card-title">🔗 审核链路（发布前必经）</div>';
+  html += '<div class="review-flow"><span class="flow-step active">① 系统内审核</span><span class="flow-arrow">→</span><span class="flow-step active">② 分支机构合规审核</span><span class="flow-arrow">→</span><span class="flow-step">③ OA 流程</span><span class="flow-arrow">→</span><span class="flow-step done">④ 审核通过 · 发布</span></div>';
+  html += '<div class="spec-note" style="margin-bottom:0;"><b>说明：</b>员工完成新媒体内容后，先在本系统内提交审核 → 走公司分支机构合规审核 → 再走 OA 流程 → 审核通过后方可对外发布。任一环节未通过均不得发布，全程留痕可追溯。</div></div>';
+  // 草稿提醒
+  html += '<div class="card" style="border-left:4px solid var(--orange);"><div class="card-title">📥 草稿提醒</div>';
+  html += '<div class="spec-note" style="background:#FEF3C7;border-color:#FCD34D;color:#92400E;margin-bottom:0;"><b>⚠️ 提示：</b>你的草稿箱中尚有 <b>2 篇</b>文案未完成敏感词筛查（【直播脚本】新手如何选基金、【小红书笔记】3个理财误区）。请前往「敏感词筛查」完成筛查后再提交审核。</div></div>';
+  // AI 质检接口
+  html += '<div class="card"><div class="card-title">🤖 AI 质检接口（预留）</div>';
+  html += '<div class="spec-note" style="margin-bottom:0;"><b>接口预留：</b>预留接口可接入公司未来引进的 AI 质检能力，在敏感词筛查基础上叠加语义级合规检测（如收益承诺识别、荐股表述识别、夸大宣传识别）。当前为「待接入」状态，接入前由敏感词筛查兜底。</div></div>';
   html += '<div class="card"><div class="card-title">待审核内容 <span class="more">共 ' + reviewItems.filter(function(x){return x.status==='pending';}).length + ' 条待审</span></div>';
   html += '<table><tr><th>内容标题</th><th>类型</th><th>作者</th><th>分支</th><th>状态</th><th>时间</th></tr>';
   reviewItems.forEach(function(it) {
@@ -850,25 +1170,96 @@ function runComplianceCheck() {
 // ============ ⑮ 任务中心 ============
 function renderTasks() {
   var h = '<div class="page-title">✅ 任务中心 · 我的待办 <span class="badge">保留</span></div>';
-  h += '<div class="page-desc">现有「任务中心」模块，每日展业提醒 + 互动任务。数据已真实注入。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有任务中心（互动任务/展业提醒），升级后增加「跨平台任务」：小红书/抖音/视频号各自的互动、发布、回填任务，由总部或分支负责人下发。</span></div>';
-  h += '<div class="card"><div class="card-title">📌 今日展业提醒（' + (interactTasks ? interactTasks.length : 0) + ' 项）</div>';
-  (interactTasks || []).forEach(function(t, i) {
-    h += '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:8px;background:#F9FAFB;border-radius:6px;font-size:13px;"><span class="tag tag-orange">待办</span><span>' + esc(t) + '</span></div>';
+  h += '<div class="page-desc">每日/每周/每月待办事项，前台后台均可见，支持自行新增与删减。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 每日/每周/每月待办分类管理；② 前台后台均可见；③ 支持新增、删减。升级后支持总部下发 → 分支负责人分配 → 一线员工认领 → 完成回填的任务闭环。</span></div>';
+  // tab
+  h += '<div class="tab-bar">';
+  (periods || []).forEach(function(p) {
+    h += '<div class="tab-item' + (curTaskPeriod === p.key ? ' active' : '') + '" onclick="switchTaskTab(\'' + p.key + '\')">' + esc(p.label) + '</div>';
   });
   h += '</div>';
-  h += '<div class="card"><div class="card-title">🗓️ 今日展业提醒</div><div class="empty-box"><div class="e-title">任务排期（占位）</div><div class="e-desc">升级后支持：总部下发任务 → 分支负责人分配 → 一线员工认领 → 完成回填，形成任务闭环。</div></div></div>';
+  var list = taskData[curTaskPeriod] || [];
+  var label = { today: '今日', week: '本周', month: '本月' }[curTaskPeriod] || '待办';
+  h += '<div class="card"><div class="card-title">📌 ' + label + '待办（' + list.length + ' 项）</div>';
+  if (list.length) {
+    list.forEach(function(t, i) {
+      h += '<div class="task-item"><span class="tag tag-orange">待办</span><span style="flex:1">' + esc(t) + '</span><button class="t-del" onclick="removeTask(\'' + curTaskPeriod + '\',' + i + ')" title="删除">✕</button></div>';
+    });
+  } else {
+    h += '<div class="empty-box" style="padding:24px;"><div class="e-title">暂无' + label + '待办</div></div>';
+  }
+  h += '</div>';
+  // 新增
+  h += '<div class="card"><div class="card-title">➕ 新增待办</div>';
+  h += '<div style="display:flex;gap:10px;"><input id="newTaskInput" placeholder="输入待办事项，回车或点击添加" style="flex:1;" onkeydown="if(event.key===\'Enter\')addTask();"><button class="btn btn-pri" onclick="addTask()">添加</button></div></div>';
   return h;
+}
+function switchTaskTab(period) {
+  curTaskPeriod = period;
+  render();
+}
+function addTask() {
+  var el = document.getElementById('newTaskInput');
+  var v = el ? el.value.trim() : '';
+  if (!v) { toast('请输入待办内容', 'warning'); return; }
+  taskData[curTaskPeriod].push(v);
+  render();
+  toast('已添加待办', 'success');
+}
+function removeTask(period, idx) {
+  if (taskData[period]) taskData[period].splice(idx, 1);
+  render();
+  toast('已删除待办', 'info');
 }
 
 // ============ ⑯ 数据分析 ============
 function renderAnalytics() {
-  var h = '<div class="page-title">📊 数据分析 <span class="badge">保留</span></div>';
-  h += '<div class="page-desc">现有「数据分析」模块，本周可执行发布策略 + 数据图表。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有数据分析（内容效果复盘、发布策略），升级后增加多平台数据（小红书/抖音/视频号的阅读/点赞/收藏/评论/涨粉），支持总部看全局、分支看自己。</span></div>';
+  // 我方账号统计
+  var totalFans = 0, totalNotes = 0, totalInter = 0;
+  (fzAccounts || []).forEach(function(a) {
+    totalFans += Number(a.fans) || 0;
+    totalNotes += Number(a.notes) || 0;
+    totalInter += Number(a.inter) || 0;
+  });
+  var benchAll = (kosAccounts || []).concat(proAccounts || []);
+  var h = '<div class="page-title">📊 数据分析 <span class="badge">多维图表</span></div>';
+  h += '<div class="page-desc">集中呈现我方账号、对标账号、客户业绩三类数据，以趋势/对比/占比等各类图表直观展示。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 我方账号更新/涨粉/发文/账号数量变化；② 对标账号每日更新与数据变化；③ 客户业绩展业情况，均以图表呈现。当前我方账号与对标账号用真实数据渲染，客户业绩待对接公司系统。</span></div>';
+  // ① 我方账号
+  h += '<div class="card"><div class="card-title">🏢 我方账号数据</div>';
+  h += '<div class="stats-grid"><div class="stat-card"><div class="label">账号总数</div><div class="value">' + (fzAccounts ? fzAccounts.length : 0) + '</div></div><div class="stat-card"><div class="label">总粉丝</div><div class="value">' + fmtWan(totalFans) + '</div></div><div class="stat-card"><div class="label">总笔记</div><div class="value">' + totalNotes + '</div></div><div class="stat-card"><div class="label">总互动</div><div class="value">' + fmtWan(totalInter) + '</div></div></div>';
+  h += '<div class="grid-2"><div class="card"><div class="card-title">账号粉丝量级分布</div><div class="chart-container" style="height:260px;"><canvas id="fzFansChart"></canvas></div></div><div class="card"><div class="card-title">📈 涨粉/发文趋势</div><div class="chart-placeholder">折线图占位（接入每日采集数据后渲染）</div></div></div></div>';
+  // ② 对标账号
+  h += '<div class="card"><div class="card-title">🎯 对标账号数据</div>';
+  h += '<div class="stats-grid"><div class="stat-card"><div class="label">对标账号数</div><div class="value">' + benchAll.length + '</div></div><div class="stat-card"><div class="label">KOS 达人</div><div class="value">' + (kosAccounts ? kosAccounts.length : 0) + '</div></div><div class="stat-card"><div class="label">专业号</div><div class="value">' + (proAccounts ? proAccounts.length : 0) + '</div></div></div>';
+  h += '<div class="grid-2"><div class="card"><div class="card-title">对标账号粉丝对比 Top8</div><div class="chart-container" style="height:260px;"><canvas id="benchFansChart"></canvas></div></div><div class="card"><div class="card-title">每日更新数据变化</div><div class="chart-placeholder">折线图占位（接入每日采集数据后渲染）</div></div></div></div>';
+  // ③ 客户业绩
+  h += '<div class="card"><div class="card-title">👥 客户业绩（待对接）<span class="more" onclick="nav(\'performance\')">去客户业绩 →</span></div><div class="grid-2"><div class="card" style="box-shadow:none;"><div class="card-title">各平台开户情况</div><div class="chart-placeholder">柱状图占位（对接公司 C 系统后渲染）</div></div><div class="card" style="box-shadow:none;"><div class="card-title">业绩趋势</div><div class="chart-placeholder">折线图占位（对接公司 C 系统后渲染）</div></div></div></div>';
+  // ④ 发布策略（保留）
   h += '<div class="card" style="border-left:4px solid var(--pri);"><div class="card-title">🚀 本周可执行发布策略</div><div class="spec-note"><b>策略摘要：</b>基于本周热点与爆款库，建议：① 新股打新攻略类（世纪数码申购热点）② 基金定投科普类 ③ 政策解读类（LPR 报价）。详细策略由数据引擎生成，此处为演示。</div></div>';
-  h += '<div class="grid-2"><div class="card"><div class="card-title">📊 各平台内容效果排行</div><div class="chart-placeholder">图表占位（接入数据后渲染）</div></div><div class="card"><div class="card-title">🏆 员工内容排行</div><div class="chart-placeholder">图表占位（接入数据后渲染）</div></div></div>';
   return h;
+}
+function drawAnalyticsCharts() {
+  if (typeof Chart === 'undefined') return;
+  // 我方账号粉丝分布
+  var ctx1 = document.getElementById('fzFansChart');
+  if (ctx1) {
+    var buckets = [0, 0, 0, 0];
+    (fzAccounts || []).forEach(function(a) {
+      var f = Number(a.fans) || 0;
+      if (f < 50) buckets[0]++; else if (f < 200) buckets[1]++; else if (f < 1000) buckets[2]++; else buckets[3]++;
+    });
+    if (chartInstances['fzFansChart']) chartInstances['fzFansChart'].destroy();
+    chartInstances['fzFansChart'] = new Chart(ctx1, { type: 'bar', data: { labels: ['<50粉', '50-200粉', '200-1000粉', '≥1000粉'], datasets: [{ label: '账号数', data: buckets, backgroundColor: ['#93C5FD', '#60A5FA', '#3B82F6', '#E01E23'] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+  }
+  // 对标账号粉丝对比 Top8
+  var ctx2 = document.getElementById('benchFansChart');
+  if (ctx2) {
+    var benchAll = (kosAccounts || []).concat(proAccounts || []);
+    var top = benchAll.slice().sort(function(a, b) { return (Number(b.fans) || 0) - (Number(a.fans) || 0); }).slice(0, 8);
+    if (chartInstances['benchFansChart']) chartInstances['benchFansChart'].destroy();
+    chartInstances['benchFansChart'] = new Chart(ctx2, { type: 'bar', data: { labels: top.map(function(a){ return a.name; }), datasets: [{ label: '粉丝数', data: top.map(function(a){ return Number(a.fans) || 0; }), backgroundColor: '#3B82F6' }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+  }
 }
 
 // ============ ⑰ 客户业绩（空框架） ============
@@ -924,42 +1315,76 @@ function renderOrg() {
 }
 
 // ============ ⑲ 周历排期 ============
+var weeklyPlats = ['小红书', '抖音', '视频号'];
 function renderWeekly() {
-  var h = '<div class="page-title">📅 周历排期 <span class="badge">' + (weeklySchedule ? weeklySchedule.length : 0) + ' 天</span></div>';
-  h += '<div class="page-desc">现有「周历排期」模块，本周内容排期。数据已真实注入。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有周历排期（每天主题/时间/内容类型/描述/要点），升级后支持多平台排期（同一主题适配小红书/抖音/视频号不同时间档）。</span></div>';
-  h += '<div class="grid-2">';
-  (weeklySchedule || []).forEach(function(w) {
-    h += '<div class="card" style="margin-bottom:16px;"><div class="card-title">' + esc(w.day) + ' · ' + esc(w.theme || '') + ' <span class="tag tag-blue">' + esc(w.type || '') + '</span></div>';
-    h += '<div style="font-size:13px;color:var(--text2);line-height:1.6;"><b style="color:var(--text)">时间：</b>' + esc(w.time || '—') + '</div>';
-    h += '<div style="font-size:13px;line-height:1.6;">' + esc(w.desc || '') + '</div>';
-    if (w.tips) h += '<div class="spec-note" style="margin-top:10px;"><b>要点：</b>' + esc(w.tips) + '</div>';
-    h += '</div>';
+  var h = '<div class="page-title">📅 周历排期 <span class="badge">分平台</span></div>';
+  h += '<div class="page-desc">按抖音/小红书/B站分平台排期，给出每个平台每天应更新的内容类型与方向指引。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 与内容创作类似，按抖音/小红书/视频号拆分；② 给出每个平台每天更新内容指引；③ 先搭框架，具体排期内容通过内部持续收集逐步填入。当前「小红书」已注入真实排期，抖音/视频号待收集。</span></div>';
+  // 平台 tab
+  h += '<div class="tab-bar">';
+  weeklyPlats.forEach(function(p) {
+    h += '<div class="tab-item' + (curWeeklyPlat === p ? ' active' : '') + '" onclick="switchWeeklyPlat(\'' + p + '\')">' + p + '</div>';
   });
   h += '</div>';
+  if (curWeeklyPlat === '小红书') {
+    h += '<div class="grid-2">';
+    (weeklySchedule || []).forEach(function(w) {
+      h += '<div class="card" style="margin-bottom:16px;"><div class="card-title">' + esc(w.day) + ' · ' + esc(w.theme || '') + ' <span class="tag tag-blue">' + esc(w.type || '') + '</span></div>';
+      h += '<div style="font-size:13px;color:var(--text2);line-height:1.6;"><b style="color:var(--text)">时间：</b>' + esc(w.time || '—') + '</div>';
+      h += '<div style="font-size:13px;line-height:1.6;">' + esc(w.desc || '') + '</div>';
+      if (w.tips) h += '<div class="spec-note" style="margin-top:10px;"><b>要点：</b>' + esc(w.tips) + '</div>';
+      h += '</div>';
+    });
+    h += '</div>';
+  } else {
+    h += '<div class="empty-box"><div class="e-icon">📅</div><div class="e-title">' + esc(curWeeklyPlat) + ' 排期（待收集）</div><div class="e-desc">该平台的具体排期内容（每天更新什么、什么时间发、更新方向）将通过内部持续收集后逐步填入。可参考「小红书」排期结构：每天一个主题 + 时间档 + 内容类型 + 方向要点。</div></div>';
+  }
   return h;
+}
+function switchWeeklyPlat(plat) {
+  curWeeklyPlat = plat;
+  render();
 }
 
 // ============ ⑳ 报表中心 ============
 function renderReports() {
   var h = '<div class="page-title">📄 报表中心 <span class="badge">保留</span></div>';
-  h += '<div class="page-desc">现有「报表中心」模块，报表命名规范 + 报表列表。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有报表中心，升级后增加「多平台展业报表」「客户业绩报表」「合规审核报表」等，支持总部/分支按权限导出。</span></div>';
+  h += '<div class="page-desc">按需配置并直接导出所需报表数据，支持多平台展业/客户业绩/合规审核等报表。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 提出希望导出的报表数据需求；② 在报表中心直接导出。升级后支持总部/分支按权限导出不同报表。</span></div>';
+  // 导出配置
+  h += '<div class="card"><div class="card-title">⬇️ 报表导出</div>';
+  h += '<div class="form-row"><div class="form-group"><label>报表类型</label><select id="reportType"><option>多平台展业日报</option><option>客户业绩报表</option><option>合规审核报表</option><option>内容效果复盘</option></select></div><div class="form-group"><label>时间范围</label><select id="reportRange"><option>昨日</option><option>本周</option><option>本月</option><option>自定义</option></select></div></div>';
+  h += '<button class="btn btn-pri" onclick="exportReport()">📥 导出报表</button></div>';
   h += '<div class="card"><div class="card-title">报表命名规范</div><div class="spec-note"><b>规范示例：</b>[机构简称]_[报表类型]_[日期].xlsx（如 方正证券_日报_20260909.xlsx）。统一命名便于归档与检索。</div></div>';
-  h += '<div class="card"><div class="card-title">报表类型（升级后）</div><table><tr><th>报表</th><th>说明</th><th>权限</th></tr>';
-  h += '<tr><td>多平台展业日报</td><td>各平台发布/互动/涨粉数据</td><td>总部/分支</td></tr>';
-  h += '<tr><td>客户业绩报表</td><td>员工展业客户业绩汇总</td><td>总部/分支</td></tr>';
-  h += '<tr><td>合规审核报表</td><td>审核通过/驳回/留痕记录</td><td>总部/合规</td></tr>';
-  h += '<tr><td>内容效果复盘</td><td>爆款内容效果分析</td><td>总部</td></tr>';
+  h += '<div class="card"><div class="card-title">报表类型（升级后）</div><table><tr><th>报表</th><th>说明</th><th>权限</th><th>操作</th></tr>';
+  h += '<tr><td>多平台展业日报</td><td>各平台发布/互动/涨粉数据</td><td>总部/分支</td><td><span class="link-btn" onclick="exportReportByName(\'多平台展业日报\')">导出</span></td></tr>';
+  h += '<tr><td>客户业绩报表</td><td>员工展业客户业绩汇总</td><td>总部/分支</td><td><span class="link-btn" onclick="exportReportByName(\'客户业绩报表\')">导出</span></td></tr>';
+  h += '<tr><td>合规审核报表</td><td>审核通过/驳回/留痕记录</td><td>总部/合规</td><td><span class="link-btn" onclick="exportReportByName(\'合规审核报表\')">导出</span></td></tr>';
+  h += '<tr><td>内容效果复盘</td><td>爆款内容效果分析</td><td>总部</td><td><span class="link-btn" onclick="exportReportByName(\'内容效果复盘\')">导出</span></td></tr>';
   h += '</table></div>';
   return h;
+}
+function exportReport() {
+  var t = document.getElementById('reportType') ? document.getElementById('reportType').value : '报表';
+  toast('「' + t + '」已生成，可下载（演示）', 'success');
+}
+function exportReportByName(name) {
+  toast('「' + name + '」已生成，可下载（演示）', 'success');
 }
 
 // ============ ㉑ 文件管理 ============
 function renderFiles() {
   var h = '<div class="page-title">📁 文件管理 <span class="badge">保留</span></div>';
-  h += '<div class="page-desc">现有「文件管理」模块，分类文件管理 + 命名规范。数据已真实注入。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>复用现有文件管理（20 类文件分类 + 归属目录映射），服务化迁移为在线文件库，按权限存取，支持版本管理。</span></div>';
+  h += '<div class="page-desc">统一管理素材知识库、模板中心、话术库、草稿箱等文件内容。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：统一管理素材知识库 / 模板中心 / 话术库 / 草稿箱。下方保留现有 20 类文件分类 + 归属目录映射，服务化迁移为在线文件库，按权限存取，支持版本管理。</span></div>';
+  // 统一管理入口
+  h += '<div class="card"><div class="card-title">🗂️ 统一管理入口</div><div class="quick-grid">';
+  h += '<div class="quick-card" onclick="nav(\'library\')"><div class="q-icon">📚</div><div class="q-name">素材知识库</div><div class="q-desc">品牌视觉/产品宣传/数据图表等素材，分支按权限复用</div></div>';
+  h += '<div class="quick-card" onclick="nav(\'templates\')"><div class="q-icon">🗂️</div><div class="q-name">模板中心</div><div class="q-desc">8 类内容模板 + 6 种文案风格公式</div></div>';
+  h += '<div class="quick-card" onclick="nav(\'scripts\')"><div class="q-icon">💬</div><div class="q-name">话术库</div><div class="q-desc">私信/评论区/企微/跟进五大场景话术</div></div>';
+  h += '<div class="quick-card" onclick="toast(\'草稿箱：暂存内容创作中保存的草稿（演示）\',\'info\')"><div class="q-icon">📝</div><div class="q-name">草稿箱</div><div class="q-desc">内容创作保存的草稿，可继续编辑或提交审核</div></div>';
+  h += '</div></div>';
+  // 文件分类
   h += '<div class="card"><div class="card-title">文件分类（' + (fileFolders ? fileFolders.length : 0) + ' 类）</div><div class="grid-4">';
   (fileFolders || []).forEach(function(f) {
     var dir = fileDirMap && fileDirMap[f] ? fileDirMap[f] : '—';
