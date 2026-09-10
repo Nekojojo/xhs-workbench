@@ -563,7 +563,7 @@ var hotspots = [
     "heat": 85,
     "tier": "二级",
     "biz": "新股打新",
-    "link": "https://www.cfi.cn/p20260910000038.html",
+    "link": "https://www.toutiao.com/article/7683691136753386018",
     "titles": [
       "今天截止！2.5万市值顶格申购操作步骤",
       "打新提醒：申购时间到15:00，别错过",
