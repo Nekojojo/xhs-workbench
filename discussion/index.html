@@ -215,6 +215,16 @@ label { font-size: 13px; font-weight: 600; color: var(--text); display: block; m
 .task-item .t-del:hover { background: #FEE2E2; }
 .link-btn { color: var(--pri); text-decoration: none; font-size: 12px; cursor: pointer; }
 .link-btn:hover { text-decoration: underline; }
+/* 财经资讯 → 内容转化标签卡（930 新规 + 平台内容逻辑） */
+.tf-card { background: linear-gradient(90deg,#EFF6FF,#F0FDF4); border: 1px solid #DBEAFE; border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+.tf-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.tf-row:last-child { margin-bottom: 0; }
+.tf-label { font-size: 11px; color: #6B7280; font-weight: 600; flex-shrink: 0; min-width: 44px; }
+.tf-plat { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.tf-plat.xhs { background: #FEE2E2; color: #DC2626; }
+.tf-plat.douyin { background: #111827; color: #ffffff; }
+.tf-plat.vh { background: #D1FAE5; color: #059669; }
+.tf-benefit { font-size: 13px; color: #B45309; font-weight: 600; background: #FEF3C7; padding: 3px 8px; border-radius: 6px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -438,21 +448,27 @@ function toggleExpand(id) {
   var el = document.getElementById(id);
   if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
-// 文案方向建议（根据热点 biz + framework 生成）
-function hotspotDirection(h) {
-  var biz = h.biz || '财经资讯';
-  var fw = h.framework || '科普一图流';
-  var map = {
-    '新股打新': '可做「打新日历/申购攻略/中签缴款规则」类笔记，主打新手刚需与收藏',
-    '券商业务': '可做「券商合并/账户影响/业务科普」类内容，主打一图看懂',
-    '规则解读': '可做「新规解读/对投资者影响」类内容，主打清单式科普',
-    '避坑防诈': '可做「防骗指南/避坑清单」类内容，主打转发与收藏',
-    'ETF基金': '可做「基金科普/新基盘点/定投教程」类内容，主打新手入门',
-    '投教科普': '可做「投资者教育/金融科普」类内容，主打官方权威',
-    '券商案例': '可做「券商爆款拆解/账号运营方法论」类内容，主打可抄作业',
-    '数据排行': '可做「数据盘点/资金流向解读」类内容，主打数据卡片'
-  };
-  return '<b>可做方向：</b>' + (map[biz] || '可围绕「' + biz + '」做' + fw + '类内容，建议先给结论再讲方法');
+// ============ 财经资讯 → 内容转化引擎（930 新规 + 平台内容逻辑） ============
+// 三层漏斗：抓取 → 合规过滤 → 转化翻译。此处为「转化翻译」层：按业务线映射可发平台/选题方向/利益点/分平台方向。
+var TRANSFORM_MAP = {
+  '新股打新': { plats: ['小红书', '抖音'], dir: '打新攻略', benefit: '今天有新股可申，怎么申、中签后怎么办，一文讲清', xhs: '打新日历 / 申购攻略 / 中签缴款规则', dy: '打新速览 / 新股基本面口播', vh: '' },
+  '券商业务': { plats: ['小红书', '视频号'], dir: '行业科普', benefit: '券商合并潮来了，你的账户和佣金会受影响吗', xhs: '券商合并一图懂 / 账户影响解读', dy: '', vh: '券商并购两条路径专业解读' },
+  '规则解读': { plats: ['小红书', '抖音', '视频号'], dir: '新规解读', benefit: '新规落地，对你的钱袋子有什么影响', xhs: '新规解读清单 / 对投资者的影响', dy: '新规划重点口播', vh: '监管红线专业解读' },
+  '避坑防诈': { plats: ['小红书', '抖音', '视频号'], dir: '避坑指南', benefit: '这种骗局近期高发，赶紧转给家人朋友', xhs: '防骗指南 / 避坑清单（高转发高收藏）', dy: '反诈案例口播', vh: '官方防非科普' },
+  'ETF基金': { plats: ['小红书', '抖音'], dir: '理财入门', benefit: '想投这个方向？新手这样选基金', xhs: '基金科普 / 新基盘点 / 定投教程', dy: '基金速览口播', vh: '' },
+  '投教科普': { plats: ['小红书', '视频号'], dir: '投教科普', benefit: '官方权威科普，理财新手必看', xhs: '投资者教育 / 金融知识科普', dy: '', vh: '深度投教内容' },
+  '券商案例': { plats: ['小红书'], dir: '运营方法论', benefit: '券商怎么做小红书，标杆案例可抄作业', xhs: '券商爆款拆解 / 账号运营方法论', dy: '', vh: '' },
+  '数据排行': { plats: ['抖音', '视频号'], dir: '数据解读', benefit: '资金在往哪流，一眼看懂市场风向', xhs: '数据卡片 / 榜单科普', dy: '数据盘点口播', vh: '资金流向解读' }
+};
+function hotspotTransform(h) {
+  var biz = h.biz || '';
+  var t = TRANSFORM_MAP[biz];
+  if (!t) t = { plats: ['小红书', '抖音', '视频号'], dir: '财经科普', benefit: '这条资讯与你有关，先看结论再决定', xhs: '通用科普笔记', dy: '热点口播', vh: '观点解读' };
+  return t;
+}
+function platTag(p) {
+  var cls = p === '小红书' ? 'xhs' : (p === '抖音' ? 'douyin' : 'vh');
+  return '<span class="tf-plat ' + cls + '">' + p + '</span>';
 }
 
 // ============ 工具函数 ============
@@ -728,16 +744,27 @@ function submitReview() {
 // ============ ③ 每日财经热点 ============
 function renderHotspots() {
   var h = '<div class="page-title">🔥 每日财经热点 <span class="badge">' + (hotspots ? hotspots.length : 0) + '条</span></div>';
-  h += '<div class="page-desc">每日自动抓取约 30 条财经热点。点击任意行展开「可做方向 + 5 个备选标题 + 话题标签」，可跳原文或一键去创作。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 每日抓取约 30 条；② 点击标题/整行下拉展开，给分支机构「若拿到新媒体平台可做的方向」+ 约 5 个备选标题；③ 阅读原文跳原链接；④ 去创作一键跳转内容创作并带入标题。</span></div>';
+  h += '<div class="page-desc">每日自动抓取约 30 条财经热点。按「930 新规 + 平台内容逻辑」，每条自动翻译成「可发平台 + 选题方向 + 利益点 + 5 个备选标题」，点击行展开，可跳原文或一键去创作。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>本模块已升级为「资讯 → 内容转化引擎」三层漏斗：① 抓取（约 30 条）；② 合规过滤（930 新规红线）；③ 转化翻译（按业务线映射可发平台/选题方向/利益点/分平台方向）。解决「资讯抓来却做不成笔记」的转化率痛点。每条热点展开可见：可发平台徽标 + 选题方向 + 利益点一句话 + 分平台方向 + 5 个备选标题 + 话题标签，支持阅读原文与一键去创作带入标题。</span></div>';
   h += '<div class="card"><table><tr><th>#</th><th>热点标题（点击展开）</th><th>来源</th><th>热度</th><th>等级</th><th>业务线</th><th>操作</th></tr>';
   (hotspots || []).forEach(function(x, i) {
     var hid = 'hp-' + i;
     h += '<tr class="expand-row" onclick="toggleExpand(\'' + hid + '\')">';
     h += '<td>' + (i + 1) + '</td><td>' + esc(x.title) + '</td><td>' + esc(x.source || '—') + '</td><td class="tag tag-orange">' + (x.heat || '—') + '</td><td>' + esc(x.tier || '—') + '</td><td>' + esc(x.biz || '—') + '</td>';
-    h += '<td><span class="link-btn" onclick="event.stopPropagation();toggleExpand(\'' + hid + '\')">展开 ▼</span></td></tr>';
+    h += '<td><span class="link-btn" onclick="event.stopPropagation();toggleExpand(\'' + hid + '\')">转化 ▼</span></td></tr>';
     h += '<tr id="' + hid + '" style="display:none;"><td colspan="7"><div class="expand-panel">';
-    h += '<div class="ep-title">💡 ' + hotspotDirection(x) + '</div>';
+    var tf = hotspotTransform(x);
+    h += '<div class="tf-card">';
+    h += '<div class="tf-row"><span class="tf-label">可发平台</span>' + tf.plats.map(platTag).join('') + '</div>';
+    h += '<div class="tf-row"><span class="tf-label">选题方向</span><span class="tag tag-purple">' + esc(tf.dir) + '</span></div>';
+    h += '<div class="tf-row"><span class="tf-label">利益点</span><span class="tf-benefit">' + esc(tf.benefit) + '</span></div>';
+    h += '</div>';
+    var dirs = [];
+    if (tf.xhs) dirs.push('小红书：' + tf.xhs);
+    if (tf.dy) dirs.push('抖音：' + tf.dy);
+    if (tf.vh) dirs.push('视频号：' + tf.vh);
+    h += '<div class="ep-dir"><b>分平台方向：</b>' + esc(dirs.join('；')) + '</div>';
+    h += '<div class="ep-title">📌 备选标题（5 个）</div>';
     h += '<div class="ep-title-list">';
     (x.titles || []).forEach(function(t, ti) {
       h += '<div class="ep-title-item"><span class="num">' + (ti + 1) + '</span><span style="flex:1">' + esc(t) + '</span><span class="copy-btn" onclick="event.stopPropagation();copyHotspotTitle(' + i + ',' + ti + ')">复制</span><span class="link-btn" onclick="event.stopPropagation();gotoCreateFromHotspot(' + i + ',' + ti + ')">去创作</span></div>';
@@ -751,7 +778,7 @@ function renderHotspots() {
     h += '</div></div></td></tr>';
   });
   h += '</table></div>';
-  h += '<div class="spec-note"><b>字段说明：</b>每条热点含 title/source/heat/tier/biz/framework + link（原文链接）+ titles[]（5 个备选标题）+ tags[]（话题标签）。「去创作」带入首标题到内容创作模块。</div>';
+  h += '<div class="spec-note"><b>转化规则：</b>每条热点按 biz（业务线）经 TRANSFORM_MAP 自动映射「可发平台 / 选题方向 / 利益点 / 分平台方向」，无需人工逐条标注；titles[] 为 5 个备选标题，tags[] 为话题标签。「去创作」带入首标题到内容创作模块。已覆盖 8 类业务线：新股打新 / 券商业务 / 规则解读 / 避坑防诈 / ETF基金 / 投教科普 / 券商案例 / 数据排行。</div>';
   return h;
 }
 function copyHotspotTitle(hpIdx, titleIdx) {
