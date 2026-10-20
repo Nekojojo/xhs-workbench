@@ -440,7 +440,7 @@ var hotspots = [
     "heat": 87,
     "tier": "二级",
     "biz": "避坑防诈",
-    "link": "https://www.dxh.gov.cn/XWZX/XWYS/202610/t20261015_28615.html",
+    "link": "https://www.csrc.gov.cn/shenzhen/c105615/c7665103/content.shtml",
     "titles": [
       "非法荐股5大骗局，收藏这份防骗清单",
       "假冒分析师、杀猪盘、AI换脸，怎么识别",
@@ -688,7 +688,7 @@ var hotspots = [
     "heat": 77,
     "tier": "常青",
     "biz": "ETF基金",
-    "link": "https://m.sfccn.com/2026/10-14/xOMDE0MDRfMjI2OTcxOQ.htm",
+    "link": "https://www.toutiao.com/article/7696917428764213770/",
     "titles": [
       "低利率时代，债券ETF为何正当其时",
       "债券基金和债券ETF，怎么选",
