@@ -538,7 +538,7 @@ var hotspots = [
     "heat": 81,
     "tier": "二级",
     "biz": "券商案例",
-    "link": "https://finance.sina.com.cn/roll/2024-11-21/doc-incwunp",
+    "link": "https://finance.sina.com.cn/roll/2024-11-21/doc-incwunpu4820078.shtml",
     "titles": [
       "券商投教爆款拆解：M1M2赞1849是怎么做到的",
       "招商、国君的投教内容为什么能火",
@@ -1035,7 +1035,7 @@ var viralContent = [
       "防诈骗",
       "对公收款"
     ],
-    "link": "https://www.sac.net.cn/fwdt/tzzfw/ffzqhd/tzzfxts/202610/t20261013_73376.html",
+    "link": "https://www.sac.net.cn/fwdt/tzzfw/ffzqhd/tzzfxts/202610/t20261013_82486.html",
     "analysis": "权威机构发布的防骗提醒自带公信力，核心结论「正规投顾只对公收款」一句话可传播，适合做成投教避坑卡片。",
     "template": "标题直接给结论，正文用「个人账户收款=骗局」这个硬标准做钩子，结尾附官方投诉渠道。可改成券商营业部投教版。"
   },
