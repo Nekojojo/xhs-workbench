@@ -225,6 +225,61 @@ label { font-size: 13px; font-weight: 600; color: var(--text); display: block; m
 .tf-plat.douyin { background: #111827; color: #ffffff; }
 .tf-plat.vh { background: #D1FAE5; color: #059669; }
 .tf-benefit { font-size: 13px; color: #B45309; font-weight: 600; background: #FEF3C7; padding: 3px 8px; border-radius: 6px; line-height: 1.6; }
+
+/* ===== 角色切换（驾驶舱） ===== */
+.role-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.role-item { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 13px; color: var(--text2); font-weight: 500; transition: all 0.15s; }
+.role-item:hover { border-color: var(--pri); color: var(--pri); }
+.role-item.active { background: var(--pri); color: #fff; border-color: var(--pri); font-weight: 600; }
+
+/* ===== 素材管理中心卡片墙（参照统一素材管理场景） ===== */
+.material-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+@media (max-width: 900px){ .material-hero{grid-template-columns:1fr;} }
+.mat-big { border-radius: var(--radius); padding: 26px 22px; color: #fff; position: relative; overflow: hidden; cursor: pointer; transition: all 0.2s; min-height: 190px; display: flex; flex-direction: column; }
+.mat-big:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+.mat-big .mb-icon { font-size: 34px; margin-bottom: 14px; }
+.mat-big .mb-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.mat-big .mb-desc { font-size: 12px; opacity: 0.92; line-height: 1.6; }
+.mat-big .mb-tags { margin-top: auto; display: flex; gap: 6px; flex-wrap: wrap; padding-top: 12px; }
+.mat-big .mb-tag { font-size: 11px; background: rgba(255,255,255,0.22); padding: 3px 10px; border-radius: 12px; }
+.mat-copy { background: linear-gradient(135deg,#1E3A8A,#3B82F6); }
+.mat-ai { background: linear-gradient(135deg,#7C3AED,#DB2777); }
+
+/* ===== 流程化步骤条（素材设计/分发） ===== */
+.pipeline { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 16px 0; }
+.pipe-step { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 16px; background: #F9FAFB; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; font-weight: 600; text-align: center; min-width: 92px; }
+.pipe-step.active { background: var(--pri-light); border-color: var(--pri); color: var(--pri); }
+.pipe-step.done { background: #D1FAE5; border-color: var(--green); color: #059669; }
+.pipe-step .ps-num { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+.pipe-arrow { color: var(--text2); padding: 0 8px; font-size: 18px; }
+
+/* ===== 账号健康度进度条 ===== */
+.health-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; }
+.health-row .h-label { width: 72px; color: var(--text2); flex-shrink: 0; }
+.health-row .h-bar { flex: 1; height: 10px; background: #F3F4F6; border-radius: 6px; overflow: hidden; }
+.health-row .h-fill { height: 100%; border-radius: 6px; }
+.health-row .h-val { width: 44px; text-align: right; font-weight: 600; flex-shrink: 0; }
+
+/* ===== 私信回复列表 ===== */
+.dm-item { display: flex; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; background: #fff; align-items: flex-start; }
+.dm-item .dm-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--pri-light); color: var(--pri); display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.dm-item .dm-body { flex: 1; }
+.dm-item .dm-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.dm-item .dm-name { font-weight: 600; font-size: 13px; }
+.dm-item .dm-content { font-size: 13px; color: var(--text); line-height: 1.6; background: #F9FAFB; border-radius: 6px; padding: 8px 12px; }
+.dm-item .dm-intent { font-size: 11px; }
+.dm-item .dm-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+
+/* ===== 账号托管列表 ===== */
+.host-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; background: #fff; }
+.host-item .hi-plat { font-size: 20px; }
+.host-item .hi-name { font-weight: 600; font-size: 13px; flex: 1; }
+.host-item .hi-sub { font-size: 12px; color: var(--text2); }
+
+/* ===== 分发任务状态 ===== */
+.dist-stat { text-align: center; }
+.dist-stat .ds-val { font-size: 26px; font-weight: 700; }
+.dist-stat .ds-label { font-size: 12px; color: var(--text2); margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -275,38 +330,99 @@ var platList = ["小红书","B站","同花顺","东方财富","天天基金","�
 var stepNames = ["选择话题","写作编辑","预览发布"];
 var mxTypeCls = {"新闻":"tag-blue","研报":"tag-purple","公告":"tag-orange","政策":"tag-red","投教":"tag-green","行业资讯":"tag-blue"};
 
+// ============ 五类角色（驾驶舱按角色切换） ============
+var ROLE_LIST = [
+  { key: 'hqBiz',    icon: '🏢', name: '总部业务管理者', desc: '账号主视角：全矩阵账号、曝光、开户/引资/创收、待办与分发总体情况' },
+  { key: 'hqCpl',    icon: '🛡️', name: '总部合规', desc: '合规视角：全公司账号、内容审核、健康度、素材审核与分发合规' },
+  { key: 'brCpl',    icon: '⚖️', name: '分支机构合规', desc: '本分支合规视角：本分支账号、发布量、AI初审复审、近期发布内容' },
+  { key: 'brMgr',    icon: '👔', name: '分支机构管理者', desc: '管理视角：本分支账号与员工业绩（开户/引资/创收）+ 排名' },
+  { key: 'brStaff',  icon: '🧑‍💼', name: '分支机构业务人员', desc: '一线视角：我负责的账号 + 个人业绩（开户/资产/创收）' }
+];
+var curRole = 'hqBiz';
+
+// ============ 账号托管（内容分发）演示数据 ============
+var hostAccounts = [
+  { plat: '小红书', icon: '📕', name: '方正证券北京丹棱街营业部', status: '已托管', count: 1, auth: '扫码已授权' },
+  { plat: '抖音', icon: '🎵', name: '方正证券北京丹棱街营业部', status: '已托管', count: 1, auth: '扫码已授权' },
+  { plat: '视频号', icon: '💚', name: '方正证券北京丹棱街营业部', status: '已托管', count: 1, auth: '扫码已授权' },
+  { plat: 'B站', icon: '📺', name: '方正证券北京丹棱街营业部', status: '待授权', count: 1, auth: '需重新扫码' }
+];
+var hostPlatList = ['小红书', '抖音', '视频号', 'B站'];
+
+// ============ 账号私信（账号运营）演示数据 ============
+var dmMessages = [
+  { id: 1, plat: '小红书', icon: '📕', from: '理财新手小白', intent: '开户意向', intentCls: 'tag-green', content: '你好，想了解一下怎么在方正证券开户，佣金是多少呀？', time: '10:23' },
+  { id: 2, plat: '抖音', icon: '🎵', from: '用户_发财树', intent: '咨询产品', intentCls: 'tag-blue', content: '你们这个基金定投适合新手吗？', time: '09:51' },
+  { id: 3, plat: '视频号', icon: '💚', from: '王先生', intent: '加微建联', intentCls: 'tag-purple', content: '可以加个微信详细聊聊吗？', time: '昨天' },
+  { id: 4, plat: 'B站', icon: '📺', from: 'UP主小风', intent: '一般互动', intentCls: 'tag-gray', content: '讲得不错，学到了', time: '昨天' }
+];
+var dmIntentCls = { '开户意向': 'tag-green', '咨询产品': 'tag-blue', '加微建联': 'tag-purple', '一般互动': 'tag-gray', '投诉风险': 'tag-red' };
+
+// ============ 内容分发任务演示数据 ============
+var distTasks = [
+  { id: 1, content: '【小红书笔记】3个理财误区，90%的人都踩过', plat: '小红书', account: '北京丹棱街营业部', status: 'success', time: '10:02' },
+  { id: 2, content: '【短视频】一个视频讲清楚基金定投', plat: '抖音', account: '北京丹棱街营业部', status: 'distributing', time: '10:15' },
+  { id: 3, content: '【视频号】新手如何选基金', plat: '视频号', account: '长春西安大路营业部', status: 'fail', time: '09:40', failReason: '标题超字数限制，请修改后重试' },
+  { id: 4, content: '【早盘收评】9月8日 隔夜美股收涨', plat: 'B站', account: '长沙星沙开元东路营业部', status: 'success', time: '08:30' }
+];
+
+// ============ 账号健康度（四平台占比）演示数据 ============
+var healthByPlat = [
+  { plat: '小红书', good: 68, warn: 22, bad: 10 },
+  { plat: '抖音', good: 55, warn: 30, bad: 15 },
+  { plat: '视频号', good: 72, warn: 20, bad: 8 },
+  { plat: 'B站', good: 48, warn: 34, bad: 18 }
+];
+
+// ============ 员工业绩排名（分支管理者视角）演示数据 ============
+var staffRank = [
+  { name: '张小明', accounts: 3, opens: 26, funds: '186万', income: '12.4万', posts: 42 },
+  { name: '李小红', accounts: 2, opens: 19, funds: '142万', income: '9.8万', posts: 35 },
+  { name: '王强', accounts: 2, opens: 15, funds: '98万', income: '6.5万', posts: 28 },
+  { name: '赵敏', accounts: 1, opens: 8, funds: '54万', income: '3.2万', posts: 19 }
+];
+
 
 // ============ 导航配置 ============
 var NAV = [
   { group: '运营总览', items: [
     { key: 'home', icon: '🏠', name: '运营驾驶舱' }
   ]},
+  { group: '素材设计', items: [
+    { key: 'create', icon: '✍️', name: '文字内容创作' },
+    { key: 'imgDesign', icon: '🖼️', name: '图片素材制作', beta: true },
+    { key: 'videoMake', icon: '🎬', name: '视频制作', beta: true }
+  ]},
   { group: '内容生产', items: [
-    { key: 'create', icon: '✍️', name: '内容创作', beta: true },
     { key: 'hotspots', icon: '🔥', name: '每日财经热点' },
     { key: 'topics', icon: '📋', name: '选题计划' },
     { key: 'viralContent', icon: '💥', name: '平台爆款' },
     { key: 'scripts', icon: '💬', name: '话术库' },
-    { key: 'posters', icon: '🖼️', name: '海报设计' },
     { key: 'library', icon: '📚', name: '素材知识库' },
-    { key: 'templates', icon: '🗂️', name: '模板中心', beta: true }
+    { key: 'templates', icon: '🗂️', name: '模板中心' }
   ]},
-  { group: '账号研究', items: [
+  { group: '内容分发', items: [
+    { key: 'hostAccount', icon: '🔐', name: '账号托管', beta: true },
+    { key: 'distribute', icon: '🚀', name: '一键分发', beta: true },
+    { key: 'aiCheck', icon: '🤖', name: 'AI 质检', beta: true }
+  ]},
+  { group: '账号运营', items: [
     { key: 'accounts', icon: '🏢', name: '账号矩阵' },
     { key: 'benchmarks', icon: '🎯', name: '对标账号' },
-    { key: 'teardown', icon: '🔍', name: '账号拆解' }
+    { key: 'teardown', icon: '🔍', name: '账号拆解' },
+    { key: 'dmReply', icon: '💬', name: '账号私信回复', beta: true }
   ]},
   { group: '协作与合规', items: [
-    { key: 'review', icon: '🛡️', name: '合规审核', beta: true },
+    { key: 'review', icon: '🛡️', name: '合规审核' },
     { key: 'compliance', icon: '🚫', name: '敏感词筛查' },
     { key: 'tasks', icon: '✅', name: '任务中心' }
   ]},
   { group: '数据洞察', items: [
     { key: 'analytics', icon: '📊', name: '数据分析' },
-    { key: 'performance', icon: '📈', name: '客户业绩', beta: true }
+    { key: 'performance', icon: '📈', name: '客户业绩' }
   ]},
   { group: '系统管理', items: [
-    { key: 'org', icon: '👥', name: '组织与权限', beta: true },
+    { key: 'org', icon: '👥', name: '组织与权限' },
     { key: 'weekly', icon: '📅', name: '周历排期' },
     { key: 'reports', icon: '📄', name: '报表中心' },
     { key: 'files', icon: '📁', name: '文件管理' }
@@ -314,9 +430,11 @@ var NAV = [
 ];
 
 var PAGE_TITLES = {
-  home: '运营驾驶舱', create: '内容创作', hotspots: '每日财经热点', topics: '选题计划',
-  viralContent: '平台爆款', scripts: '话术库', posters: '海报设计', library: '素材知识库',
-  templates: '模板中心', accounts: '账号矩阵', benchmarks: '对标账号', teardown: '账号拆解',
+  home: '运营驾驶舱', create: '文字内容创作', imgDesign: '图片素材制作', videoMake: '视频制作',
+  hotspots: '每日财经热点', topics: '选题计划',
+  viralContent: '平台爆款', scripts: '话术库', library: '素材知识库',
+  templates: '模板中心', hostAccount: '账号托管', distribute: '一键分发', aiCheck: 'AI 质检',
+  accounts: '账号矩阵', benchmarks: '对标账号', teardown: '账号拆解', dmReply: '账号私信回复',
   review: '合规审核', compliance: '敏感词筛查', tasks: '任务中心', analytics: '数据分析',
   performance: '客户业绩', org: '组织与权限', weekly: '周历排期', reports: '报表中心', files: '文件管理'
 };
@@ -388,16 +506,21 @@ function render() {
   var html = '';
   if (curPage === 'home') html = renderHome();
   else if (curPage === 'create') html = renderCreate();
+  else if (curPage === 'imgDesign') html = renderImgDesign();
+  else if (curPage === 'videoMake') html = renderVideoMake();
   else if (curPage === 'hotspots') html = renderHotspots();
   else if (curPage === 'topics') html = renderTopics();
   else if (curPage === 'viralContent') html = renderViralContent();
   else if (curPage === 'scripts') html = renderScripts();
-  else if (curPage === 'posters') html = renderPosters();
   else if (curPage === 'library') html = renderLibrary();
   else if (curPage === 'templates') html = renderTemplates();
+  else if (curPage === 'hostAccount') html = renderHostAccount();
+  else if (curPage === 'distribute') html = renderDistribute();
+  else if (curPage === 'aiCheck') html = renderAiCheck();
   else if (curPage === 'accounts') html = renderAccounts();
   else if (curPage === 'benchmarks') html = renderBenchmarks();
   else if (curPage === 'teardown') html = renderTeardown();
+  else if (curPage === 'dmReply') html = renderDmReply();
   else if (curPage === 'review') html = renderReview();
   else if (curPage === 'compliance') html = renderCompliance();
   else if (curPage === 'tasks') html = renderTasks();
@@ -412,6 +535,8 @@ function render() {
   if (curPage === 'create' && prefillTitle && document.getElementById('f_title')) {
     document.getElementById('f_title').value = prefillTitle;
   }
+  // 驾驶舱：总部业务管理者视图绘制曝光分布图
+  if (curPage === 'home' && curRole === 'hqBiz') setTimeout(function(){ drawHomeExpose(); }, 50);
 }
 
 // ============ 跨模块公共交互 ============
@@ -493,78 +618,141 @@ function fmtWan(n) {
   return String(v);
 }
 
-// ============ ① 运营驾驶舱 ============
+// ============ ① 运营驾驶舱（五角色视图） ============
 function renderHome() {
-  var h = '<div class="page-title">🏠 运营驾驶舱 <span class="badge">首页总览</span></div>';
-  h += '<div class="page-desc">工作台首页总览：一屏掌握账号情况、每日更新、数据汇总、内容汇总与每日待办。</div>';
-  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档重构为「总览 + 汇总」首页：账号情况 / 每日更新 / 每日数据 / 内容汇总 / 每日待办五大块。数据来自现有工作台各模块（已真实注入），升级后增加「平台」筛选维度。</span></div>';
-
-  // 内容汇总统计（创作/审核/发布）
-  var pending = reviewItems.filter(function(x){ return x.status === 'pending'; }).length;
-  var approved = reviewItems.filter(function(x){ return x.status === 'approved'; }).length;
-  var rejected = reviewItems.filter(function(x){ return x.status === 'rejected'; }).length;
-
-  // ① 账号情况 + 每日数据 汇总
-  h += '<div class="card"><div class="card-title">📊 账号情况 · 每日数据汇总</div>';
-  h += '<div class="stats-grid">';
-  h += '<div class="stat-card"><div class="label">方正证券账号</div><div class="value">' + (typeof fzAccounts !== 'undefined' ? fzAccounts.length : 0) + '</div></div>';
-  h += '<div class="stat-card"><div class="label">对标账号</div><div class="value">' + ((typeof kosAccounts !== 'undefined' ? kosAccounts.length : 0) + (typeof proAccounts !== 'undefined' ? proAccounts.length : 0)) + '</div></div>';
-  h += '<div class="stat-card"><div class="label">今日财经热点</div><div class="value">' + (typeof hotspots !== 'undefined' ? hotspots.length : 0) + '</div></div>';
-  h += '<div class="stat-card"><div class="label">选题计划</div><div class="value">' + (typeof topicPlans !== 'undefined' ? topicPlans.length : 0) + '</div></div>';
-  h += '<div class="stat-card"><div class="label">平台爆款</div><div class="value">' + (typeof viralContent !== 'undefined' ? viralContent.length : 0) + '</div></div>';
-  h += '<div class="stat-card"><div class="label">拆解案例</div><div class="value">' + (typeof teardownAccounts !== 'undefined' ? teardownAccounts.length : 0) + '</div></div>';
-  h += '</div></div>';
-
-  // ② 内容汇总
-  h += '<div class="card"><div class="card-title">📝 内容汇总（今日创作流转）</div>';
-  h += '<div class="stats-grid">';
-  h += '<div class="stat-card"><div class="label">审核中</div><div class="value" style="color:var(--orange)">' + pending + '</div></div>';
-  h += '<div class="stat-card"><div class="label">已通过</div><div class="value" style="color:var(--green)">' + approved + '</div></div>';
-  h += '<div class="stat-card"><div class="label">已驳回</div><div class="value" style="color:var(--pri)">' + rejected + '</div></div>';
-  h += '<div class="stat-card"><div class="label">今日待办</div><div class="value">' + taskData.today.length + '</div></div>';
+  var role = getRole(curRole);
+  var h = '<div class="page-title">🏠 运营驾驶舱 <span class="badge">五角色视图</span></div>';
+  h += '<div class="page-desc">按登录角色呈现不同驾驶舱首页。当前演示：<b>' + role.icon + ' ' + role.name + '</b> —— ' + role.desc + '。</div>';
+  // 角色切换
+  h += '<div class="role-bar">';
+  ROLE_LIST.forEach(function(r) {
+    h += '<div class="role-item' + (curRole === r.key ? ' active' : '') + '" onclick="switchRole(\'' + r.key + '\')">' + r.icon + ' ' + r.name + '</div>';
+  });
   h += '</div>';
-  h += '<div class="spec-note" style="margin-bottom:0;"><b>说明：</b>审核中/已通过/已驳回为「合规审核」模块的真实流转状态；内容发布后由系统自动统计到「数据分析」模块。点击下方待办或右上导航可直达对应模块。</div>';
-  h += '</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>运营驾驶舱按「角色」差异化呈现。五种角色（总部业务管理者 / 总部合规 / 分支机构合规 / 分支机构管理者 / 分支机构业务人员）各有一版首页。数据接入后可实时渲染（账号数、曝光、开户/引资/创收、健康度、待办、分发任务等均来自统一分发平台接口）。</span></div>';
+  if (curRole === 'hqBiz') h += homeHqBiz();
+  else if (curRole === 'hqCpl') h += homeHqCpl();
+  else if (curRole === 'brCpl') h += homeBrCpl();
+  else if (curRole === 'brMgr') h += homeBrMgr();
+  else if (curRole === 'brStaff') h += homeBrStaff();
+  return h;
+}
+function switchRole(key) { curRole = key; render(); window.scrollTo(0, 0); }
+function getRole(key) { for (var i = 0; i < ROLE_LIST.length; i++) if (ROLE_LIST[i].key === key) return ROLE_LIST[i]; return ROLE_LIST[0]; }
 
-  // ③ 每日待办
-  h += '<div class="card"><div class="card-title">✅ 每日待办 <span class="more" onclick="nav(\'tasks\')">去任务中心 →</span></div>';
-  if (taskData.today.length) {
-    taskData.today.forEach(function(t) {
-      h += '<div class="task-item"><span class="tag tag-orange">待办</span><span>' + esc(t) + '</span></div>';
-    });
-  } else {
-    h += '<div class="empty-box" style="padding:24px;"><div class="e-title">今日暂无待办</div></div>';
-  }
-  h += '</div>';
-
-  // ④ 热点 + 选题
+// —— ① 总部业务管理者（账号主视角） ——
+function homeHqBiz() {
+  var h = '';
+  // 核心业绩（最上）
+  h += '<div class="stats-grid"><div class="stat-card"><div class="label">累计开户</div><div class="value" style="color:var(--pri)">1,286 户</div></div><div class="stat-card"><div class="label">累计引资</div><div class="value" style="color:var(--pri)">¥ 4,620 万</div></div><div class="stat-card"><div class="label">累计创收</div><div class="value" style="color:var(--pri)">¥ 318 万</div></div><div class="stat-card"><div class="label">今日开户意向</div><div class="value" style="color:var(--orange)">36 条</div></div></div>';
+  // 账号总体 + 分平台
+  h += '<div class="card"><div class="card-title">🏢 账号矩阵总体情况</div>';
+  h += '<div class="stats-grid"><div class="stat-card"><div class="label">总账号数</div><div class="value">' + (fzAccounts ? fzAccounts.length : 0) + '</div></div><div class="stat-card"><div class="label">小红书账号</div><div class="value">' + (fzAccounts ? fzAccounts.length : 0) + '</div></div><div class="stat-card"><div class="label">抖音账号</div><div class="value">112</div></div><div class="stat-card"><div class="label">视频号账号</div><div class="value">86</div></div><div class="stat-card"><div class="label">B站账号</div><div class="value">54</div></div></div>';
+  h += '<div class="grid-2"><div class="card"><div class="card-title">📈 各平台曝光分布</div><div class="chart-container" style="height:240px;"><canvas id="homeExposeChart"></canvas></div></div><div class="card"><div class="card-title">📥 开户意向 · 待处理</div><div class="stats-grid" style="margin-bottom:0;"><div class="stat-card"><div class="label">待跟进</div><div class="value">24</div></div><div class="stat-card"><div class="label">已建联</div><div class="value">9</div></div><div class="stat-card"><div class="label">已开户</div><div class="value">3</div></div></div></div></div></div>';
+  // 健康度
+  h += '<div class="card"><div class="card-title">🩺 账号健康度（四平台占比）</div>';
+  healthByPlat.forEach(function(p) {
+    h += '<div class="health-row"><span class="h-label">' + p.plat + '</span><div class="h-bar"><div class="h-fill" style="width:' + p.good + '%;background:var(--green)"></div></div><div class="h-bar" style="margin-left:-8px;"><div class="h-fill" style="width:' + p.warn + '%;background:var(--orange)"></div></div><div class="h-bar" style="margin-left:-8px;"><div class="h-fill" style="width:' + p.bad + '%;background:var(--pri)"></div></div><span class="h-val">' + p.good + '%健康</span></div>';
+  });
+  h += '<div style="font-size:12px;color:var(--text2);margin-top:6px;">🟢 健康 ' + ' · ' + '🟠 预警 ' + ' · ' + '🔴 异常（点击「账号矩阵」可查看明细）</div></div>';
+  // 待办中心 + 分发总体
   h += '<div class="grid-2">';
-  h += '<div class="card"><div class="card-title">🔥 今日热点 Top 5 <span class="more" onclick="nav(\'hotspots\')">全部 →</span></div><table><tr><th>#</th><th>热点</th><th>热度</th><th>等级</th></tr>';
-  (hotspots || []).slice(0, 5).forEach(function(x, i) {
-    h += '<tr><td>' + (i + 1) + '</td><td>' + esc(x.title) + '</td><td class="tag tag-orange">' + (x.heat || '—') + '</td><td>' + esc(x.tier || '—') + '</td></tr>';
-  });
-  h += '</table></div>';
-  h += '<div class="card"><div class="card-title">📋 本周选题（按爆款潜力）<span class="more" onclick="nav(\'topics\')">全部 →</span></div><table><tr><th>选题</th><th>★</th><th>爆款分</th><th>类型</th></tr>';
-  (topicPlans || []).slice(0, 5).forEach(function(x) {
-    h += '<tr><td>' + esc(x.name) + '</td><td>' + (x.stars || '—') + '</td><td class="tag tag-red">' + (x.viral || '—') + '</td><td>' + esc(x.type || '—') + '</td></tr>';
-  });
-  h += '</table></div>';
+  h += '<div class="card"><div class="card-title">✅ 待办中心 <span class="more" onclick="nav(\'tasks\')">去任务中心 →</span></div>';
+  h += '<div class="spec-note"><b>待办概况：</b>全网共 <b>87</b> 项待办，其中 <b>12 人</b> 有逾期未完成，<b>5 人</b> 今日待办为空。系统按「逾期 > 今日 > 本周」排序推送。</div>';
+  (taskData.today || []).slice(0, 4).forEach(function(t) { h += '<div class="task-item"><span class="tag tag-orange">待办</span><span>' + esc(t) + '</span></div>'; });
   h += '</div>';
-
-  // ⑤ 爆款 + 对标分布
-  h += '<div class="grid-2">';
-  h += '<div class="card"><div class="card-title">💥 爆款内容（多平台）<span class="more" onclick="nav(\'viralContent\')">全部 →</span></div><table><tr><th>标题</th><th>平台</th><th>爆款分</th></tr>';
-  (viralContent || []).slice(0, 5).forEach(function(x) {
-    h += '<tr><td>' + esc(x.title) + '</td><td>' + esc(x.platform) + '</td><td class="tag tag-orange">' + (x.viralScore || '—') + '</td></tr>';
-  });
-  h += '</table></div>';
-  h += '<div class="card"><div class="card-title">🎯 对标账号分布</div>';
-  h += '<div class="stats-grid" style="grid-template-columns:1fr 1fr;margin-bottom:0;">';
-  h += '<div class="stat-card"><div class="label">KOS 达人</div><div class="value">' + (typeof kosAccounts !== 'undefined' ? kosAccounts.length : 0) + '</div></div>';
-  h += '<div class="stat-card"><div class="label">专业号</div><div class="value">' + (typeof proAccounts !== 'undefined' ? proAccounts.length : 0) + '</div></div>';
-  h += '</div></div>';
+  h += '<div class="card"><div class="card-title">🚀 分发任务总体情况</div>';
+  var s = distTasks.length, ok = distTasks.filter(function(x){return x.status==='success';}).length, fail = distTasks.filter(function(x){return x.status==='fail';}).length, doing = distTasks.filter(function(x){return x.status==='distributing';}).length;
+  h += '<div class="stats-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:0;"><div class="dist-stat"><div class="ds-val" style="color:var(--green)">' + ok + '</div><div class="ds-label">分发成功</div></div><div class="dist-stat"><div class="ds-val" style="color:var(--orange)">' + doing + '</div><div class="ds-label">分发中</div></div><div class="dist-stat"><div class="ds-val" style="color:var(--pri)">' + fail + '</div><div class="ds-label">分发失败</div></div></div>';
+  h += '<div class="spec-note" style="margin:12px 0 0;"><b>说明：</b>分发失败项支持单独重试，详见「一键分发」模块。</div></div>';
   h += '</div>';
   return h;
+}
+
+// —— ② 总部合规视角 ——
+function homeHqCpl() {
+  var pending = reviewItems.filter(function(x){ return x.status === 'pending'; }).length;
+  var h = '';
+  h += '<div class="stats-grid"><div class="stat-card"><div class="label">方正证券账号总数</div><div class="value">' + (fzAccounts ? fzAccounts.length : 0) + '</div></div><div class="stat-card"><div class="label">累计发布内容</div><div class="value">3,204</div></div><div class="stat-card"><div class="label">待处理消息</div><div class="value" style="color:var(--orange)">' + (pending + 12) + '</div></div><div class="stat-card"><div class="label">健康账号占比</div><div class="value" style="color:var(--green)">61%</div></div></div>';
+  h += '<div class="card"><div class="card-title">🩺 全矩阵账号健康度</div>';
+  healthByPlat.forEach(function(p) {
+    h += '<div class="health-row"><span class="h-label">' + p.plat + '</span><div class="h-bar"><div class="h-fill" style="width:' + p.good + '%;background:var(--green)"></div></div><div class="h-bar" style="margin-left:-8px;"><div class="h-fill" style="width:' + p.warn + '%;background:var(--orange)"></div></div><div class="h-bar" style="margin-left:-8px;"><div class="h-fill" style="width:' + p.bad + '%;background:var(--pri)"></div></div><span class="h-val">' + p.good + '%</span></div>';
+  });
+  h += '</div>';
+  h += '<div class="card"><div class="card-title">🚀 分发内容合规情况</div>';
+  h += '<div class="stats-grid" style="margin-bottom:0;"><div class="stat-card"><div class="label">今日分发总量</div><div class="value">128</div></div><div class="stat-card"><div class="label">AI 初审通过</div><div class="value" style="color:var(--green)">118</div></div><div class="stat-card"><div class="label">待人工复审</div><div class="value" style="color:var(--orange)">7</div></div><div class="stat-card"><div class="label">分发失败待重试</div><div class="value" style="color:var(--pri)">3</div></div></div></div>';
+  h += '<div class="card"><div class="card-title">📑 素材合规审核汇总</div>';
+  h += '<table><tr><th>审核环节</th><th>数量</th><th>处理建议</th></tr>';
+  h += '<tr><td>AI 初审未通过</td><td><span class="tag tag-red">6 条</span></td><td>自动退回作者修改，并附违规点标注</td></tr>';
+  h += '<tr><td>人工复审未通过</td><td><span class="tag tag-orange">2 条</span></td><td>分支合规驳回，需重新提交</td></tr>';
+  h += '<tr><td>分发失败待重试</td><td><span class="tag tag-orange">3 条</span></td><td>平台返回错误，可一键重试</td></tr>';
+  h += '<tr><td>已通过待分发</td><td><span class="tag tag-green">118 条</span></td><td>等待定时/手动分发</td></tr>';
+  h += '</table></div>';
+  return h;
+}
+
+// —— ③ 分支机构合规视角 ——
+function homeBrCpl() {
+  var h = '';
+  h += '<div class="card"><div class="card-title">🏢 本分支账号总体情况（北京丹棱街营业部）</div>';
+  h += '<div class="stats-grid"><div class="stat-card"><div class="label">小红书账号</div><div class="value">8</div></div><div class="stat-card"><div class="label">抖音账号</div><div class="value">6</div></div><div class="stat-card"><div class="label">视频号账号</div><div class="value">5</div></div><div class="stat-card"><div class="label">B站账号</div><div class="value">3</div></div></div></div>';
+  h += '<div class="card"><div class="card-title">📤 分发数量 & 近期发布任务</div>';
+  h += '<div class="stats-grid" style="margin-bottom:0;"><div class="stat-card"><div class="label">本月累计分发</div><div class="value">46</div></div><div class="stat-card"><div class="label">今日待发布</div><div class="value" style="color:var(--orange)">5</div></div><div class="stat-card"><div class="label">发布成功</div><div class="value" style="color:var(--green)">38</div></div><div class="stat-card"><div class="label">发布失败</div><div class="value" style="color:var(--pri)">3</div></div></div></div>';
+  h += '<div class="card"><div class="card-title">🤖 AI 初审 / 复审情况</div>';
+  h += '<div class="stats-grid" style="margin-bottom:0;"><div class="stat-card"><div class="label">AI 初审通过</div><div class="value" style="color:var(--green)">41</div></div><div class="stat-card"><div class="label">AI 初审驳回</div><div class="value" style="color:var(--pri)">2</div></div><div class="stat-card"><div class="label">待人工复审</div><div class="value" style="color:var(--orange)">3</div></div><div class="stat-card"><div class="label">复审通过率</div><div class="value">93%</div></div></div></div>';
+  h += '<div class="card"><div class="card-title">📅 近几日发布内容</div><table><tr><th>日期</th><th>内容</th><th>平台</th><th>状态</th></tr>';
+  h += '<tr><td>10-22</td><td>【短视频】基金定投三步法</td><td>抖音</td><td><span class="tag tag-green">已发布</span></td></tr>';
+  h += '<tr><td>10-21</td><td>【小红书笔记】理财误区避坑</td><td>小红书</td><td><span class="tag tag-green">已发布</span></td></tr>';
+  h += '<tr><td>10-21</td><td>【视频号】新手如何选基金</td><td>视频号</td><td><span class="tag tag-orange">待发布</span></td></tr>';
+  h += '<tr><td>10-20</td><td>【早盘收评】隔夜美股收涨</td><td>B站</td><td><span class="tag tag-green">已发布</span></td></tr>';
+  h += '</table></div>';
+  return h;
+}
+
+// —— ④ 分支机构管理者视角 ——
+function homeBrMgr() {
+  var h = '';
+  h += '<div class="card"><div class="card-title">🏢 本分支账号 & 员工业绩总览（北京丹棱街营业部）</div>';
+  h += '<div class="stats-grid"><div class="stat-card"><div class="label">本分支账号数</div><div class="value">22</div></div><div class="stat-card"><div class="label">累计开户</div><div class="value" style="color:var(--pri)">68 户</div></div><div class="stat-card"><div class="label">累计引资</div><div class="value" style="color:var(--pri)">¥ 480 万</div></div><div class="stat-card"><div class="label">累计创收</div><div class="value" style="color:var(--pri)">¥ 31.9 万</div></div></div></div>';
+  h += '<div class="card"><div class="card-title">🏆 员工展业排名</div><table><tr><th>排名</th><th>员工</th><th>负责账号</th><th>开户量</th><th>引资</th><th>创收</th><th>发布内容</th></tr>';
+  staffRank.forEach(function(s, i) {
+    var medal = i === 0 ? '🥇' : (i === 1 ? '🥈' : (i === 2 ? '🥉' : (i + 1)));
+    h += '<tr><td>' + medal + '</td><td><b>' + esc(s.name) + '</b></td><td>' + s.accounts + '</td><td>' + s.opens + '</td><td>' + s.funds + '</td><td>' + s.income + '</td><td>' + s.posts + '</td></tr>';
+  });
+  h += '</table></div>';
+  h += '<div class="spec-note"><b>说明：</b>排名维度支持切换（开户 / 引资 / 创收 / 发布内容），接入数据后按所选维度自动重排。当前为演示数据。</div>';
+  return h;
+}
+
+// —— ⑤ 分支机构业务人员视角 ——
+function homeBrStaff() {
+  var h = '';
+  h += '<div class="card"><div class="card-title">📱 我负责的账号</div><div class="quick-grid">';
+  h += '<div class="quick-card"><div class="q-icon">📕</div><div class="q-name">小红书 · 方正证券北京丹棱街</div><div class="q-desc">粉丝 31 · 笔记 32 · 互动 301</div></div>';
+  h += '<div class="quick-card"><div class="q-icon">🎵</div><div class="q-name">抖音 · 方正证券北京丹棱街</div><div class="q-desc">粉丝 286 · 视频 18 · 获赞 1.2k</div></div>';
+  h += '<div class="quick-card"><div class="q-icon">💚</div><div class="q-name">视频号 · 方正证券北京丹棱街</div><div class="q-desc">粉丝 154 · 视频 9 · 获赞 620</div></div>';
+  h += '</div></div>';
+  h += '<div class="card"><div class="card-title">📈 我的业绩</div>';
+  h += '<div class="stats-grid"><div class="stat-card"><div class="label">累计开户</div><div class="value" style="color:var(--pri)">26 户</div></div><div class="stat-card"><div class="label">引入资产</div><div class="value" style="color:var(--pri)">¥ 186 万</div></div><div class="stat-card"><div class="label">累计创收</div><div class="value" style="color:var(--pri)">¥ 12.4 万</div></div><div class="stat-card"><div class="label">本月发布</div><div class="value">42 条</div></div></div></div>';
+  h += '<div class="grid-2">';
+  h += '<div class="card"><div class="card-title">🚀 我的分发任务 <span class="more" onclick="nav(\'distribute\')">去分发 →</span></div>';
+  var s = distTasks.length, ok = distTasks.filter(function(x){return x.status==='success';}).length, fail = distTasks.filter(function(x){return x.status==='fail';}).length, doing = distTasks.filter(function(x){return x.status==='distributing';}).length;
+  h += '<div class="stats-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:0;"><div class="dist-stat"><div class="ds-val" style="color:var(--green)">' + ok + '</div><div class="ds-label">成功</div></div><div class="dist-stat"><div class="ds-val" style="color:var(--orange)">' + doing + '</div><div class="ds-label">分发中</div></div><div class="dist-stat"><div class="ds-val" style="color:var(--pri)">' + fail + '</div><div class="ds-label">失败</div></div></div></div>';
+  h += '<div class="card"><div class="card-title">✅ 今日待办 <span class="more" onclick="nav(\'tasks\')">全部 →</span></div>';
+  (taskData.today || []).slice(0, 3).forEach(function(t) { h += '<div class="task-item"><span class="tag tag-orange">待办</span><span>' + esc(t) + '</span></div>'; });
+  h += '</div></div>';
+  return h;
+}
+// 总部驾驶舱：各平台曝光分布（饼图）
+function drawHomeExpose() {
+  var cv = document.getElementById('homeExposeChart');
+  if (!cv || typeof Chart === 'undefined') return;
+  if (cv._chart) { cv._chart.destroy(); }
+  cv._chart = new Chart(cv, {
+    type: 'doughnut',
+    data: { labels: ['小红书', '抖音', '视频号', 'B站'], datasets: [{ data: [42, 31, 17, 10], backgroundColor: ['#E01E23', '#111827', '#10B981', '#3B82F6'] }] },
+    options: { plugins: { legend: { position: 'bottom' } }, cutout: '55%', maintainAspectRatio: false }
+  });
 }
 
 // ============ ② 内容创作（两级导航） ============
@@ -579,15 +767,15 @@ function renderCreate() {
   html += '<div class="card"><div class="card-title">📝 创作信息</div>' + typeForm(t.key) + '</div>';
   html += '<div class="card"><div class="card-title">📄 生成结果 <span style="display:inline-flex;gap:8px;"><button class="btn btn-sm" onclick="copyPrompt()">📋 复制 AI 提示词</button><span class="more" onclick="generateDemo()">重新生成</span></span></div><div id="genResult">' + typeResult(t.key) + '</div></div>';
   html += '</div>';
-  html += '<div class="card"><div class="card-title">🛡️ 提交合规审核</div><div class="spec-note"><b>流程说明：</b>生成的内容默认处于「草稿」状态，需点击下方按钮提交至合规审核。合规审核通过后，系统才会生成「最终可发布版本」并开放复制/下载。此卡点为硬性要求，不可跳过。</div><div style="display:flex;gap:10px;"><button class="btn btn-pri" onclick="submitReview()">提交合规审核</button><button class="btn" onclick="toast(\'已保存为草稿\',\'info\')">保存草稿</button></div></div>';
+  html += '<div class="card"><div class="card-title">🔁 下一步：素材设计 → 合规审核</div><div class="spec-note"><b>流程说明：</b>文字内容定稿后，进入「素材设计」环节——优先选择「生成图片」，也可切换「生成视频」；图片/视频设计完成后，<b>强制跳转「合规审核」</b>（AI 质检 + 敏感词 + 风险提示），通过后方可一键分发。此链路为硬性要求，不可跳过。</div><div style="display:flex;gap:10px;flex-wrap:wrap;"><button class="btn btn-pri" onclick="nav(\'imgDesign\')">🖼️ 生成图片（优先）</button><button class="btn" onclick="nav(\'videoMake\')">🎬 生成视频</button><button class="btn" onclick="submitReview()">直接提交合规审核</button><button class="btn" onclick="toast(\'已保存为草稿\',\'info\')">保存草稿</button></div></div>';
   return html;
 }
 
 function renderCreateTypeSelect() {
   var html = '';
-  html += '<div class="page-title">✍️ 内容创作 <span class="badge">先选分类</span></div>';
-  html += '<div class="page-desc">第一步：选择你要创作的内容类型，进入对应的创作模块。支持多平台（小红书 / 抖音 / 视频号）与多种内容形态。此页为现有「内容创作工具箱」的升级版，原有 8 类内容模板（政策解读/行情分析/理财科普等）已迁移到「模板中心」。</div>';
-  html += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>这是「内容创作」模块的入口交互——用户先选分类，再进入对应操作模块。分类可配置、可扩展。当前为 8 个分类（含早盘/尾盘收评、热点通报等新形态）。</span></div>';
+  html += '<div class="page-title">✍️ 文字内容创作 <span class="badge">先选分类</span></div>';
+  html += '<div class="page-desc">第一步：选择你要创作的内容类型，进入对应的创作模块。支持多平台（小红书 / 抖音 / 视频号）与多种内容形态。文字定稿后进入「图片素材制作 / 视频制作」，再强制走合规审核。</div>';
+  html += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>这是「素材设计 → 文字内容创作」子项的入口交互——用户先选分类，再进入对应操作模块。分类可配置、可扩展。当前为 8 个分类（含早盘/尾盘收评、热点通报等新形态）。</span></div>';
   html += '<div class="spec-note" style="margin-bottom:16px;"><b>分类口径（避免混淆）：</b>「视频脚本创作」= 中长视频的<b>分镜脚本</b>（含镜头/画面/口播，适合拍摄剪辑）；「短视频创作」= <b>竖屏 15-60 秒</b>快节奏成片脚本（侧重黄金3秒钩子+完播率）；「口播创作」= <b>单人出镜纯口播稿</b>（无分镜，可直接照读）。三者按"内容载体"区分，不按平台区分。</div>';
   html += '<div class="type-grid">';
   CREATE_TYPES.forEach(function(t) {
@@ -1143,11 +1331,11 @@ function initTeardownChart(idx) {
 function renderReview() {
   var html = '<div class="page-title">🛡️ 合规审核 <span class="badge">核心</span></div>';
   html += '<div class="page-desc">券商合规红线模块：所有对外内容必经审核，全程留痕。审核链路明确公示给每一位员工。</div>';
-  html += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>按需求文档实现：① 醒目公示完整审核链路（系统内审核 → 分支机构合规审核 → OA 流程 → 审核通过发布）；② 预留 AI 质检接口；③ 接入敏感词筛查；④ 草稿箱未筛查文案主动提醒。发布前强制卡点 + 全程留痕，满足监管备查。</span></div>';
-  // 审核链路（四步）
+  html += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>合规审核定义 = <b>敏感词筛查 + 风险提示 + AI 质检</b>（前置强制）。完整链路：内容创作 → 强制 AI 质检 → 提交分支机构合规审核 → 分支合规通过后<b>传阅总部合规</b> → 分支合规同意后即可<b>一键分发</b>到对应平台。可对接公司 OA 系统，实现跨系统流转；全程留痕满足监管备查。</span></div>';
+  // 审核链路（五步）
   html += '<div class="card"><div class="card-title">🔗 审核链路（发布前必经）</div>';
-  html += '<div class="review-flow"><span class="flow-step active">① 系统内审核</span><span class="flow-arrow">→</span><span class="flow-step active">② 分支机构合规审核</span><span class="flow-arrow">→</span><span class="flow-step">③ OA 流程</span><span class="flow-arrow">→</span><span class="flow-step done">④ 审核通过 · 发布</span></div>';
-  html += '<div class="spec-note" style="margin-bottom:0;"><b>说明：</b>员工完成新媒体内容后，先在本系统内提交审核 → 走公司分支机构合规审核 → 再走 OA 流程 → 审核通过后方可对外发布。任一环节未通过均不得发布，全程留痕可追溯。</div></div>';
+  html += '<div class="review-flow"><span class="flow-step done">① 强制 AI 质检</span><span class="flow-arrow">→</span><span class="flow-step active">② 分支机构合规审核</span><span class="flow-arrow">→</span><span class="flow-step">③ 传阅总部合规</span><span class="flow-arrow">→</span><span class="flow-step">④ 分支合规同意</span><span class="flow-arrow">→</span><span class="flow-step done">⑤ 一键分发</span></div>';
+  html += '<div class="spec-note" style="margin-bottom:0;"><b>说明：</b>员工完成内容后，先过<b>强制 AI 质检</b>（敏感词 + 风险提示 + AI 质检）→ 提交<b>分支机构合规</b>审核 → 通过后<b>传阅总部合规</b> → 分支合规<b>同意后即可一键分发</b>。可对接公司 OA 系统实现跨系统流转，任一环节未通过均不得发布，全程留痕可追溯。</div></div>';
   // 草稿提醒
   html += '<div class="card" style="border-left:4px solid var(--orange);"><div class="card-title">📥 草稿提醒</div>';
   html += '<div class="spec-note" style="background:#FEF3C7;border-color:#FCD34D;color:#92400E;margin-bottom:0;"><b>⚠️ 提示：</b>你的草稿箱中尚有 <b>2 篇</b>文案未完成敏感词筛查（【直播脚本】新手如何选基金、【小红书笔记】3个理财误区）。请前往「敏感词筛查」完成筛查后再提交审核。</div></div>';
@@ -1419,6 +1607,201 @@ function renderFiles() {
   });
   h += '</div></div>';
   return h;
+}
+
+// ============ 图片素材制作（素材设计·子项二） ============
+function renderImgDesign() {
+  var h = '<div class="page-title">🖼️ 图片素材制作 <span class="badge">NEW</span></div>';
+  h += '<div class="page-desc">素材设计 · 图片制作：文字内容定稿后，在此生成配图 / 封面 / 海报（优先走图片），完成后<b>强制进入合规审核</b>。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>参照「统一素材管理中心」场景设计：左侧「版权创作」与右侧「AI 生图」两大能力入口，下方为海报/封面模板墙。后续接入第三方设计软件接口（如即梦、可画、稿定、MJ 等）后，此处即成为统一设计工作台——员工在平台内完成从文案到成图的全流程，无需跳转外部工具。</span></div>';
+  // 流程化步骤
+  h += '<div class="card"><div class="card-title">🔁 素材设计流程（文字 → 图片/视频 → 合规 → 分发）</div>';
+  h += '<div class="pipeline">';
+  h += '<span class="pipe-step done"><span class="ps-num">1</span>文字内容创作</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step active"><span class="ps-num">2</span>生成图片（优先）</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step"><span class="ps-num">3</span>合规审核（强制）</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step"><span class="ps-num">4</span>一键分发</span>';
+  h += '</div>';
+  h += '<div class="spec-note" style="margin-bottom:0;"><b>流程说明：</b>文字内容在「文字内容创作」定稿后，自动跳转到此环节；优先选择「生成图片」，也可切换「生成视频」；图片/视频设计完成后，<b>强制跳转「合规审核」</b>，通过后进入「一键分发」。</div></div>';
+  // 素材管理中心卡片墙（参照统一素材管理场景）
+  h += '<div class="material-hero">';
+  h += '<div class="mat-big mat-copy" onclick="toast(\'版权创作：合规可商用素材库（演示）\',\'info\')"><div class="mb-icon">🎨</div><div class="mb-name">版权创作</div><div class="mb-desc">基于方正证券品牌 VI 与合规模板，进行封面、海报、配图的专业设计创作。支持品牌色 / 模板 / 字体规范约束，保证对外视觉统一。</div><div class="mb-tags"><span class="mb-tag">品牌模板</span><span class="mb-tag">合规素材</span><span class="mb-tag">多尺寸</span></div></div>';
+  h += '<div class="mat-big mat-ai" onclick="toast(\'AI 生图：接入设计大模型后可用（演示）\',\'info\')"><div class="mb-icon">🤖</div><div class="mb-name">AI 生图</div><div class="mb-desc">通过提示词一键生成封面、海报、配图；接入设计类大模型接口后，员工描述场景即可产出可商用素材，大幅降低设计门槛。</div><div class="mb-tags"><span class="mb-tag">提示词生成</span><span class="mb-tag">AI 出图</span><span class="mb-tag">待接接口</span></div></div>';
+  h += '</div>';
+  // 海报/封面模板
+  h += '<div class="card"><div class="card-title">🖼️ 海报 / 封面模板 <span class="tag tag-gray">' + (posterTemplates ? posterTemplates.length : 0) + ' 款</span></div><div class="grid-3">';
+  (posterTemplates || []).forEach(function(p) {
+    var light = p.light ? ' light' : '';
+    h += '<div class="poster-card' + light + '" style="background:' + p.bg + ';" onclick="toast(\'模板：' + esc(p.name) + '（演示）\',\'info\')"><div class="p-name">' + p.icon + ' ' + esc(p.name) + '</div><div class="p-desc">' + esc(p.desc) + '</div></div>';
+  });
+  h += '</div></div>';
+  // 强制合规审核
+  h += '<div class="card" style="border-left:4px solid var(--pri);"><div class="card-title">🛡️ 下一步：强制合规审核</div>';
+  h += '<div class="spec-note" style="background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C;margin-bottom:0;"><b>⚠️ 硬性卡点：</b>凡通过本工作台生成的图片/视频素材，<b>必须</b>先经过「AI 质检 + 敏感词筛查 + 风险提示」三步强制质检，再提交分支机构合规审核，通过后方可分发。不可跳过。</div>';
+  h += '<div style="display:flex;gap:10px;margin-top:12px;"><button class="btn btn-pri" onclick="nav(\'aiCheck\')">🤖 去 AI 质检</button><button class="btn" onclick="nav(\'review\')">去合规审核</button></div></div>';
+  return h;
+}
+
+// ============ 视频制作（素材设计·子项三） ============
+function renderVideoMake() {
+  var h = '<div class="page-title">🎬 视频制作 <span class="badge">NEW</span></div>';
+  h += '<div class="page-desc">素材设计 · 视频制作：视频脚本定稿后，接入视频生成/数字人口播能力，产出可发布成片。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>视频制作是内容生产三大载体之一（文字 / 图片 / 视频）。后续接入视频生成接口（如数字人口播、图文成片、AI 剪辑）后，员工可从「文字内容创作」的视频脚本一键生成成片。当前展示为流程与能力占位。</span></div>';
+  h += '<div class="card"><div class="card-title">🔁 视频制作流程</div>';
+  h += '<div class="pipeline">';
+  h += '<span class="pipe-step done"><span class="ps-num">1</span>视频脚本创作</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step active"><span class="ps-num">2</span>选择成片方式</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step"><span class="ps-num">3</span>合规审核（强制）</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step"><span class="ps-num">4</span>一键分发</span>';
+  h += '</div></div>';
+  // 成片方式
+  h += '<div class="grid-3">';
+  h += '<div class="type-card" onclick="toast(\'数字人口播：接入后可用（演示）\',\'info\')"><div class="t-icon">🧑‍💼</div><div class="t-name">数字人口播</div><div class="t-desc">口播稿 → 数字人出镜成片，适合抖音/视频号竖屏口播</div><div class="t-tags"><span class="tag tag-blue">待接接口</span></div></div>';
+  h += '<div class="type-card" onclick="toast(\'图文成片：接入后可用（演示）\',\'info\')"><div class="t-icon">🖼️</div><div class="t-name">图文成片</div><div class="t-desc">图文笔记一键转视频，自动配音配乐转场</div><div class="t-tags"><span class="tag tag-blue">待接接口</span></div></div>';
+  h += '<div class="type-card" onclick="toast(\'AI 剪辑：接入后可用（演示）\',\'info\')"><div class="t-icon">✂️</div><div class="t-name">AI 剪辑</div><div class="t-desc">素材自动剪辑、加字幕、一键多版本分发</div><div class="t-tags"><span class="tag tag-blue">待接接口</span></div></div>';
+  h += '</div>';
+  h += '<div class="spec-note"><b>说明：</b>视频脚本创作入口在「文字内容创作 → 视频脚本创作 / 短视频创作 / 口播创作」，脚本定稿后跳转到此环节生成成片。</div>';
+  return h;
+}
+
+// ============ 账号托管（内容分发·第一步） ============
+function renderHostAccount() {
+  var h = '<div class="page-title">🔐 账号托管 <span class="badge">NEW</span></div>';
+  h += '<div class="page-desc">把各平台账号托管到内容中台云服务器，员工登录一次即可管理其所有平台账号，支持一键发布。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>参照统一分发平台「账号托管」能力：扫码授权后集中管理官方号、营业部号与个人号的授权状态。员工在本平台登录其所有平台账号，总部/中台可帮其进行一键发布。核心是「一次授权、集中管理、状态可视」。</span></div>';
+  // 流程
+  h += '<div class="card"><div class="card-title">🔁 内容分发全流程</div>';
+  h += '<div class="pipeline">';
+  h += '<span class="pipe-step done"><span class="ps-num">1</span>账号托管</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step active"><span class="ps-num">2</span>内容生产</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step"><span class="ps-num">3</span>素材设计</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step"><span class="ps-num">4</span>合规审核</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step"><span class="ps-num">5</span>一键分发</span>';
+  h += '</div></div>';
+  // 平台账号托管状态
+  h += '<div class="card"><div class="card-title">📱 已托管账号（北京丹棱街营业部）</div>';
+  hostAccounts.forEach(function(a) {
+    var stCls = a.status === '已托管' ? 'tag-green' : 'tag-orange';
+    h += '<div class="host-item"><span class="hi-plat">' + a.icon + '</span><span class="hi-name">' + a.plat + ' · ' + esc(a.name) + '</span><span class="hi-sub">' + a.auth + '</span><span class="tag ' + stCls + '">' + a.status + '</span><span class="btn btn-sm" onclick="toast(\'重新扫码授权（演示）\',\'info\')">重新授权</span></div>';
+  });
+  h += '</div>';
+  // 托管说明
+  h += '<div class="card"><div class="card-title">➕ 托管新账号</div>';
+  h += '<div class="quick-grid">';
+  hostPlatList.forEach(function(p) {
+    var icon = { '小红书': '📕', '抖音': '🎵', '视频号': '💚', 'B站': '📺' }[p] || '🔗';
+    h += '<div class="quick-card" onclick="toast(\'扫码托管 ' + p + ' 账号（演示）\',\'info\')"><div class="q-icon">' + icon + '</div><div class="q-name">' + p + '</div><div class="q-desc">扫码授权后纳入统一管理</div></div>';
+  });
+  h += '</div></div>';
+  h += '<div class="spec-note"><b>权限说明：</b>账号托管授权由账号持有人本人扫码确认，总部中台仅获得「发布」权限（可配置），不触碰账号登录密码。授权可随时撤回。</div>';
+  return h;
+}
+
+// ============ 一键分发（内容分发·第二步） ============
+function renderDistribute() {
+  var h = '<div class="page-title">🚀 一键分发 <span class="badge">NEW</span></div>';
+  h += '<div class="page-desc">选好内容和账号，按平台自动调整规格后一键投递到小红书 / 抖音 / 视频号 / B站，结果逐条跟踪。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>参照统一分发平台「一键分发 / 发布预检 / 分发任务」三项能力：① 一次选好内容和账号，按平台自动调整规格后同时投递；② 投递前自动校验时长、标签、标题字数与授权状态；③ 以任务为单位跟踪每个平台每个账号的投递结果，失败项可单独重试。</span></div>';
+  // 分发统计
+  var ok = distTasks.filter(function(x){return x.status==='success';}).length;
+  var fail = distTasks.filter(function(x){return x.status==='fail';}).length;
+  var doing = distTasks.filter(function(x){return x.status==='distributing';}).length;
+  h += '<div class="card"><div class="card-title">📊 分发总览（今日）</div><div class="stats-grid" style="margin-bottom:0;">';
+  h += '<div class="dist-stat"><div class="ds-val">' + distTasks.length + '</div><div class="ds-label">分发任务总数</div></div>';
+  h += '<div class="dist-stat"><div class="ds-val" style="color:var(--green)">' + ok + '</div><div class="ds-label">成功</div></div>';
+  h += '<div class="dist-stat"><div class="ds-val" style="color:var(--orange)">' + doing + '</div><div class="ds-label">分发中</div></div>';
+  h += '<div class="dist-stat"><div class="ds-val" style="color:var(--pri)">' + fail + '</div><div class="ds-label">失败待重试</div></div>';
+  h += '</div></div>';
+  // 分发任务列表
+  h += '<div class="card"><div class="card-title">📋 分发任务 <span class="more">失败项可单独重试</span></div><table><tr><th>内容</th><th>平台</th><th>账号</th><th>状态</th><th>时间</th><th>操作</th></tr>';
+  distTasks.forEach(function(t) {
+    var st = t.status === 'success' ? '<span class="tag tag-green">成功</span>' : (t.status === 'distributing' ? '<span class="tag tag-blue">分发中</span>' : '<span class="tag tag-red">失败</span>');
+    var op = t.status === 'fail' ? '<span class="link-btn" onclick="toast(\'重新分发：' + esc(t.content.slice(0,12)) + '…\',\'info\')">重试</span>' : '<span class="tag tag-gray">—</span>';
+    h += '<tr><td>' + esc(t.content) + '</td><td><span class="tag tag-blue">' + t.plat + '</span></td><td>' + esc(t.account) + '</td><td>' + st + (t.failReason ? '<br><span class="tag tag-red">' + esc(t.failReason) + '</span>' : '') + '</td><td>' + t.time + '</td><td>' + op + '</td></tr>';
+  });
+  h += '</table></div>';
+  // 发布预检
+  h += '<div class="card"><div class="card-title">🔍 发布预检（投递前自动校验）</div>';
+  h += '<div class="spec-note" style="margin-bottom:0;"><b>自动校验项：</b>① 时长是否符合平台限制；② 标签数量与格式；③ 标题字数（各平台不同）；④ 账号授权状态；⑤ 合规审核是否通过。任一不过则给出可直接执行的修改建议，无法直接发布。</div></div>';
+  // 新建分发
+  h += '<div class="card"><div class="card-title">➕ 新建分发</div>';
+  h += '<div class="form-row"><div class="form-group"><label>选择内容</label><select><option>【小红书笔记】3个理财误区</option><option>【短视频】基金定投三步法</option><option>【视频号】新手如何选基金</option></select></div><div class="form-group"><label>选择账号</label><select><option>北京丹棱街营业部（全平台）</option><option>北京丹棱街营业部 · 小红书</option><option>北京丹棱街营业部 · 抖音</option></select></div></div>';
+  h += '<button class="btn btn-pri" onclick="toast(\'已创建分发任务，进入发布预检（演示）\',\'success\')">🚀 一键分发</button></div>';
+  return h;
+}
+
+// ============ AI 质检（内容分发·强制环节） ============
+function renderAiCheck() {
+  var h = '<div class="page-title">🤖 AI 质检 <span class="badge">NEW · 强制</span></div>';
+  h += '<div class="page-desc">凡通过内容中台产出的内容，发布前<b>强制</b>先经过 AI 质检（敏感词筛查 + 风险提示 + 语义级合规检测）。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>这是合规审核的「前置强制环节」。定义 = ① 敏感词筛查（关键词硬拦截）+ ② 风险提示（风险词提醒必看）+ ③ AI 质检（接入公司采购的 AI 质检接口，做语义级识别：收益承诺 / 荐股表述 / 夸大宣传 / 风险揭示不足）。只要是通过本中台做出来的内容，就会强制先过 AI 质检，不通过则无法进入后续人工审核与分发。</span></div>';
+  // 质检三步
+  h += '<div class="card"><div class="card-title">🔗 强制质检三步</div>';
+  h += '<div class="pipeline">';
+  h += '<span class="pipe-step active"><span class="ps-num">1</span>敏感词筛查</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step active"><span class="ps-num">2</span>风险提示</span><span class="pipe-arrow">→</span>';
+  h += '<span class="pipe-step"><span class="ps-num">3</span>AI 质检（待接入）</span>';
+  h += '</div>';
+  h += '<div class="spec-note" style="margin-bottom:0;"><b>说明：</b>①② 当前可用（复用现有敏感词库）；③ 待接入公司采购的 AI 质检接口，接入后作为强制前置卡点。</div></div>';
+  // 输入待质检内容
+  h += '<div class="card"><div class="card-title">📝 输入待质检内容</div><textarea id="aiCheckInput" rows="3" placeholder="粘贴待质检文案，点击开始质检"></textarea><div style="margin-top:10px;display:flex;gap:10px;"><button class="btn btn-pri" onclick="runAiCheck()">🤖 开始 AI 质检</button><button class="btn" onclick="nav(\'compliance\')">去敏感词筛查</button></div><div id="aiCheckResult" style="margin-top:14px;"></div></div>';
+  // AI 质检接口说明
+  h += '<div class="card"><div class="card-title">🧩 AI 质检接口（预留）</div><table><tr><th>检测维度</th><th>说明</th><th>状态</th></tr>';
+  h += '<tr><td>收益承诺识别</td><td>识别「保本、稳赚、必涨」等收益承诺表述</td><td><span class="tag tag-green">敏感词已覆盖</span></td></tr>';
+  h += '<tr><td>荐股表述识别</td><td>识别具体个股买卖建议、点位预测</td><td><span class="tag tag-orange">语义级待接入</span></td></tr>';
+  h += '<tr><td>夸大宣传识别</td><td>识别「最、唯一、绝对」等夸大用语</td><td><span class="tag tag-orange">语义级待接入</span></td></tr>';
+  h += '<tr><td>风险揭示不足</td><td>检测是否缺失风险提示与免责声明</td><td><span class="tag tag-orange">语义级待接入</span></td></tr>';
+  h += '</table></div>';
+  return h;
+}
+function runAiCheck() {
+  var txt = document.getElementById('aiCheckInput') ? document.getElementById('aiCheckInput').value : '';
+  var hitBanned = [], hitDanger = [];
+  (bannedWords || []).forEach(function(w) { if (w && txt.indexOf(w) > -1) hitBanned.push(w); });
+  (dangerWords || []).forEach(function(w) { if (w && txt.indexOf(w) > -1) hitDanger.push(w); });
+  var el = document.getElementById('aiCheckResult');
+  if (!hitBanned.length && !hitDanger.length) {
+    el.innerHTML = '<div class="spec-note" style="background:#D1FAE5;border-color:#6EE7B7;color:#065F46;">✅ AI 质检通过（敏感词 + 风险提示无命中），可进入「合规审核」提交人工复核。当前语义级 AI 质检待接入。</div>';
+  } else {
+    var s = '';
+    if (hitBanned.length) s += '<div class="spec-note" style="background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C;"><b>🚫 命中违禁词（硬拦截，不可发布）：</b>' + hitBanned.map(esc).join('、') + '</div>';
+    if (hitDanger.length) s += '<div class="spec-note" style="background:#FEF3C7;border-color:#FCD34D;color:#92400E;"><b>⚠️ 命中风险词（需人工复核）：</b>' + hitDanger.map(esc).join('、') + '</div>';
+    el.innerHTML = s;
+  }
+}
+
+// ============ 账号私信回复（账号运营） ============
+function renderDmReply() {
+  var h = '<div class="page-title">💬 账号私信回复 <span class="badge">NEW</span></div>';
+  h += '<div class="page-desc">统一接收各平台（小红书 / 抖音 / 视频号 / B站）账号的私信与评论，按意向类型分流并套用标准话术，直接在平台内回复。</div>';
+  h += '<div class="discuss-banner">💡 <span><b>给研发的说明：</b>参照统一分发平台「互动中心」能力：统一接收评论和私信，按意向类型（开户意向 / 咨询产品 / 加微建联 / 一般互动 / 投诉风险）分流并套用标准话术。数据由采集接口抓取各平台私信后台，员工无需切换 App 即可在工作台内回复。</span></div>';
+  // 统计
+  h += '<div class="stats-grid"><div class="stat-card"><div class="label">待回复私信</div><div class="value" style="color:var(--orange)">' + dmMessages.length + '</div></div><div class="stat-card"><div class="label">开户意向</div><div class="value" style="color:var(--green)">1</div></div><div class="stat-card"><div class="label">加微建联</div><div class="value" style="color:var(--purple)">1</div></div><div class="stat-card"><div class="label">今日已回复</div><div class="value">18</div></div></div>';
+  // 私信列表
+  h += '<div class="card"><div class="card-title">📥 私信列表 <span class="more">按意向分流 + 套用话术</span></div>';
+  dmMessages.forEach(function(m) {
+    h += '<div class="dm-item"><div class="dm-avatar">' + esc(m.from.slice(0,1)) + '</div><div class="dm-body">';
+    h += '<div class="dm-head"><span class="dm-name">' + m.icon + ' ' + esc(m.from) + '</span><span class="tag ' + m.intentCls + ' dm-intent">' + m.intent + '</span><span style="margin-left:auto;font-size:11px;color:var(--text2)">' + m.time + '</span></div>';
+    h += '<div class="dm-content">' + esc(m.content) + '</div>';
+    h += '<div class="dm-actions"><button class="btn btn-sm btn-pri" onclick="replyDm(' + m.id + ')">回复</button><button class="btn btn-sm" onclick="copyScript(' + m.id + ')">套用话术</button><button class="btn btn-sm" onclick="toast(\'已标记：' + m.intent + '\',\'info\')">标记</button></div>';
+    h += '</div></div>';
+  });
+  h += '</div>';
+  // 话术库引用
+  h += '<div class="card"><div class="card-title">💬 标准话术（自动套用）<span class="more" onclick="nav(\'scripts\')">完整话术库 →</span></div>';
+  h += '<div class="spec-note" style="margin-bottom:0;"><b>分流规则：</b>① 开户意向 → 走合规开户话术（引导官方渠道）；② 加微建联 → 走企微建联话术（合规留资）；③ 投诉风险 → 升级总部合规，禁止自行承诺。话术内容见「话术库」模块。</div></div>';
+  return h;
+}
+function replyDm(id) {
+  var m = null; for (var i=0;i<dmMessages.length;i++) if (dmMessages[i].id===id) m = dmMessages[i];
+  if (!m) return;
+  toast('已打开「' + m.plat + '」私信回复窗口（演示），可直接回复 @' + m.from, 'success');
+}
+function copyScript(id) {
+  var m = null; for (var i=0;i<dmMessages.length;i++) if (dmMessages[i].id===id) m = dmMessages[i];
+  if (!m) return;
+  var tpl = '您好，感谢您的咨询！我已收到您的消息，稍后为您详细解答。为保障合规，具体业务请通过方正证券官方渠道了解，我会为您对接专属顾问。';
+  copyText(tpl);
 }
 
 // ============ 初始化 ============
