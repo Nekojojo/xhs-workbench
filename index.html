@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小红书工作台 V2.5 - 方正证券</title>
+<title>小红书工作台 V2.6 - 方正证券</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="history/index.js"></script>
@@ -309,6 +309,20 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
   .history-selector select { flex: 1; font-size: 13px; padding: 6px 10px; }
   .tier-legend-grid { grid-template-columns: 1fr !important; }
 }
+.vlib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.vlib-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: all 0.2s; display: flex; flex-direction: column; gap: 10px; }
+.vlib-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }
+.vlib-card.used { border-left: 3px solid var(--green); }
+.vlib-title { font-weight: 600; font-size: 14px; line-height: 1.5; }
+.vlib-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+.vlib-stats { font-size: 12px; color: var(--text2); }
+.vlib-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+.vlib-add-form { display: flex; flex-direction: column; gap: 10px; }
+.vlib-add-form input, .vlib-add-form textarea { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+@media (max-width: 768px) {
+  .vlib-grid { grid-template-columns: 1fr; gap: 12px; }
+  .vlib-card { padding: 14px; }
+}
 </style>
 </head>
 <body>
@@ -319,7 +333,7 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
     <svg viewBox="0 0 36 36"><rect width="36" height="36" rx="8" fill="#E01E23"/><polygon points="10,26 18,8 26,26 22,26 18,16 14,26" fill="#fff"/></svg>
     <div>
       <div class="logo-text">方正证券</div>
-      <div class="logo-sub">小红书工作台 V2.5</div>
+      <div class="logo-sub">小红书工作台 V2.6</div>
     </div>
   </div>
   <div class="nav-group">
@@ -330,6 +344,7 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
     <div class="nav-item" onclick="nav('topics')"><span class="icon">&#x1F4CB;</span>今日选题计划</div>
     <div class="nav-item" onclick="nav('benchmarks')"><span class="icon">&#x1F3AF;</span>对标账号</div>
     <div class="nav-item" onclick="nav('viralContent')"><span class="icon">&#x1F4A5;</span>平台爆款</div>
+    <div class="nav-item" onclick="nav('viralLibrary')"><span class="icon">&#x2B50;</span>爆款笔记库</div>
     <div class="nav-item" onclick="nav('teardown')"><span class="icon">&#x1F50D;</span>账号拆解</div>
   </div>
   <div class="nav-group">
@@ -1430,313 +1445,1232 @@ var viralContent = [
     "id": 3
   },
   {
-    "title": "一文读懂“均线（MA）”",
+    "title": "《长红客栈》第2集：木匠学炒股首战告捷",
     "platform": "小红书",
-    "author": "招商证券财经社牛养成记",
-    "viralScore": 96,
-    "likes": 9451,
-    "collects": 6615,
+    "author": "国金证券",
+    "viralScore": 80,
+    "likes": 796,
+    "collects": 557,
     "category": "科普",
     "bizLine": "投教",
     "tags": [
-      "招商证券财经社牛养成记",
+      "国金证券",
       "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/69e57f9a0000000023025ec4",
-    "analysis": "招商证券财经社牛养成记用「读懂」切入，点赞9451，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "link": "https://www.xiaohongshu.com/explore/6ae1a6f20000000028004cfe",
+    "analysis": "国金证券用「科普」切入，点赞796，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 4
   },
   {
-    "title": "一分钟搞懂“洗盘”",
+    "title": "一文读懂“四大经济周期”",
     "platform": "小红书",
     "author": "招商证券财经社牛养成记",
-    "viralScore": 96,
-    "likes": 8186,
-    "collects": 5730,
+    "viralScore": 80,
+    "likes": 607,
+    "collects": 424,
     "category": "科普",
     "bizLine": "投教",
     "tags": [
       "招商证券财经社牛养成记",
       "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/68eca94f000000000701743c",
-    "analysis": "招商证券财经社牛养成记用「一分钟」切入，点赞8186，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "link": "https://www.xiaohongshu.com/explore/6a38e489000000000f005174",
+    "analysis": "招商证券财经社牛养成记用「读懂」切入，点赞607，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 5
   },
   {
-    "title": "🐮存储芯片爆发性机会！10大核心龙头",
+    "title": "《长红客栈》正式开播！第1集铜跌成这样咋买？",
     "platform": "小红书",
-    "author": "江海证券组合家",
-    "viralScore": 96,
-    "likes": 6272,
-    "collects": 4390,
-    "category": "合集榜单",
+    "author": "国金证券",
+    "viralScore": 80,
+    "likes": 436,
+    "collects": 305,
+    "category": "科普",
     "bizLine": "投教",
     "tags": [
-      "江海证券组合家",
-      "合集榜单"
+      "国金证券",
+      "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/68fb4a1f000000000402a043",
-    "analysis": "江海证券组合家用「10大」切入，点赞6272，是券商官方号在合集榜单类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「XX赛道N大龙头/榜单」，正文按「赛道逻辑→清单→核心数据」做成可收藏清单。",
+    "link": "https://www.xiaohongshu.com/explore/6ae1a4a90000000022036327",
+    "analysis": "国金证券用「科普」切入，点赞436，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 6
   },
   {
-    "title": "🐮8大经典买入方法！",
+    "title": "🔥10🈷️盯紧羊字辈！",
     "platform": "小红书",
     "author": "江海证券小白鲸",
-    "viralScore": 96,
-    "likes": 5638,
-    "collects": 3946,
+    "viralScore": 76,
+    "likes": 389,
+    "collects": 272,
     "category": "合集榜单",
     "bizLine": "投教",
     "tags": [
       "江海证券小白鲸",
       "合集榜单"
     ],
-    "link": "https://www.xiaohongshu.com/explore/6a78a6bc0000000008010cf7",
-    "analysis": "江海证券小白鲸用「8大」切入，点赞5638，是券商官方号在合集榜单类内容里的已验证样本，可借鉴其选题与结构。",
+    "link": "https://www.xiaohongshu.com/explore/6ad607670000000027036038",
+    "analysis": "江海证券小白鲸用「合集榜单」切入，点赞389，是券商官方号在合集榜单类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「XX赛道N大龙头/榜单」，正文按「赛道逻辑→清单→核心数据」做成可收藏清单。",
     "id": 7
   },
   {
-    "title": "股票必看的十大指标❗️",
+    "title": "100种普通人的睡后收入",
     "platform": "小红书",
     "author": "同花顺研习社",
-    "viralScore": 96,
-    "likes": 5148,
-    "collects": 3603,
-    "category": "攻略",
+    "viralScore": 76,
+    "likes": 371,
+    "collects": 259,
+    "category": "科普",
     "bizLine": "投教",
     "tags": [
       "同花顺研习社",
-      "攻略"
+      "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/68da4a74000000000e00d7fc",
-    "analysis": "同花顺研习社用「必看」切入，点赞5148，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
+    "link": "https://www.xiaohongshu.com/explore/6ac9ad83000000001a02790c",
+    "analysis": "同花顺研习社用「科普」切入，点赞371，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 8
   },
   {
-    "title": "炒股复盘步骤全流程！赶紧收藏",
+    "title": "特斯拉汽车为何能 \"升空\"？技术原理拆解",
     "platform": "小红书",
-    "author": "广发证券",
-    "viralScore": 92,
-    "likes": 4802,
-    "collects": 3361,
-    "category": "数据卡片",
+    "author": "国金证券",
+    "viralScore": 76,
+    "likes": 290,
+    "collects": 203,
+    "category": "科普",
     "bizLine": "投教",
     "tags": [
-      "广发证券",
-      "数据卡片"
+      "国金证券",
+      "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/67443cb10000000002019ca0",
-    "analysis": "广发证券用「复盘」切入，点赞4802，是券商官方号在数据卡片类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「XX日历/数据盘点」，图表化呈现，做成可收藏卡片。",
+    "link": "https://www.xiaohongshu.com/explore/6ad5dac8000000002f030862",
+    "analysis": "国金证券用「科普」切入，点赞290，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 9
   },
   {
-    "title": "这样证券开户，一年多省几千！",
+    "title": "🔥A股下周大事件（11.2-11.6）！",
     "platform": "小红书",
-    "author": "广发证券",
-    "viralScore": 92,
-    "likes": 4209,
-    "collects": 2946,
-    "category": "攻略",
-    "bizLine": "券商业务",
+    "author": "江海证券小白鲸",
+    "viralScore": 76,
+    "likes": 271,
+    "collects": 189,
+    "category": "科普",
+    "bizLine": "投教",
     "tags": [
-      "广发证券",
-      "攻略"
+      "江海证券小白鲸",
+      "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/66014c58000000000d00d8ec",
-    "analysis": "广发证券用「攻略」切入，点赞4209，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
+    "link": "https://www.xiaohongshu.com/explore/6ae5515b000000001200945e",
+    "analysis": "江海证券小白鲸用「科普」切入，点赞271，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 10
   },
   {
-    "title": "股市上车指南📝｜新手如何购买第一支股票🥳",
+    "title": "“马”呀，申万宏源的“羊毛”太香了咩！",
     "platform": "小红书",
-    "author": "东方财富证券",
-    "viralScore": 92,
-    "likes": 4074,
-    "collects": 2851,
-    "category": "攻略",
+    "author": "申万宏源证券财富管理",
+    "viralScore": 76,
+    "likes": 261,
+    "collects": 182,
+    "category": "科普",
     "bizLine": "投教",
     "tags": [
-      "东方财富证券",
-      "攻略"
+      "申万宏源证券财富管理",
+      "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/6757a768000000000603abf6",
-    "analysis": "东方财富证券用「指南」切入，点赞4074，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
+    "link": "https://www.xiaohongshu.com/explore/6969a55b000000001a02b65f",
+    "analysis": "申万宏源证券财富管理用「科普」切入，点赞261，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 11
   },
   {
-    "title": "什么是“CAPEX（资本性支出）？",
+    "title": "🔥A股下周大事件（10.19-10.23）！",
+    "platform": "小红书",
+    "author": "江海证券小白鲸",
+    "viralScore": 76,
+    "likes": 251,
+    "collects": 175,
+    "category": "科普",
+    "bizLine": "投教",
+    "tags": [
+      "江海证券小白鲸",
+      "科普"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/6ad3078d000000001403b91c",
+    "analysis": "江海证券小白鲸用「科普」切入，点赞251，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
+    "id": 12
+  },
+  {
+    "title": "被问爆！国泰海通新客开户福利香到哭😭",
+    "platform": "小红书",
+    "author": "国泰海通超人说",
+    "viralScore": 76,
+    "likes": 244,
+    "collects": 170,
+    "category": "攻略",
+    "bizLine": "券商业务",
+    "tags": [
+      "国泰海通超人说",
+      "攻略"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68aff2e8000000001b031dca",
+    "analysis": "国泰海通超人说用「攻略」切入，点赞244，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
+    "id": 13
+  },
+  {
+    "title": "一文读懂“蓝筹股、红筹股”",
     "platform": "小红书",
     "author": "招商证券财经社牛养成记",
-    "viralScore": 92,
-    "likes": 3983,
-    "collects": 2788,
+    "viralScore": 76,
+    "likes": 216,
+    "collects": 151,
     "category": "科普",
     "bizLine": "投教",
     "tags": [
       "招商证券财经社牛养成记",
       "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/6a869aaa0000000035017be2",
-    "analysis": "招商证券财经社牛养成记用「科普」切入，点赞3983，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 12
-  },
-  {
-    "title": "A股顶级科技公司TOP100强👍",
-    "platform": "小红书",
-    "author": "江海证券小白鲸",
-    "viralScore": 92,
-    "likes": 3681,
-    "collects": 2576,
-    "category": "合集榜单",
-    "bizLine": "投教",
-    "tags": [
-      "江海证券小白鲸",
-      "合集榜单"
-    ],
-    "link": "https://www.xiaohongshu.com/explore/67a5d1e2000000001800a92d",
-    "analysis": "江海证券小白鲸用「TOP」切入，点赞3681，是券商官方号在合集榜单类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「XX赛道N大龙头/榜单」，正文按「赛道逻辑→清单→核心数据」做成可收藏清单。",
-    "id": 13
-  },
-  {
-    "title": "乖乖待在我身边不好吗",
-    "platform": "小红书",
-    "author": "东方财富",
-    "viralScore": 92,
-    "likes": 3342,
-    "collects": 2339,
-    "category": "科普",
-    "bizLine": "投教",
-    "tags": [
-      "东方财富",
-      "科普"
-    ],
-    "link": "https://www.xiaohongshu.com/explore/6ae0782a000000003501fc64",
-    "analysis": "东方财富用「科普」切入，点赞3342，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "link": "https://www.xiaohongshu.com/explore/6ab22af800000000310110ab",
+    "analysis": "招商证券财经社牛养成记用「读懂」切入，点赞216，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 14
   },
   {
-    "title": "股市小白必看，K线的常见形态❗️",
+    "title": "一分钟搞懂“股票解禁”",
     "platform": "小红书",
-    "author": "同花顺研习社",
-    "viralScore": 92,
-    "likes": 3179,
-    "collects": 2225,
-    "category": "攻略",
-    "bizLine": "投教",
-    "tags": [
-      "同花顺研习社",
-      "攻略"
-    ],
-    "link": "https://www.xiaohongshu.com/explore/68ea1cda000000000401063a",
-    "analysis": "同花顺研习社用「必看」切入，点赞3179，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
-    "id": 15
-  },
-  {
-    "title": "全剧杀青｜长红客栈的故事，即将开启",
-    "platform": "小红书",
-    "author": "国金证券",
-    "viralScore": 88,
-    "likes": 1833,
-    "collects": 1283,
+    "author": "招商证券财经社牛养成记",
+    "viralScore": 76,
+    "likes": 215,
+    "collects": 150,
     "category": "科普",
     "bizLine": "投教",
     "tags": [
-      "国金证券",
+      "招商证券财经社牛养成记",
       "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/6adb0881000000003101f629",
-    "analysis": "国金证券用「科普」切入，点赞1833，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "link": "https://www.xiaohongshu.com/explore/6ab2384b000000003100e054",
+    "analysis": "招商证券财经社牛养成记用「一分钟」切入，点赞215，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
+    "id": 15
+  },
+  {
+    "title": "3800守得住？",
+    "platform": "小红书",
+    "author": "国泰海通超人说",
+    "viralScore": 76,
+    "likes": 174,
+    "collects": 121,
+    "category": "科普",
+    "bizLine": "投教",
+    "tags": [
+      "国泰海通超人说",
+      "科普"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/69cf794000000000230069db",
+    "analysis": "国泰海通超人说用「科普」切入，点赞174，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 16
   },
   {
-    "title": "突然发现要和喜欢炒股的人当朋友",
+    "title": "大宗商品筑底，周期行情要来了？",
     "platform": "小红书",
-    "author": "东方财富",
-    "viralScore": 88,
-    "likes": 1678,
-    "collects": 1174,
-    "category": "科普",
+    "author": "国泰海通超人说",
+    "viralScore": 76,
+    "likes": 154,
+    "collects": 107,
+    "category": "数据卡片",
     "bizLine": "投教",
     "tags": [
-      "东方财富",
-      "科普"
+      "国泰海通超人说",
+      "数据卡片"
     ],
-    "link": "https://www.xiaohongshu.com/explore/699ebe0600000000230394d7",
-    "analysis": "东方财富用「科普」切入，点赞1678，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
+    "link": "https://www.xiaohongshu.com/explore/6a8e9cde0000000025013067",
+    "analysis": "国泰海通超人说用「数据卡片」切入，点赞154，是券商官方号在数据卡片类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「XX日历/数据盘点」，图表化呈现，做成可收藏卡片。",
     "id": 17
   },
   {
-    "title": "🔥7x24小时办理，国金证券超方便！",
+    "title": "金价回调想布局？“T+0”交易方式可试试！",
     "platform": "小红书",
-    "author": "国金证券",
-    "viralScore": 84,
-    "likes": 1153,
-    "collects": 807,
+    "author": "华泰证券涨乐财富通",
+    "viralScore": 76,
+    "likes": 149,
+    "collects": 104,
     "category": "科普",
     "bizLine": "投教",
     "tags": [
-      "国金证券",
+      "华泰证券涨乐财富通",
       "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/670730dc000000001b020ffe",
-    "analysis": "国金证券用「科普」切入，点赞1153，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "link": "https://www.xiaohongshu.com/explore/69d47677000000002102d055",
+    "analysis": "华泰证券涨乐财富通用「科普」切入，点赞149，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 18
   },
   {
-    "title": "不算不知道👀一算吓一跳 低佣到底能省多少❓",
+    "title": "🔥江海证券组合家重磅福利",
     "platform": "小红书",
-    "author": "东方财富证券",
-    "viralScore": 84,
-    "likes": 944,
-    "collects": 660,
+    "author": "江海证券组合家",
+    "viralScore": 76,
+    "likes": 148,
+    "collects": 103,
     "category": "科普",
-    "bizLine": "投教",
+    "bizLine": "券商业务",
     "tags": [
-      "东方财富证券",
+      "江海证券组合家",
       "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/6732f872000000001b02bc7a",
-    "analysis": "东方财富证券用「科普」切入，点赞944，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "link": "https://www.xiaohongshu.com/explore/68a8536f000000001c010bda",
+    "analysis": "江海证券组合家用「科普」切入，点赞148，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 19
   },
   {
-    "title": "炒股人有自己的恨海情天😭",
+    "title": "猜猜这是什么水果？猜对送证券开户福利",
     "platform": "小红书",
-    "author": "东方财富",
-    "viralScore": 84,
-    "likes": 844,
-    "collects": 590,
-    "category": "科普",
-    "bizLine": "投教",
+    "author": "申万宏源证券财富管理",
+    "viralScore": 76,
+    "likes": 128,
+    "collects": 89,
+    "category": "攻略",
+    "bizLine": "券商业务",
     "tags": [
-      "东方财富",
-      "科普"
+      "申万宏源证券财富管理",
+      "攻略"
     ],
-    "link": "https://www.xiaohongshu.com/explore/6ae85ede000000002d002e43",
-    "analysis": "东方财富用「科普」切入，点赞844，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
+    "link": "https://www.xiaohongshu.com/explore/6ac6efc4000000000202989a",
+    "analysis": "申万宏源证券财富管理用「攻略」切入，点赞128，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
     "id": 20
   }
 ];
 var _originalViralContent = JSON.parse(JSON.stringify(viralContent));
+
+var viralLibrary = [
+  {
+    "id": "69e57f9a0000000023025ec4",
+    "title": "一文读懂“均线（MA）”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/69e57f9a0000000023025ec4",
+    "likes": 9451,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "68eca94f000000000701743c",
+    "title": "一分钟搞懂“洗盘”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/68eca94f000000000701743c",
+    "likes": 8186,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "68fb4a1f000000000402a043",
+    "title": "🐮存储芯片爆发性机会！10大核心龙头",
+    "author": "江海证券组合家",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/68fb4a1f000000000402a043",
+    "likes": 6272,
+    "collects": null,
+    "category": "合集榜单",
+    "tags": [
+      "江海证券组合家",
+      "合集榜单"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "6a78a6bc0000000008010cf7",
+    "title": "🐮8大经典买入方法！",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a78a6bc0000000008010cf7",
+    "likes": 5638,
+    "collects": null,
+    "category": "合集榜单",
+    "tags": [
+      "江海证券小白鲸",
+      "合集榜单"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "68da4a74000000000e00d7fc",
+    "title": "股票必看的十大指标❗️",
+    "author": "同花顺研习社",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/68da4a74000000000e00d7fc",
+    "likes": 5148,
+    "collects": null,
+    "category": "攻略",
+    "tags": [
+      "同花顺研习社",
+      "攻略"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "67443cb10000000002019ca0",
+    "title": "炒股复盘步骤全流程！赶紧收藏",
+    "author": "广发证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/67443cb10000000002019ca0",
+    "likes": 4802,
+    "collects": null,
+    "category": "数据卡片",
+    "tags": [
+      "广发证券",
+      "数据卡片"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "2",
+    "title": "半导体产业链大拆解，投资报告免费送",
+    "author": "国金证券",
+    "platform": "券商案例",
+    "link": "https://www.xiaohongshu.com/explore/6a06e0840000000037036292",
+    "likes": 4672,
+    "collects": 3572,
+    "category": "科普",
+    "tags": [
+      "券商案例",
+      "半导体",
+      "产业链",
+      "报告诱饵"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "66014c58000000000d00d8ec",
+    "title": "这样证券开户，一年多省几千！",
+    "author": "广发证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/66014c58000000000d00d8ec",
+    "likes": 4209,
+    "collects": null,
+    "category": "攻略",
+    "tags": [
+      "广发证券",
+      "攻略"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "6757a768000000000603abf6",
+    "title": "股市上车指南📝｜新手如何购买第一支股票🥳",
+    "author": "东方财富证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6757a768000000000603abf6",
+    "likes": 4074,
+    "collects": null,
+    "category": "攻略",
+    "tags": [
+      "东方财富证券",
+      "攻略"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "6a869aaa0000000035017be2",
+    "title": "什么是“CAPEX（资本性支出）？",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a869aaa0000000035017be2",
+    "likes": 3983,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "67a5d1e2000000001800a92d",
+    "title": "A股顶级科技公司TOP100强👍",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/67a5d1e2000000001800a92d",
+    "likes": 3681,
+    "collects": null,
+    "category": "合集榜单",
+    "tags": [
+      "江海证券小白鲸",
+      "合集榜单"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "6ae0782a000000003501fc64",
+    "title": "乖乖待在我身边不好吗",
+    "author": "东方财富",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ae0782a000000003501fc64",
+    "likes": 3342,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "东方财富",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "68ea1cda000000000401063a",
+    "title": "股市小白必看，K线的常见形态❗️",
+    "author": "同花顺研习社",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/68ea1cda000000000401063a",
+    "likes": 3179,
+    "collects": null,
+    "category": "攻略",
+    "tags": [
+      "同花顺研习社",
+      "攻略"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "3",
+    "title": "大白话看懂CCL/PCB/电子布到底是啥",
+    "author": "国金证券",
+    "platform": "券商案例",
+    "link": "https://www.xiaohongshu.com/explore/69fc5cb2000000001a036e99",
+    "likes": 3022,
+    "collects": 3043,
+    "category": "科普",
+    "tags": [
+      "券商案例",
+      "PCB",
+      "电子布",
+      "大白话科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "4",
+    "title": "要站在光里，首先要弄懂「光」是什么",
+    "author": "国金证券",
+    "platform": "券商案例",
+    "link": "https://www.xiaohongshu.com/explore/69e7539b0000000022025b7c",
+    "likes": 1949,
+    "collects": 2341,
+    "category": "科普",
+    "tags": [
+      "小红书",
+      "光模块",
+      "诗意钩子",
+      "国金证券"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "6adb0881000000003101f629",
+    "title": "全剧杀青｜长红客栈的故事，即将开启",
+    "author": "国金证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6adb0881000000003101f629",
+    "likes": 1833,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "国金证券",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "699ebe0600000000230394d7",
+    "title": "突然发现要和喜欢炒股的人当朋友",
+    "author": "东方财富",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/699ebe0600000000230394d7",
+    "likes": 1678,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "东方财富",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "670730dc000000001b020ffe",
+    "title": "🔥7x24小时办理，国金证券超方便！",
+    "author": "国金证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/670730dc000000001b020ffe",
+    "likes": 1153,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "国金证券",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "6732f872000000001b02bc7a",
+    "title": "不算不知道👀一算吓一跳 低佣到底能省多少❓",
+    "author": "东方财富证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6732f872000000001b02bc7a",
+    "likes": 944,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "东方财富证券",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "6ae85ede000000002d002e43",
+    "title": "炒股人有自己的恨海情天😭",
+    "author": "东方财富",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ae85ede000000002d002e43",
+    "likes": 844,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "东方财富",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03",
+    "lastUsed": "2026-11-03",
+    "usedCount": 1
+  },
+  {
+    "id": "6ae1a6f20000000028004cfe",
+    "title": "《长红客栈》第2集：木匠学炒股首战告捷",
+    "author": "国金证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ae1a6f20000000028004cfe",
+    "likes": 796,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "国金证券",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a38e489000000000f005174",
+    "title": "一文读懂“四大经济周期”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a38e489000000000f005174",
+    "likes": 607,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ae1a4a90000000022036327",
+    "title": "《长红客栈》正式开播！第1集铜跌成这样咋买？",
+    "author": "国金证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ae1a4a90000000022036327",
+    "likes": 436,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "国金证券",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ad607670000000027036038",
+    "title": "🔥10🈷️盯紧羊字辈！",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ad607670000000027036038",
+    "likes": 389,
+    "collects": null,
+    "category": "合集榜单",
+    "tags": [
+      "江海证券小白鲸",
+      "合集榜单"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ac9ad83000000001a02790c",
+    "title": "100种普通人的睡后收入",
+    "author": "同花顺研习社",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ac9ad83000000001a02790c",
+    "likes": 371,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "同花顺研习社",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ad5dac8000000002f030862",
+    "title": "特斯拉汽车为何能 \"升空\"？技术原理拆解",
+    "author": "国金证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ad5dac8000000002f030862",
+    "likes": 290,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "国金证券",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ae5515b000000001200945e",
+    "title": "🔥A股下周大事件（11.2-11.6）！",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ae5515b000000001200945e",
+    "likes": 271,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "江海证券小白鲸",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6969a55b000000001a02b65f",
+    "title": "“马”呀，申万宏源的“羊毛”太香了咩！",
+    "author": "申万宏源证券财富管理",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6969a55b000000001a02b65f",
+    "likes": 261,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "申万宏源证券财富管理",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ad3078d000000001403b91c",
+    "title": "🔥A股下周大事件（10.19-10.23）！",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ad3078d000000001403b91c",
+    "likes": 251,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "江海证券小白鲸",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "68aff2e8000000001b031dca",
+    "title": "被问爆！国泰海通新客开户福利香到哭😭",
+    "author": "国泰海通超人说",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/68aff2e8000000001b031dca",
+    "likes": 244,
+    "collects": null,
+    "category": "攻略",
+    "tags": [
+      "国泰海通超人说",
+      "攻略"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ab22af800000000310110ab",
+    "title": "一文读懂“蓝筹股、红筹股”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ab22af800000000310110ab",
+    "likes": 216,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6adc19aa000000002c01a2ca",
+    "title": "🔥A股下周大事件（10.26-10.30）！",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6adc19aa000000002c01a2ca",
+    "likes": 216,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "江海证券小白鲸",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ab2384b000000003100e054",
+    "title": "一分钟搞懂“股票解禁”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ab2384b000000003100e054",
+    "likes": 215,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ac9b7e200000000180070ba",
+    "title": "🔥A股下周大事件（10.12-10.16）！",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ac9b7e200000000180070ba",
+    "likes": 207,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "江海证券小白鲸",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a91415f000000000b024b10",
+    "title": "一文读懂“72法则”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a91415f000000000b024b10",
+    "likes": 206,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a6ffb420000000027020b98",
+    "title": "一分钟搞懂“股票质押式回购”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a6ffb420000000027020b98",
+    "likes": 188,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a7ea785000000002403eeee",
+    "title": "一分钟搞懂“面值退市”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a7ea785000000002403eeee",
+    "likes": 182,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "69cf794000000000230069db",
+    "title": "3800守得住？",
+    "author": "国泰海通超人说",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/69cf794000000000230069db",
+    "likes": 174,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "国泰海通超人说",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a8d515100000000100291a4",
+    "title": "一文读懂“算力金属”（图文）",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a8d515100000000100291a4",
+    "likes": 169,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a4ca355000000000f01daf8",
+    "title": "一分钟搞懂“永续债”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a4ca355000000000f01daf8",
+    "likes": 154,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a8e9cde0000000025013067",
+    "title": "大宗商品筑底，周期行情要来了？",
+    "author": "国泰海通超人说",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a8e9cde0000000025013067",
+    "likes": 154,
+    "collects": null,
+    "category": "数据卡片",
+    "tags": [
+      "国泰海通超人说",
+      "数据卡片"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "69d47677000000002102d055",
+    "title": "金价回调想布局？“T+0”交易方式可试试！",
+    "author": "华泰证券涨乐财富通",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/69d47677000000002102d055",
+    "likes": 149,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "华泰证券涨乐财富通",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "68a8536f000000001c010bda",
+    "title": "🔥江海证券组合家重磅福利",
+    "author": "江海证券组合家",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/68a8536f000000001c010bda",
+    "likes": 148,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "江海证券组合家",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6adb0603000000003102485a",
+    "title": "尽揽涨跌风云！《长红客栈》即将上线",
+    "author": "国金证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6adb0603000000003102485a",
+    "likes": 147,
+    "collects": null,
+    "category": "数据卡片",
+    "tags": [
+      "国金证券",
+      "数据卡片"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6aa0f4ff000000001001d9bd",
+    "title": "一文读懂“鸟笼逻辑”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6aa0f4ff000000001001d9bd",
+    "likes": 147,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a8e5cd70000000025018450",
+    "title": "大盘缩量调整 短期有望变盘？",
+    "author": "国泰海通超人说",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a8e5cd70000000025018450",
+    "likes": 144,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "国泰海通超人说",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a63030a000000001100501e",
+    "title": "一分钟搞懂“金字塔策略”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a63030a000000001100501e",
+    "likes": 143,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6acf7d0a000000000b006de0",
+    "title": "🔥10🈷️六大核心主线",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6acf7d0a000000000b006de0",
+    "likes": 142,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "江海证券小白鲸",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a548333000000001102f467",
+    "title": "一文读懂“A股交易新规”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a548333000000001102f467",
+    "likes": 139,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6aa8e980000000001203ed4a",
+    "title": "一分钟搞懂投资中的“鳄鱼效应”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6aa8e980000000001203ed4a",
+    "likes": 138,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a96333200000000120352a9",
+    "title": "一分钟搞懂投资中的“FOMO情绪”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a96333200000000120352a9",
+    "likes": 136,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ad097900000000012038178",
+    "title": "AI短剧：从漫剧走向长剧与电影",
+    "author": "国金证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ad097900000000012038178",
+    "likes": 130,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "国金证券",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ac6efc4000000000202989a",
+    "title": "猜猜这是什么水果？猜对送证券开户福利",
+    "author": "申万宏源证券财富管理",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ac6efc4000000000202989a",
+    "likes": 128,
+    "collects": null,
+    "category": "攻略",
+    "tags": [
+      "申万宏源证券财富管理",
+      "攻略"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6adb3357000000002c00de90",
+    "title": "AI开始教机器人干活，产业爆发还要多久？",
+    "author": "国金证券",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6adb3357000000002c00de90",
+    "likes": 121,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "国金证券",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6accca88000000001303e476",
+    "title": "🔥10🈷️这三天，建议提前空仓！",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6accca88000000001303e476",
+    "likes": 121,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "江海证券小白鲸",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6ae1de4d0000000027014ade",
+    "title": "🔥人形机器人“唯一性”龙头！",
+    "author": "江海证券小白鲸",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6ae1de4d0000000027014ade",
+    "likes": 120,
+    "collects": null,
+    "category": "合集榜单",
+    "tags": [
+      "江海证券小白鲸",
+      "合集榜单"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a8ba8e90000000016023711",
+    "title": "A股真正的风险，并不是下跌！",
+    "author": "国泰海通超人说",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a8ba8e90000000016023711",
+    "likes": 119,
+    "collects": null,
+    "category": "避坑",
+    "tags": [
+      "国泰海通超人说",
+      "避坑"
+    ],
+    "firstSeen": "2026-11-03"
+  },
+  {
+    "id": "6a3de93f000000000f028de5",
+    "title": "一文读懂“猪粮比”",
+    "author": "招商证券财经社牛养成记",
+    "platform": "小红书",
+    "link": "https://www.xiaohongshu.com/explore/6a3de93f000000000f028de5",
+    "likes": 107,
+    "collects": null,
+    "category": "科普",
+    "tags": [
+      "招商证券财经社牛养成记",
+      "科普"
+    ],
+    "firstSeen": "2026-11-03"
+  }
+];
 
 var weeklySchedule = [
   {
@@ -7592,10 +8526,10 @@ function nav(page) {
   currentPage = page;
   var items = document.querySelectorAll('.nav-item');
   items.forEach(function(item) { item.classList.remove('active'); });
-  var pageMap = {home:0,accounts:1,hotspots:2,topics:3,benchmarks:4,viralContent:5,teardown:6,scripts:7,create:8,posters:9,library:10,analytics:11,weekly:12,compliance:13,tasks:14,reports:15,files:16};
+  var pageMap = {home:0,accounts:1,hotspots:2,topics:3,benchmarks:4,viralContent:5,viralLibrary:6,teardown:7,scripts:8,create:9,posters:10,library:11,analytics:12,weekly:13,compliance:14,tasks:15,reports:16,files:17};
   var idx = pageMap[page];
   if (idx !== undefined) { items[idx].classList.add('active'); }
-  var renderers = {home:renderHome,accounts:renderAccounts,hotspots:renderHotspots,topics:renderTopics,benchmarks:renderBenchmarks,viralContent:renderViralContent,teardown:renderTeardown,scripts:renderScripts,create:renderCreate,posters:renderPosters,library:renderLibrary,analytics:renderAnalytics,weekly:renderWeekly,compliance:renderCompliance,tasks:renderTasks,reports:renderReports,files:renderFiles};
+  var renderers = {home:renderHome,accounts:renderAccounts,hotspots:renderHotspots,topics:renderTopics,benchmarks:renderBenchmarks,viralContent:renderViralContent,viralLibrary:renderViralLibrary,teardown:renderTeardown,scripts:renderScripts,create:renderCreate,posters:renderPosters,library:renderLibrary,analytics:renderAnalytics,weekly:renderWeekly,compliance:renderCompliance,tasks:renderTasks,reports:renderReports,files:renderFiles};
   var fn = renderers[page];
   if (fn) {
     document.getElementById('main').innerHTML = fn();
@@ -8699,6 +9633,166 @@ function showViralQr(id) {
   } catch (e) {
     box.innerHTML = '<div style="font-size:12px;color:#c00;padding:8px">二维码生成失败，请点「查看原文」</div>';
   }
+}
+
+// ===== 爆款笔记库（V2.6 新增） =====
+function getCustomNotes() { return loadFromLS('viralLibCustom', []); }
+function getDeletedIds() { return loadFromLS('viralLibDeleted', []); }
+function getUsedIds() { return loadFromLS('viralLibUsed', []); }
+
+function allLibraryNotes() {
+  var deleted = getDeletedIds();
+  var base = (viralLibrary || []).filter(function(n) {
+    return n && n.link && deleted.indexOf(String(n.id)) < 0;
+  });
+  return base.concat(getCustomNotes());
+}
+
+function showLibQr(key) {
+  var box = document.getElementById('libqr-' + key);
+  if (!box) return;
+  if (box.style.display === 'block') { box.style.display = 'none'; box.innerHTML = ''; return; }
+  var notes = allLibraryNotes();
+  var v = null;
+  for (var i = 0; i < notes.length; i++) { if (String(notes[i].id) === String(key)) { v = notes[i]; break; } }
+  if (!v || !v.link) return;
+  box.innerHTML = '<div style="text-align:center"><div style="font-size:12px;color:#6B7280;margin-bottom:6px">手机扫码打开原文</div><div id="libqr-img-' + key + '" style="display:inline-block"></div></div>';
+  box.style.display = 'block';
+  try {
+    new QRCode(document.getElementById('libqr-img-' + key), { text: v.link, width: 132, height: 132, correctLevel: QRCode.CorrectLevel.M });
+  } catch (e) {
+    box.innerHTML = '<div style="font-size:12px;color:#c00;padding:8px">二维码生成失败，请点「查看原文」</div>';
+  }
+}
+
+function toggleLibUsed(key) {
+  var used = getUsedIds();
+  var k = String(key);
+  var i = used.indexOf(k);
+  if (i >= 0) { used.splice(i, 1); } else { used.push(k); }
+  saveToLS('viralLibUsed', used);
+  nav('viralLibrary');
+  toast(i >= 0 ? '已取消标记' : '已标记为已用', 'success');
+}
+
+function delLibNote(key) {
+  var k = String(key);
+  var custom = getCustomNotes();
+  var isCustom = custom.some(function(n) { return String(n.id) === k; });
+  if (isCustom) {
+    custom = custom.filter(function(n) { return String(n.id) !== k; });
+    saveToLS('viralLibCustom', custom);
+  } else {
+    var deleted = getDeletedIds();
+    if (deleted.indexOf(k) < 0) deleted.push(k);
+    saveToLS('viralLibDeleted', deleted);
+  }
+  nav('viralLibrary');
+  toast('已删除', 'success');
+}
+
+function openAddNote() {
+  var body = '<div class="vlib-add-form">';
+  body += '<input type="text" id="addNoteTitle" placeholder="笔记标题">';
+  body += '<input type="text" id="addNoteAuthor" placeholder="作者 / 账号名">';
+  body += '<input type="text" id="addNoteLink" placeholder="链接 https://www.xiaohongshu.com/explore/...">';
+  body += '<input type="text" id="addNoteCategory" placeholder="类型（避坑/攻略/教程/科普/合集榜单/数据卡片）">';
+  body += '</div>';
+  body += '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">';
+  body += '<button class="btn" onclick="closeModal()">取消</button>';
+  body += '<button class="btn btn-pri" onclick="saveAddNote()">保存</button>';
+  body += '</div>';
+  openModal('手动添加笔记', body);
+}
+
+function saveAddNote() {
+  var title = (document.getElementById('addNoteTitle').value || '').trim();
+  var author = (document.getElementById('addNoteAuthor').value || '').trim();
+  var link = (document.getElementById('addNoteLink').value || '').trim();
+  var category = (document.getElementById('addNoteCategory').value || '').trim() || '科普';
+  if (!title || !link) { toast('标题和链接必填', 'error'); return; }
+  if (!/xiaohongshu\.com\/(explore|discovery\/item)\/[0-9a-fA-F]{24}|xhslink\./.test(link)) {
+    toast('链接格式不正确，应为小红书笔记链接', 'error'); return;
+  }
+  var custom = getCustomNotes();
+  custom.unshift({ id: 'c' + Date.now(), title: title, author: author || '手动添加', platform: '小红书', link: link, likes: 0, collects: null, category: category, tags: [author || '手动', category], firstSeen: todayStr() });
+  saveToLS('viralLibCustom', custom);
+  closeModal();
+  nav('viralLibrary');
+  toast('已添加到爆款笔记库', 'success');
+}
+
+function filterVlib() {
+  var q = (document.getElementById('vlibSearch').value || '').toLowerCase();
+  var cards = document.querySelectorAll('#vlibGrid .vlib-card');
+  cards.forEach(function(c) {
+    c.style.display = c.textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+  });
+}
+
+function filterVlibCat(cat) {
+  var tabs = document.querySelectorAll('#vlibTabs .tab');
+  tabs.forEach(function(t) {
+    var txt = t.textContent || '';
+    if ((cat === '全部' && txt.indexOf('全部') === 0) || txt.indexOf(cat) === 0) t.classList.add('active');
+    else t.classList.remove('active');
+  });
+  var cards = document.querySelectorAll('#vlibGrid .vlib-card');
+  cards.forEach(function(c) {
+    c.style.display = (cat === '全部' || c.dataset.category === cat) ? '' : 'none';
+  });
+}
+
+function renderViralLibrary() {
+  var notes = allLibraryNotes();
+  var usedIds = getUsedIds();
+  var authors = {};
+  notes.forEach(function(n) { authors[n.author] = (authors[n.author] || 0) + 1; });
+  var catCount = {};
+  notes.forEach(function(n) { catCount[n.category] = (catCount[n.category] || 0) + 1; });
+
+  var h = renderTopbar();
+  h += '<div class="page-title">爆款笔记库 <span class="badge">' + notes.length + '篇</span></div>';
+
+  h += '<div class="stats-grid">';
+  h += '<div class="stat-card highlight"><div class="label">笔记总数</div><div class="value">' + notes.length + '</div><div class="sub">对标账号真实笔记</div></div>';
+  h += '<div class="stat-card"><div class="label">覆盖账号</div><div class="value">' + Object.keys(authors).length + '</div><div class="sub">个券商/平台号</div></div>';
+  h += '<div class="stat-card"><div class="label">已标记使用</div><div class="value">' + usedIds.length + '</div><div class="sub">条（本地记录）</div></div>';
+  h += '<div class="stat-card"><div class="label">内容类型</div><div class="value">' + Object.keys(catCount).length + '</div><div class="sub">种笔记类型</div></div>';
+  h += '</div>';
+
+  h += '<div class="card" style="padding:12px 18px;margin-bottom:16px;font-size:12px;color:var(--text2)">说明：这里沉淀了对标账号（国金/江海/招商/同花顺/东方财富等）真实高互动笔记，可点击或扫码跳转小红书原笔记；支持手动添加链接、删除、标记已用。</div>';
+
+  h += '<div class="search-box"><input type="text" id="vlibSearch" placeholder="搜索标题 / 作者..." oninput="filterVlib()"><button class="btn btn-pri" onclick="openAddNote()">+ 添加笔记</button></div>';
+
+  var cats = ['全部','避坑','攻略','教程','科普','合集榜单','数据卡片'];
+  h += '<div class="tabs" id="vlibTabs">';
+  cats.forEach(function(c) {
+    var cnt = c === '全部' ? notes.length : notes.filter(function(n) { return n.category === c; }).length;
+    h += '<div class="tab' + (c === '全部' ? ' active' : '') + '" onclick="filterVlibCat(\'' + c + '\')">' + c + ' (' + cnt + ')</div>';
+  });
+  h += '</div>';
+
+  h += '<div class="vlib-grid" id="vlibGrid">';
+  notes.forEach(function(n) {
+    var key = String(n.id).replace(/'/g, '');
+    var isUsed = usedIds.indexOf(String(n.id)) >= 0;
+    var usedCnt = n.usedCount || 0;
+    h += '<div class="vlib-card' + (isUsed ? ' used' : '') + '" data-author="' + (n.author || '') + '" data-category="' + (n.category || '科普') + '">';
+    h += '<div class="vlib-title">' + n.title + '</div>';
+    h += '<div class="vlib-meta"><span class="tag tag-blue">' + (n.author || '-') + '</span><span class="tag tag-green">' + (n.category || '科普') + '</span></div>';
+    h += '<div class="vlib-stats">&#128077; ' + (n.likes || 0) + (n.collects != null ? ' &middot; &#11088; ' + n.collects : '') + (usedCnt > 0 ? ' &middot; 已用 ' + usedCnt + ' 次' : ' &middot; 未用') + '</div>';
+    h += '<div class="vlib-actions">';
+    h += '<a href="' + n.link + '" target="_blank" class="btn btn-sm">查看原文</a>';
+    h += '<button class="btn btn-sm" onclick="showLibQr(\'' + key + '\')">手机扫码</button>';
+    h += '<button class="btn btn-sm ' + (isUsed ? 'btn-pri' : '') + '" onclick="toggleLibUsed(\'' + key + '\')">' + (isUsed ? '已用 &#10003;' : '标记已用') + '</button>';
+    h += '<button class="btn btn-sm" style="color:#DC2626;border-color:#FCA5A5" onclick="delLibNote(\'' + key + '\')">删除</button>';
+    h += '</div>';
+    h += '<div id="libqr-' + key + '" style="display:none;margin-top:8px"></div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
 }
 </script>
 </body>
