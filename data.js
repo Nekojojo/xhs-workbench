@@ -968,26 +968,6 @@ var topicPlans = [
 
 var viralContent = [
   {
-    "title": "存储芯片爆发性机会！10大核心龙头",
-    "platform": "券商案例",
-    "author": "江海证券组合家",
-    "viralScore": 96,
-    "likes": 5000,
-    "collects": 10000,
-    "category": "合集榜单",
-    "bizLine": "投教",
-    "tags": [
-      "券商案例",
-      "存储芯片",
-      "半导体",
-      "龙头清单"
-    ],
-    "link": "https://www.xiaohongshu.com/explore/68fb4a1f000000000402a043",
-    "analysis": "江海证券组合家用「10大」切入，点赞5000，是券商官方号在合集榜单类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「XX赛道N大龙头/榜单」，正文按「赛道逻辑→清单→核心数据」做成可收藏清单。",
-    "id": 1
-  },
-  {
     "title": "半导体产业链大拆解，投资报告免费送",
     "platform": "券商案例",
     "author": "国金证券",
@@ -1005,7 +985,7 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/6a06e0840000000037036292",
     "analysis": "国金证券用「科普」切入，点赞4672，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 2
+    "id": 1
   },
   {
     "title": "大白话看懂CCL/PCB/电子布到底是啥",
@@ -1025,7 +1005,7 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/69fc5cb2000000001a036e99",
     "analysis": "国金证券用「大白话」切入，点赞3022，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 3
+    "id": 2
   },
   {
     "title": "要站在光里，首先要弄懂「光」是什么",
@@ -1045,7 +1025,7 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/69e7539b0000000022025b7c",
     "analysis": "国金证券用「科普」切入，点赞1949，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 4
+    "id": 3
   },
   {
     "title": "一文读懂“均线（MA）”",
@@ -1063,7 +1043,7 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/69e57f9a0000000023025ec4",
     "analysis": "招商证券财经社牛养成记用「读懂」切入，点赞9451，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 5
+    "id": 4
   },
   {
     "title": "一分钟搞懂“洗盘”",
@@ -1081,6 +1061,24 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/68eca94f000000000701743c",
     "analysis": "招商证券财经社牛养成记用「一分钟」切入，点赞8186，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
+    "id": 5
+  },
+  {
+    "title": "🐮存储芯片爆发性机会！10大核心龙头",
+    "platform": "小红书",
+    "author": "江海证券组合家",
+    "viralScore": 96,
+    "likes": 6272,
+    "collects": 4390,
+    "category": "合集榜单",
+    "bizLine": "投教",
+    "tags": [
+      "江海证券组合家",
+      "合集榜单"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68fb4a1f000000000402a043",
+    "analysis": "江海证券组合家用「10大」切入，点赞6272，是券商官方号在合集榜单类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「XX赛道N大龙头/榜单」，正文按「赛道逻辑→清单→核心数据」做成可收藏清单。",
     "id": 6
   },
   {
@@ -1102,6 +1100,24 @@ var viralContent = [
     "id": 7
   },
   {
+    "title": "股票必看的十大指标❗️",
+    "platform": "小红书",
+    "author": "同花顺研习社",
+    "viralScore": 96,
+    "likes": 5148,
+    "collects": 3603,
+    "category": "攻略",
+    "bizLine": "投教",
+    "tags": [
+      "同花顺研习社",
+      "攻略"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68da4a74000000000e00d7fc",
+    "analysis": "同花顺研习社用「必看」切入，点赞5148，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
+    "id": 8
+  },
+  {
     "title": "炒股复盘步骤全流程！赶紧收藏",
     "platform": "小红书",
     "author": "广发证券",
@@ -1117,7 +1133,7 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/67443cb10000000002019ca0",
     "analysis": "广发证券用「复盘」切入，点赞4802，是券商官方号在数据卡片类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「XX日历/数据盘点」，图表化呈现，做成可收藏卡片。",
-    "id": 8
+    "id": 9
   },
   {
     "title": "这样证券开户，一年多省几千！",
@@ -1135,7 +1151,7 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/66014c58000000000d00d8ec",
     "analysis": "广发证券用「攻略」切入，点赞4209，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
-    "id": 9
+    "id": 10
   },
   {
     "title": "股市上车指南📝｜新手如何购买第一支股票🥳",
@@ -1153,7 +1169,7 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/6757a768000000000603abf6",
     "analysis": "东方财富证券用「指南」切入，点赞4074，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
-    "id": 10
+    "id": 11
   },
   {
     "title": "什么是“CAPEX（资本性支出）？",
@@ -1171,7 +1187,7 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/6a869aaa0000000035017be2",
     "analysis": "招商证券财经社牛养成记用「科普」切入，点赞3983，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 11
+    "id": 12
   },
   {
     "title": "A股顶级科技公司TOP100强👍",
@@ -1189,7 +1205,43 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/67a5d1e2000000001800a92d",
     "analysis": "江海证券小白鲸用「TOP」切入，点赞3681，是券商官方号在合集榜单类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「XX赛道N大龙头/榜单」，正文按「赛道逻辑→清单→核心数据」做成可收藏清单。",
-    "id": 12
+    "id": 13
+  },
+  {
+    "title": "乖乖待在我身边不好吗",
+    "platform": "小红书",
+    "author": "东方财富",
+    "viralScore": 92,
+    "likes": 3342,
+    "collects": 2339,
+    "category": "科普",
+    "bizLine": "投教",
+    "tags": [
+      "东方财富",
+      "科普"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/6ae0782a000000003501fc64",
+    "analysis": "东方财富用「科普」切入，点赞3342，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
+    "id": 14
+  },
+  {
+    "title": "股市小白必看，K线的常见形态❗️",
+    "platform": "小红书",
+    "author": "同花顺研习社",
+    "viralScore": 92,
+    "likes": 3179,
+    "collects": 2225,
+    "category": "攻略",
+    "bizLine": "投教",
+    "tags": [
+      "同花顺研习社",
+      "攻略"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68ea1cda000000000401063a",
+    "analysis": "同花顺研习社用「必看」切入，点赞3179，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
+    "id": 15
   },
   {
     "title": "全剧杀青｜长红客栈的故事，即将开启",
@@ -1207,7 +1259,25 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/6adb0881000000003101f629",
     "analysis": "国金证券用「科普」切入，点赞1833，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 13
+    "id": 16
+  },
+  {
+    "title": "突然发现要和喜欢炒股的人当朋友",
+    "platform": "小红书",
+    "author": "东方财富",
+    "viralScore": 88,
+    "likes": 1678,
+    "collects": 1174,
+    "category": "科普",
+    "bizLine": "投教",
+    "tags": [
+      "东方财富",
+      "科普"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/699ebe0600000000230394d7",
+    "analysis": "东方财富用「科普」切入，点赞1678，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
+    "id": 17
   },
   {
     "title": "🔥7x24小时办理，国金证券超方便！",
@@ -1225,7 +1295,7 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/670730dc000000001b020ffe",
     "analysis": "国金证券用「科普」切入，点赞1153，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 14
+    "id": 18
   },
   {
     "title": "不算不知道👀一算吓一跳 低佣到底能省多少❓",
@@ -1243,95 +1313,23 @@ var viralContent = [
     "link": "https://www.xiaohongshu.com/explore/6732f872000000001b02bc7a",
     "analysis": "东方财富证券用「科普」切入，点赞944，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 15
-  },
-  {
-    "title": "《长红客栈》第2集：木匠学炒股首战告捷",
-    "platform": "小红书",
-    "author": "国金证券",
-    "viralScore": 80,
-    "likes": 796,
-    "collects": 557,
-    "category": "科普",
-    "bizLine": "投教",
-    "tags": [
-      "国金证券",
-      "科普"
-    ],
-    "link": "https://www.xiaohongshu.com/explore/6ae1a6f20000000028004cfe",
-    "analysis": "国金证券用「科普」切入，点赞796，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 16
-  },
-  {
-    "title": "🔥10🈷️盯紧羊字辈！",
-    "platform": "小红书",
-    "author": "江海证券小白鲸",
-    "viralScore": 76,
-    "likes": 389,
-    "collects": 272,
-    "category": "合集榜单",
-    "bizLine": "投教",
-    "tags": [
-      "江海证券小白鲸",
-      "合集榜单"
-    ],
-    "link": "https://www.xiaohongshu.com/explore/6ad607670000000027036038",
-    "analysis": "江海证券小白鲸用「合集榜单」切入，点赞389，是券商官方号在合集榜单类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「XX赛道N大龙头/榜单」，正文按「赛道逻辑→清单→核心数据」做成可收藏清单。",
-    "id": 17
-  },
-  {
-    "title": "“马”呀，申万宏源的“羊毛”太香了咩！",
-    "platform": "小红书",
-    "author": "申万宏源证券财富管理",
-    "viralScore": 76,
-    "likes": 261,
-    "collects": 182,
-    "category": "科普",
-    "bizLine": "投教",
-    "tags": [
-      "申万宏源证券财富管理",
-      "科普"
-    ],
-    "link": "https://www.xiaohongshu.com/explore/6969a55b000000001a02b65f",
-    "analysis": "申万宏源证券财富管理用「科普」切入，点赞261，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
-    "id": 18
-  },
-  {
-    "title": "被问爆！国泰海通新客开户福利香到哭😭",
-    "platform": "小红书",
-    "author": "国泰海通超人说",
-    "viralScore": 76,
-    "likes": 244,
-    "collects": 170,
-    "category": "攻略",
-    "bizLine": "券商业务",
-    "tags": [
-      "国泰海通超人说",
-      "攻略"
-    ],
-    "link": "https://www.xiaohongshu.com/explore/68aff2e8000000001b031dca",
-    "analysis": "国泰海通超人说用「攻略」切入，点赞244，是券商官方号在攻略类内容里的已验证样本，可借鉴其选题与结构。",
-    "template": "标题「新手如何/怎么XX」，正文分步骤卡片讲解，结尾引导关注。",
     "id": 19
   },
   {
-    "title": "3800守得住？",
+    "title": "炒股人有自己的恨海情天😭",
     "platform": "小红书",
-    "author": "国泰海通超人说",
-    "viralScore": 76,
-    "likes": 174,
-    "collects": 121,
+    "author": "东方财富",
+    "viralScore": 84,
+    "likes": 844,
+    "collects": 590,
     "category": "科普",
     "bizLine": "投教",
     "tags": [
-      "国泰海通超人说",
+      "东方财富",
       "科普"
     ],
-    "link": "https://www.xiaohongshu.com/explore/69cf794000000000230069db",
-    "analysis": "国泰海通超人说用「科普」切入，点赞174，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
+    "link": "https://www.xiaohongshu.com/explore/6ae85ede000000002d002e43",
+    "analysis": "东方财富用「科普」切入，点赞844，是券商官方号在科普类内容里的已验证样本，可借鉴其选题与结构。",
     "template": "标题「一分钟搞懂/大白话看懂XX」，正文「是什么→为什么→怎么看」三段式，配一张图。",
     "id": 20
   }
