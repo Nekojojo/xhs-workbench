@@ -3087,7 +3087,7 @@ var proAccounts = [{"name":"华泰证券涨乐财富通","fans":19000,"posts":60
 function renderTopbar() {
   var now = new Date();
   var t = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日 ' + ('0'+now.getHours()).slice(-2) + ':' + ('0'+now.getMinutes()).slice(-2) + ':' + ('0'+now.getSeconds()).slice(-2);
-  return '<div class="topbar"><span class="topbar-clock" id="clock">' + t + '</span><span style="font-size:13px;color:var(--text2)">小红书工作台 简易版1.4</span><span id="history-selector-slot"></span><span class="compliance-reminder" onclick="nav(\'compliance\')">&#x26A0;&#xFE0F; 发布前务必过敏感词筛查</span></div>';
+  return '<div class="topbar"><span class="topbar-clock" id="clock">' + t + '</span><span style="font-size:13px;color:var(--text2)">小红书工作台 简易版1.5</span><span id="history-selector-slot"></span><span class="compliance-reminder" onclick="nav(\'compliance\')">&#x26A0;&#xFE0F; 发布前务必过敏感词筛查</span></div>';
 }
 
 function renderHotspots() {
@@ -3904,7 +3904,7 @@ function nav(page) {
   var pageMap = {hotspots:0, viral:1, viralLibrary:2, benchmarks:3, teardown:4, topics:5, weekly:6, create:7, scripts:8, tasks:9, compliance:10};
   var idx = pageMap[page];
   if (idx !== undefined) { items[idx].classList.add('active'); }
-  var renderers = {hotspots:renderHotspots, viral:renderViral, viralLibrary:renderViralLibrary, benchmarks:renderBenchmarks, teardown:renderTeardown, topics:renderTopics, weekly:renderWeekly, create:renderCreate, scripts:renderScripts, tasks:renderTasks, compliance:renderCompliance};
+  var renderers = {hotspots:renderHotspots, viral:renderViral, viralLibrary:(typeof renderViralLibrary === 'function' ? renderViralLibrary : null), benchmarks:renderBenchmarks, teardown:renderTeardown, topics:renderTopics, weekly:renderWeekly, create:renderCreate, scripts:renderScripts, tasks:renderTasks, compliance:renderCompliance};
   var fn = renderers[page];
   if (fn) {
     document.getElementById('main').innerHTML = fn();
