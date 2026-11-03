@@ -968,133 +968,310 @@ var topicPlans = [
 
 var viralContent = [
   {
-    "id": 1,
-    "title": "招商证券「一分钟讲清M1M2」，金融科普也能破圈",
+    "title": "存储芯片爆发性机会！10大核心龙头",
     "platform": "券商案例",
-    "author": "招商证券官方号",
+    "author": "江海证券组合家",
+    "viralScore": 98,
+    "likes": 5000,
+    "collects": 10000,
+    "category": "合集榜单",
+    "tags": [
+      "券商案例",
+      "存储芯片",
+      "半导体",
+      "龙头清单"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68fb4a1f000000000402a043",
+    "analysis": "用「爆发性机会+10大龙头」的数字榜单结构，把热门赛道整理成可直接收藏的清单，收藏1w+远超点赞，说明用户把它当工具书存下来反复翻。",
+    "template": "标题「XX赛道爆发性机会，N大核心龙头一次看清」，正文按「赛道逻辑→龙头清单→核心数据」三段，结尾引导收藏。",
+    "id": 1
+  },
+  {
+    "title": "一分钟搞懂「洗盘」",
+    "platform": "券商案例",
+    "author": "招商证券财经社牛养成记",
+    "viralScore": 97,
+    "likes": 5000,
+    "collects": 5000,
+    "category": "金融科普",
+    "tags": [
+      "券商案例",
+      "洗盘",
+      "招商证券",
+      "术语科普"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/68eca94f000000000701743c",
+    "analysis": "「一分钟搞懂」短平快结构把专业术语降维成口语，招商证券「财经社牛」IP让严肃内容变有趣，赞藏双5000+证明通俗化科普是券商号最强抓手。",
+    "template": "标题「一分钟搞懂XX」，正文用三步/条漫讲清一个概念，配一个有人格的账号IP，结尾引导关注。",
+    "id": 2
+  },
+  {
+    "title": "半导体产业链大拆解，投资报告免费送",
+    "platform": "券商案例",
+    "author": "国金证券",
+    "viralScore": 94,
+    "likes": 4672,
+    "collects": 3572,
+    "category": "产业链拆解",
+    "tags": [
+      "券商案例",
+      "半导体",
+      "产业链",
+      "报告诱饵"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/6a06e0840000000037036292",
+    "analysis": "「大拆解+报告免费送」用免费资料做诱饵承接留资，把复杂产业链做成可视化拆解，赞4672藏3572，是「内容种草→资料诱饵→留资转化」的经典样本。",
+    "template": "标题「XX产业链大拆解」，正文拆上中下游，结尾「评论区/私信领完整报告」做留资钩子（报告需合规过审）。",
+    "id": 3
+  },
+  {
+    "title": "大白话看懂CCL/PCB/电子布到底是啥",
+    "platform": "券商案例",
+    "author": "国金证券",
     "viralScore": 92,
-    "likes": 1857,
-    "collects": 2241,
-    "category": "投教科普",
+    "likes": 3022,
+    "collects": 3043,
+    "category": "术语科普",
     "tags": [
       "券商案例",
-      "M1M2",
-      "金融科普"
+      "PCB",
+      "电子布",
+      "大白话科普"
     ],
-    "link": "https://stcn.com/article/detail/1421829",
-    "analysis": "把晦涩的货币指标用「一分钟」短视频讲清楚，降低认知门槛，收藏数高于点赞数说明实用价值突出。",
-    "template": "挑一个专业名词，用「一分钟讲清」的口吻，配上生活化比喻和一张信息图，结尾引导收藏。"
+    "link": "https://www.xiaohongshu.com/explore/69fc5cb2000000001a036e99",
+    "analysis": "「大白话」直接承诺降低理解门槛，把三个易混术语一次讲清，收藏3043≈点赞3022，是「术语对照科普」的爆款范式。",
+    "template": "标题「大白话看懂XX」，用「易混概念对照表」讲清差别，一张图配一段口语解释。",
+    "id": 4
   },
   {
-    "id": 2,
-    "title": "国泰海通「ETF到底怎么分类」，一张图讲透品种",
+    "title": "组合家杯ETF实盘大赛正式开启",
     "platform": "券商案例",
-    "author": "国泰海通证券官方号",
-    "viralScore": 88,
-    "likes": 1266,
-    "collects": 1848,
-    "category": "ETF科普",
+    "author": "江海证券组合家",
+    "viralScore": 84,
+    "likes": 1474,
+    "collects": 525,
+    "category": "活动运营",
     "tags": [
       "券商案例",
-      "ETF",
-      "分类科普"
+      "ETF大赛",
+      "活动获客",
+      "江海证券"
     ],
-    "link": "https://www.thepaper.cn/newsDetail_forward_29415459",
-    "analysis": "用「一张图」形式把ETF按股票/债券/商品等维度分类，信息密度高、可收藏，切中新手痛点。",
-    "template": "把复杂知识做成分类信息图，配「一张图讲清XX」标题，视觉化呈现+收藏引导。"
+    "link": "https://www.xiaohongshu.com/explore/69ad0332000000000e03dd48",
+    "analysis": "用「实盘大赛」赛事化运营激活用户参与，把开户/交易行为包装成比赛，赞1474藏525，是券商「活动获客」可直接复制的形态。",
+    "template": "标题「XX杯实盘大赛开启」，正文讲赛制/奖励/报名方式，配排行榜，结尾加风险提示与合规声明。",
+    "id": 5
   },
   {
-    "id": 3,
-    "title": "湘财证券「秒懂国债逆回购」，节假日理财小技巧",
-    "platform": "券商案例",
-    "author": "湘财证券官方号",
-    "viralScore": 85,
-    "likes": 428,
-    "collects": 441,
-    "category": "实操教程",
-    "tags": [
-      "券商案例",
-      "国债逆回购",
-      "理财技巧"
-    ],
-    "link": "https://finance.sina.com.cn/roll/2024-11-21/doc-incwunpu4820078.shtml",
-    "analysis": "贴合节假日前夕的实用场景，讲清「操作一天赚多天利息」的原理，实用性强引发收藏。",
-    "template": "抓住节假日前的时间窗口，用「秒懂」「别错过」制造紧迫感，步骤分点讲清操作。"
-  },
-  {
-    "id": 4,
-    "title": "券商集体入驻小红书，官方号爆款打法合集",
-    "platform": "券商案例",
-    "author": "证券时报",
-    "viralScore": 86,
-    "likes": 1890,
-    "collects": 2450,
-    "category": "运营打法",
-    "tags": [
-      "券商案例",
-      "小红书运营",
-      "爆款拆解"
-    ],
-    "link": "https://finance.sina.com.cn/roll/2024-11-21/doc-incwunpu4820078.shtml",
-    "analysis": "汇总33家券商官方号入驻小红书的爆款案例（招商M1M2/国君ETF/湘财逆回购/江海3.6万粉），为同行提供可复制的对标清单。",
-    "template": "做「对标账号合集」，把同类账号的爆款标题、互动数据列成清单，配「怎么照着做」的拆解。"
-  },
-  {
-    "id": 5,
-    "title": "小红书发布首份《社区金融生态公约》，金融内容迎来规范期",
+    "title": "要站在光里，首先要弄懂「光」是什么",
     "platform": "小红书",
-    "author": "人民网",
-    "viralScore": 83,
-    "likes": 3200,
-    "collects": 4100,
-    "category": "行业规范",
+    "author": "国金证券",
+    "viralScore": 90,
+    "likes": 1949,
+    "collects": 2341,
+    "category": "金融科普",
     "tags": [
       "小红书",
-      "金融公约",
-      "内容规范"
+      "光模块",
+      "诗意钩子",
+      "国金证券"
     ],
-    "link": "http://gzylhyzx.com/detail.html?newsId=58503852",
-    "analysis": "金融内容需求爆发（日活+65%搜索+314%）叠加监管收紧，公约对「合法专业内容」和「非法荐股」划清界限，行业关注度极高。",
-    "template": "借政策/公约发布节点，做「这些内容被禁止」的清单式科普，标注红线、给出正确做法。"
+    "link": "https://www.xiaohongshu.com/explore/69e7539b0000000022025b7c",
+    "analysis": "用「站在光里」诗意钩子切入光学/光模块科普，收藏2341>点赞1949，证明「情绪化标题+硬核科普」能同时拿流量和收藏。",
+    "template": "标题用一句有画面感的话起兴，正文顺势带出专业科普，结尾点题升华。",
+    "id": 6
   },
   {
-    "id": 6,
-    "title": "券商网络营销路径换轨：从「流量至上」回归「专业为本」",
-    "platform": "同花顺",
-    "author": "上海证券报",
-    "viralScore": 80,
-    "likes": 1500,
-    "collects": 2100,
-    "category": "行业趋势",
+    "title": "快速看懂什么是物理AI",
+    "platform": "小红书",
+    "author": "国金证券",
+    "viralScore": 88,
+    "likes": 1545,
+    "collects": 1841,
+    "category": "金融科普",
     "tags": [
-      "券商",
-      "网络营销",
-      "合规"
+      "小红书",
+      "物理AI",
+      "新概念",
+      "科普"
     ],
-    "link": "https://news.10jqka.com.cn/20261026/c681058999.shtml",
-    "analysis": "新规落地后券商获客逻辑的根本转变，对从业者和投资者都有强参考价值，转发收藏意愿高。",
-    "template": "围绕一个政策落地节点，采访多方、梳理「过去vs现在」的对比，做成趋势解读图文。"
+    "link": "https://www.xiaohongshu.com/explore/6a0d4f610000000006035be1",
+    "analysis": "「快速看懂+新概念」抓住物理AI等前沿热点，把新名词讲成大白话，赞1545藏1841，是「热点新概念科普」打法。",
+    "template": "标题「快速看懂XX新概念」，用「是什么→为什么→怎么用」三段式讲清一个风口词。",
+    "id": 7
   },
   {
-    "id": 7,
-    "title": "东方红资管发布声明：警惕假冒「东方证券资产管理」账号",
+    "title": "MLCC涨价潮：快速看懂其中的逻辑和机会",
+    "platform": "小红书",
+    "author": "国金证券",
+    "viralScore": 82,
+    "likes": 855,
+    "collects": 1030,
+    "category": "金融科普",
+    "tags": [
+      "小红书",
+      "MLCC",
+      "涨价",
+      "逻辑科普"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/6a16d521000000003803472b",
+    "analysis": "借「涨价潮」热点切入MLCC，讲清涨价逻辑，赞855藏1030，用「涨价→逻辑→怎么看」把行业动态变成可理解的知识点。",
+    "template": "标题「XX涨价潮，快速看懂逻辑」，正文讲供需+影响+怎么看，只讲逻辑不荐股。",
+    "id": 8
+  },
+  {
+    "title": "A股5月25日：半导体，在交易什么？",
+    "platform": "小红书",
+    "author": "国金证券",
+    "viralScore": 78,
+    "likes": 1399,
+    "collects": 166,
+    "category": "行情科普",
+    "tags": [
+      "小红书",
+      "半导体",
+      "行情逻辑",
+      "国金证券"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/6a142e34000000003700dd45",
+    "analysis": "用「在交易什么」把当日行情转成「逻辑科普」而非点位播报，赞1399，是「行情→逻辑」的合规转化样本。",
+    "template": "标题「X月X日XX在交易什么」，把涨跌背后的产业逻辑讲清楚，不做点位预测。",
+    "id": 9
+  },
+  {
+    "title": "2招，3点前精准判断基金涨跌",
+    "platform": "小红书",
+    "author": "广发证券淄博中润大道证券营业部",
+    "viralScore": 81,
+    "likes": 848,
+    "collects": 795,
+    "category": "实操教程",
+    "tags": [
+      "小红书",
+      "营业部",
+      "基金",
+      "实操技巧"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/69928ad8000000001a02e092",
+    "analysis": "营业部号用「2招+时间点」给可操作的判断方法，赞848藏795，证明「小技巧+场景化」是营业部号低成本获客的好形态（注意只讲方法不荐基）。",
+    "template": "标题「X招，X点前做XX」，给2-3个具体动作，正文分步讲，结尾引导咨询并提示不构成建议。",
+    "id": 10
+  },
+  {
+    "title": "海外全线涨价，5类ETF将迎来涨价潮",
+    "platform": "小红书",
+    "author": "广发证券淄博中润大道证券营业部",
+    "viralScore": 77,
+    "likes": 953,
+    "collects": 573,
+    "category": "ETF科普",
+    "tags": [
+      "小红书",
+      "ETF",
+      "营业部",
+      "配置科普"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/699c16d8000000001a024dfd",
+    "analysis": "用「5类ETF」清单结构把海外涨价潮翻译成配置视角，赞953藏573，是营业部号做ETF科普的可复制模板。",
+    "template": "标题「XX涨价，N类ETF要关注」，列5类ETF+对应逻辑+风险提示，不做收益承诺。",
+    "id": 11
+  },
+  {
+    "title": "突然发现要和喜欢炒股的人当朋友",
     "platform": "东方财富",
-    "author": "东方红资产管理",
-    "viralScore": 79,
-    "likes": 980,
-    "collects": 1560,
-    "category": "防骗警示",
+    "author": "东方财富",
+    "viralScore": 86,
+    "likes": 1670,
+    "collects": 517,
+    "category": "情绪共鸣",
     "tags": [
-      "假冒券商",
-      "防骗",
-      "风险提示"
+      "东方财富",
+      "情绪共鸣",
+      "互动",
+      "股民"
     ],
-    "link": "https://data.eastmoney.com/notices/detail/169101/AN202610291831167259.html",
-    "analysis": "直接关系投资者财产安全，官方声明+识别方法，天然具备传播与收藏价值。",
-    "template": "用「官方声明+假冒手法拆解+官方渠道清单」结构，提醒读者留存证据、通过正规渠道办事。"
+    "link": "https://www.xiaohongshu.com/explore/699ebe0600000000230394d7",
+    "analysis": "用「和炒股的人当朋友」情绪梗引发共鸣，评论223条说明话题性强，点赞1670>收藏517，是「情绪互动」型爆款，靠讨论而非收藏传播。",
+    "template": "标题用「突然发现/原来」式生活化观察，正文抛一个共鸣点，引导评论区讨论。",
+    "id": 12
   },
   {
-    "id": 8,
+    "title": "阿姨，我的持仓为什么是绿色的啊？",
+    "platform": "东方财富",
+    "author": "东方财富",
+    "viralScore": 85,
+    "likes": 1412,
+    "collects": 187,
+    "category": "情绪梗",
+    "tags": [
+      "东方财富",
+      "自嘲",
+      "持仓",
+      "情绪"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/6a2bc635000000003501c274",
+    "analysis": "用「持仓绿色」自嘲梗直击散户亏钱痛点，评论458条爆量，证明「自嘲+情绪」能引爆评论区，收藏低但传播强。",
+    "template": "标题用「为什么我的XX」自嘲句式，正文玩梗+轻科普，引导评论互动。",
+    "id": 13
+  },
+  {
+    "title": "我将辞职在家全职研究大a古文今译系统",
+    "platform": "东方财富",
+    "author": "东方财富",
+    "viralScore": 80,
+    "likes": 1077,
+    "collects": 300,
+    "category": "玩梗",
+    "tags": [
+      "东方财富",
+      "谐音梗",
+      "段子",
+      "年轻化"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/69a159bd00000000230385dc",
+    "analysis": "「大a古文今译」谐音梗把炒股术语玩成段子，评论222条，是「用网络梗包装财经」的流量打法，适合年轻群体。",
+    "template": "标题玩一个财经谐音/网络梗，正文把梗展开成段子，结尾接一个知识点。",
+    "id": 14
+  },
+  {
+    "title": "看到高考语文作文那一刻我悟了",
+    "platform": "东方财富",
+    "author": "东方财富",
+    "viralScore": 79,
+    "likes": 1180,
+    "collects": 194,
+    "category": "玩梗",
+    "tags": [
+      "东方财富",
+      "热点",
+      "玩梗",
+      "共鸣"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/6a268dfe000000002201b5e8",
+    "analysis": "借高考作文热点玩「悟了」梗，把考场作文和炒股心态勾连，评论221条，是「蹭热点+玩梗」的低成本流量打法。",
+    "template": "标题蹭一个全民热点（高考/节日），用「那一刻我悟了」句式接财经梗，引导讨论。",
+    "id": 15
+  },
+  {
+    "title": "我最喜欢的同花顺APP五大功能",
+    "platform": "同花顺",
+    "author": "同花顺研习社",
+    "viralScore": 76,
+    "likes": 668,
+    "collects": 817,
+    "category": "工具教学",
+    "tags": [
+      "同花顺",
+      "APP功能",
+      "工具教学",
+      "教程"
+    ],
+    "link": "https://www.xiaohongshu.com/explore/6a30bb69000000002003b07e",
+    "analysis": "「五大功能」工具盘点把APP功能做成实用清单，收藏817>点赞668，是「工具教学」型内容，用户当操作手册收藏。",
+    "template": "标题「我最喜欢的XX五大功能」，逐个功能讲用法+使用场景，结尾引导收藏。",
+    "id": 16
+  },
+  {
     "title": "线上股票开户完整流程：材料、佣金、权限一文讲清",
     "platform": "同花顺",
     "author": "叩富问财",
@@ -1109,28 +1286,10 @@ var viralContent = [
     ],
     "link": "https://licai.cofool.com/user/guide_view_3513723.html",
     "analysis": "覆盖开户全流程的「攻略式」长文，收藏数远超点赞数，是典型的高实用价值内容。",
-    "template": "做「全流程攻略」，按时间线分步写，穿插避坑提示（全佣/净佣、权限门槛），结尾放联系方式引导咨询。"
+    "template": "做「全流程攻略」，按时间线分步写，穿插避坑提示（全佣/净佣、权限门槛），结尾放联系方式引导咨询。",
+    "id": 17
   },
   {
-    "id": 9,
-    "title": "哪个证券公司佣金最低：分渠道选费率",
-    "platform": "同花顺",
-    "author": "敬慕百科",
-    "viralScore": 82,
-    "likes": 2100,
-    "collects": 4600,
-    "category": "佣金对比",
-    "tags": [
-      "佣金",
-      "开户",
-      "对比"
-    ],
-    "link": "https://www.jingmu.net/html/baike/c7f4u1r2g2r.html",
-    "analysis": "用对比表格拆解不同券商佣金档位，数字冲击力强，直击「省钱」痛点，收藏率高。",
-    "template": "做「对比表+避坑点」内容，把费率档位、免五限制、全佣净佣区分列成表，配「先谈再开」的行动建议。"
-  },
-  {
-    "id": 10,
     "title": "债券型ETF受青睐：年内累计流入超2400亿",
     "platform": "天天基金",
     "author": "新华财经",
@@ -1145,28 +1304,10 @@ var viralContent = [
     ],
     "link": "https://stcn.com/article/detail/4257384.html",
     "analysis": "数据卡片式的资金流向盘点，让枯燥的申赎数据变成可读的趋势判断，专业又实用。",
-    "template": "把规模、净流入、头部产品座次做成「数据卡片」，配一句趋势解读，结尾引导关注。"
+    "template": "把规模、净流入、头部产品座次做成「数据卡片」，配一句趋势解读，结尾引导关注。",
+    "id": 18
   },
   {
-    "id": 11,
-    "title": "黄金ETF大跌，这轮金价猛跌怎么看",
-    "platform": "东方财富",
-    "author": "大河财立方",
-    "viralScore": 80,
-    "likes": 1700,
-    "collects": 2900,
-    "category": "行情解读",
-    "tags": [
-      "黄金ETF",
-      "金价",
-      "解读"
-    ],
-    "link": "https://www.dahecube.com/article.html?artid=291025",
-    "analysis": "把金价回调的驱动因素拆解清楚，替焦虑的投资者「找原因、给参考」，情绪价值+干货兼备。",
-    "template": "围绕一个热门的资产回调，做「发生了什么+为什么+怎么办」三段式解读，避免给具体买卖建议。"
-  },
-  {
-    "id": 12,
     "title": "AI荐股骗局「利智投」涉案350万，数十名投资者被骗",
     "platform": "小红书",
     "author": "最高人民检察院",
@@ -1181,10 +1322,10 @@ var viralContent = [
     ],
     "link": "https://www.toutiao.com/article/7701682287028568639/",
     "analysis": "真实判例+完整诈骗链条复盘，触目惊心的细节激发转发，避坑类内容收藏远高于点赞。",
-    "template": "用「真实案例+诈骗步骤拆解+识别要点」结构，讲一个完整骗局，结尾给出行动建议。"
+    "template": "用「真实案例+诈骗步骤拆解+识别要点」结构，讲一个完整骗局，结尾给出行动建议。",
+    "id": 19
   },
   {
-    "id": 13,
     "title": "充值112万炒股，提现却被索要89万「分红」",
     "platform": "小红书",
     "author": "人民法治网",
@@ -1199,132 +1340,7 @@ var viralContent = [
     ],
     "link": "https://www.rmfzw.org.cn/article/2478/330476",
     "analysis": "「提现先交钱」的反常识骗局戳中大众神经，配合警方追款结果，既震撼又有警示价值。",
-    "template": "聚焦一个「反常识」细节做标题，正文复盘被骗过程+警方提醒，强调保存证据、及时报警。"
-  },
-  {
-    "id": 14,
-    "title": "厦门辖区10月无资质证券机构名单公示",
-    "platform": "东方财富",
-    "author": "厦门证监局",
-    "viralScore": 78,
-    "likes": 1200,
-    "collects": 2600,
-    "category": "资质查询",
-    "tags": [
-      "无资质机构",
-      "名单",
-      "防骗"
-    ],
-    "link": "https://www.csrc.gov.cn/xiamen/c105637/c7667332/content.shtml",
-    "analysis": "官方发布的「黑名单」，是投资者查询资质、避坑的高频收藏内容。",
-    "template": "转发权威机构公示名单，配「如何查资质」的教程，提醒通过证监会官网核验。"
-  },
-  {
-    "id": 15,
-    "title": "港股通开户条件与佣金协商攻略",
-    "platform": "天天基金",
-    "author": "叩富问财",
-    "viralScore": 80,
-    "likes": 1800,
-    "collects": 3700,
-    "category": "开户攻略",
-    "tags": [
-      "港股通",
-      "开户",
-      "佣金"
-    ],
-    "link": "https://licai.jiantou8.com/user/guide_view_3513765.html",
-    "analysis": "针对港股投资门槛的攻略式问答，把「能开通」和「开得划算」分开讲，实用性强。",
-    "template": "用「条件清单+协商技巧」结构，先讲准入条件，再教怎么和客户经理谈佣金。"
-  },
-  {
-    "id": 16,
-    "title": "在哪个证券公司开户最好：按需求匹配券商",
-    "platform": "小红书",
-    "author": "敬慕百科",
-    "viralScore": 82,
-    "likes": 2400,
-    "collects": 5100,
-    "category": "开户指南",
-    "tags": [
-      "开户",
-      "券商对比",
-      "指南"
-    ],
-    "link": "https://www.jingmu.net/html/baike/cffd61rnr1t.html",
-    "analysis": "按「短线/长线/两融/资金量」维度推荐券商，把选择逻辑讲透，收藏数高。",
-    "template": "做「按需求匹配」的指南，先问用户画像，再给对应推荐，配避坑提醒（别自助开户）。"
-  },
-  {
-    "id": 17,
-    "title": "证券交易手续费哪家最低：散户开户怎么谈才划算",
-    "platform": "B站",
-    "author": "财云科技",
-    "viralScore": 79,
-    "likes": 1600,
-    "collects": 3100,
-    "category": "佣金科普",
-    "tags": [
-      "手续费",
-      "佣金",
-      "开户"
-    ],
-    "link": "https://www.caiair.com/pages/zhengquanjiaoyi-shouxufei-gupiao-kaihu-2932.html",
-    "analysis": "把手续费拆成印花税/过户费/佣金三块，讲清「万1.5分水岭」「最低5元」等细节，干货足。",
-    "template": "做「成本拆解」内容，把收费项目逐项列出，配「怎么谈」的实操建议。"
-  },
-  {
-    "id": 18,
-    "title": "券商三季报收官：41家净利2065亿、8家破百亿，18家中期分红135亿",
-    "platform": "东方财富",
-    "author": "消费日报财经",
-    "viralScore": 83,
-    "likes": 2200,
-    "collects": 3900,
-    "category": "券商业绩",
-    "tags": [
-      "券商三季报",
-      "分红",
-      "数据"
-    ],
-    "link": "https://www.cnstock.com/commonDetail/811210",
-    "analysis": "券商三季报+分红数据汇总，数据卡片式呈现，专业投资者和股民都爱看。",
-    "template": "把业绩和分红数据做成榜单，配一句点评，标注数据来源，增强可信度。"
-  },
-  {
-    "id": 19,
-    "title": "方正证券姜志军：一切指向客户获得感，以「数驱投顾」重塑服务链",
-    "platform": "B站",
-    "author": "今日头条",
-    "viralScore": 78,
-    "likes": 1400,
-    "collects": 2200,
-    "category": "券商观点",
-    "tags": [
-      "方正证券",
-      "数驱投顾",
-      "行业"
-    ],
-    "link": "https://www.toutiao.com/article/7699044856262214198",
-    "analysis": "券商高管深度访谈，输出「买方投顾」的方法论，对行业从业者和关注券商的投资者有参考价值。",
-    "template": "做「人物访谈+观点提炼」内容，把核心观点用小标题拆开，配金句摘录。"
-  },
-  {
-    "id": 20,
-    "title": "中泰证券临沂分公司：拒绝非法荐股，筑牢理性投资防线",
-    "platform": "B站",
-    "author": "大众网",
-    "viralScore": 76,
-    "likes": 900,
-    "collects": 1800,
-    "category": "投教活动",
-    "tags": [
-      "非法荐股",
-      "投教",
-      "券商"
-    ],
-    "link": "https://www.dzwww.com/xinwen/jishixinwen/202610/t20261027_18243042.htm",
-    "analysis": "券商投教进企业的纪实报道，体现「防非反诈」主题，是券商投教内容的正面样板。",
-    "template": "做「投教活动纪实」内容，用真实案例拆解诈骗手法，结尾给资质查询方法。"
+    "template": "聚焦一个「反常识」细节做标题，正文复盘被骗过程+警方提醒，强调保存证据、及时报警。",
+    "id": 20
   }
 ];
