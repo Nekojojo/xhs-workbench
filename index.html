@@ -8529,7 +8529,7 @@ function nav(page) {
   var pageMap = {home:0,accounts:1,hotspots:2,topics:3,benchmarks:4,viralContent:5,viralLibrary:6,teardown:7,scripts:8,create:9,posters:10,library:11,analytics:12,weekly:13,compliance:14,tasks:15,reports:16,files:17};
   var idx = pageMap[page];
   if (idx !== undefined) { items[idx].classList.add('active'); }
-  var renderers = {home:renderHome,accounts:renderAccounts,hotspots:renderHotspots,topics:renderTopics,benchmarks:renderBenchmarks,viralContent:renderViralContent,viralLibrary:renderViralLibrary,teardown:renderTeardown,scripts:renderScripts,create:renderCreate,posters:renderPosters,library:renderLibrary,analytics:renderAnalytics,weekly:renderWeekly,compliance:renderCompliance,tasks:renderTasks,reports:renderReports,files:renderFiles};
+  var renderers = {home:renderHome,accounts:renderAccounts,hotspots:renderHotspots,topics:renderTopics,benchmarks:renderBenchmarks,viralContent:renderViralContent,viralLibrary:(typeof renderViralLibrary === 'function' ? renderViralLibrary : null),teardown:renderTeardown,scripts:renderScripts,create:renderCreate,posters:renderPosters,library:renderLibrary,analytics:renderAnalytics,weekly:renderWeekly,compliance:renderCompliance,tasks:renderTasks,reports:renderReports,files:renderFiles};
   var fn = renderers[page];
   if (fn) {
     document.getElementById('main').innerHTML = fn();
