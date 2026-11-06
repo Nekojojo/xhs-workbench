@@ -269,9 +269,31 @@ textarea:focus { border-color: var(--pri); box-shadow: 0 0 0 3px rgba(224,30,35,
 .vlib-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
 .vlib-add-form { display: flex; flex-direction: column; gap: 10px; }
 .vlib-add-form input, .vlib-add-form textarea { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
+/* 爆款笔记库统计卡片（KPI） */
+.vlib-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px; }
+.vlib-kpi { position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); padding: 16px 18px; display: flex; align-items: center; gap: 14px; overflow: hidden; transition: box-shadow .2s, transform .2s; }
+.vlib-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.vlib-kpi:hover { box-shadow: 0 8px 20px rgba(0,0,0,.09); transform: translateY(-2px); }
+.vlib-kpi .kpi-icon { width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.vlib-kpi .kpi-info { min-width: 0; }
+.vlib-kpi .kpi-value { font-size: 26px; font-weight: 800; line-height: 1; color: var(--text); }
+.vlib-kpi .kpi-label { font-size: 13px; font-weight: 600; color: var(--text); margin-top: 4px; }
+.vlib-kpi .kpi-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.vlib-kpi.k1::before { background: #E01E23; }
+.vlib-kpi.k1 .kpi-icon { background: #FEE2E2; color: #DC2626; }
+.vlib-kpi.k2::before { background: #3B82F6; }
+.vlib-kpi.k2 .kpi-icon { background: #DBEAFE; color: #2563EB; }
+.vlib-kpi.k3::before { background: #10B981; }
+.vlib-kpi.k3 .kpi-icon { background: #D1FAE5; color: #059669; }
+.vlib-kpi.k4::before { background: #8B5CF6; }
+.vlib-kpi.k4 .kpi-icon { background: #EDE9FE; color: #7C3AED; }
 @media (max-width: 768px) {
   .vlib-grid { grid-template-columns: 1fr; gap: 12px; }
   .vlib-card { padding: 14px; }
+  .vlib-kpis { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .vlib-kpi { padding: 12px 14px; gap: 10px; }
+  .vlib-kpi .kpi-icon { width: 40px; height: 40px; font-size: 20px; border-radius: 10px; }
+  .vlib-kpi .kpi-value { font-size: 22px; }
 }
 </style>
 </head>
@@ -4813,11 +4835,11 @@ function renderViralLibrary() {
   var h = renderTopbar();
   h += '<div class="page-title">爆款笔记库 <span class="badge">' + notes.length + '篇</span></div>';
 
-  h += '<div class="stats-grid">';
-  h += '<div class="stat-card highlight"><div class="label">笔记总数</div><div class="value">' + notes.length + '</div><div class="sub">对标账号真实笔记</div></div>';
-  h += '<div class="stat-card"><div class="label">覆盖账号</div><div class="value">' + Object.keys(authors).length + '</div><div class="sub">个券商/平台号</div></div>';
-  h += '<div class="stat-card"><div class="label">已标记使用</div><div class="value">' + usedIds.length + '</div><div class="sub">条（本地记录）</div></div>';
-  h += '<div class="stat-card"><div class="label">内容类型</div><div class="value">' + Object.keys(catCount).length + '</div><div class="sub">种笔记类型</div></div>';
+  h += '<div class="vlib-kpis">';
+  h += '<div class="vlib-kpi k1"><div class="kpi-icon">&#128218;</div><div class="kpi-info"><div class="kpi-value">' + notes.length + '</div><div class="kpi-label">笔记总数</div><div class="kpi-sub">对标账号真实笔记</div></div></div>';
+  h += '<div class="vlib-kpi k2"><div class="kpi-icon">&#127974;</div><div class="kpi-info"><div class="kpi-value">' + Object.keys(authors).length + '</div><div class="kpi-label">覆盖账号</div><div class="kpi-sub">家券商 / 平台号</div></div></div>';
+  h += '<div class="vlib-kpi k3"><div class="kpi-icon">&#9989;</div><div class="kpi-info"><div class="kpi-value">' + usedIds.length + '</div><div class="kpi-label">已标记使用</div><div class="kpi-sub">条本地记录</div></div></div>';
+  h += '<div class="vlib-kpi k4"><div class="kpi-icon">&#127991;&#65039;</div><div class="kpi-info"><div class="kpi-value">' + Object.keys(catCount).length + '</div><div class="kpi-label">内容类型</div><div class="kpi-sub">种笔记类型</div></div></div>';
   h += '</div>';
 
   h += '<div class="card" style="padding:12px 18px;margin-bottom:16px;font-size:12px;color:var(--text2)">说明：这里沉淀了对标账号（国金/江海/招商/同花顺/东方财富等）真实高互动笔记，可点击或扫码跳转小红书原笔记；支持手动添加链接、删除、标记已用。</div>';
